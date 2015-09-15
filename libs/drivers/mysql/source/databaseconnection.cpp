@@ -22,18 +22,13 @@ DatabaseConnection::DatabaseConnection(ConnectionSettings *settings):
     RabidSQL::DatabaseConnection(settings)
 {
     connection = nullptr;
+    driver = nullptr;
     connection_id = 0;
 
     hostname = settings->get("hostname").toString();
     username = settings->get("username").toString();
     port = settings->get("port").toUInt();
     password = settings->get("password").toString();
-
-    // Get driver instance
-    driver = get_driver_instance();
-
-    // Init SQL thread
-    driver->threadInit();
 }
 
 /**
@@ -49,18 +44,13 @@ DatabaseConnection::DatabaseConnection(DatabaseConnection *mainConnection,
     RabidSQL::DatabaseConnection::DatabaseConnection(mainConnection, manager)
 {
     connection = nullptr;
+    driver = nullptr;
     connection_id = 0;
 
     hostname = mainConnection->hostname;
     username = mainConnection->username;
     port = mainConnection->port;
     password = mainConnection->password;
-
-    // Get driver instance
-    driver = get_driver_instance();
-
-    // Init SQL thread
-    driver->threadInit();
 }
 
 /**
@@ -75,6 +65,15 @@ DatabaseConnection::DatabaseConnection(DatabaseConnection *mainConnection,
 QueryResult DatabaseConnection::connect()
 {
     QueryResult result;
+
+    if (driver == nullptr) {
+
+        // Get driver instance
+        driver = get_driver_instance();
+
+        // Init SQL thread
+        driver->threadInit();
+    }
 
     if (connection == nullptr) {
 
@@ -364,9 +363,17 @@ void DatabaseConnection::disconnect()
 
         // Free memory
         delete connection;
+
+        connection = nullptr;
     }
 
-    connection = nullptr;
+    if (driver != nullptr) {
+
+        // End the thread in the MySQL driver's internals
+        driver->threadEnd();
+
+        driver = nullptr;
+    }
 }
 
 /**
@@ -383,14 +390,8 @@ std::vector<SettingsField> DatabaseConnection::getSettingsFields()
 DatabaseConnection::~DatabaseConnection()
 {
 
-    // Make sure the connection was shut down
-    disconnect();
-
-    if (driver != nullptr) {
-
-        // End the thread in the MySQL driver's internals
-        driver->threadEnd();
-    }
+    // Ensure that this thread has stopped
+    stop();
 }
 
 } // namespace MySQLDriver
