@@ -55,9 +55,14 @@ void Thread::start()
  */
 void Thread::_run()
 {
+    // Increment thread counter
+    activeThreads++;
 
     // Run thread's event loop
     run();
+
+    // Decrement thread counter
+    activeThreads--;
 
     finished = true;
 }
@@ -141,6 +146,17 @@ bool Thread::isStopping()
 
 /**
  *
+ * Returns the number of active threads.
+ *
+ * @return the number of active threads
+ */
+int Thread::numberOfActiveThreads()
+{
+    return activeThreads;
+}
+
+/**
+ *
  * Waits for the thread to shut down and then does any cleanup tasks
  *
  * @return void
@@ -162,6 +178,8 @@ Thread::~Thread()
         delete thread;
     }
 }
+
+std::atomic_int Thread::activeThreads(0);
 
 } // namespace RabidSQL
 

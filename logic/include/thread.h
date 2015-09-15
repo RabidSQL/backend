@@ -22,6 +22,7 @@ public:
     ~Thread();
 
     static void processQueue();
+    static int numberOfActiveThreads();
 
 private:
     void _run();
@@ -29,6 +30,7 @@ private:
     std::thread *thread;
     std::atomic_bool finished;
     std::atomic_bool stopping;
+    static std::atomic_int activeThreads;
 };
 
 } // namespace RabidSQL
