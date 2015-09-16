@@ -21,8 +21,6 @@ public:
     DatabaseConnection(ConnectionSettings *settings);
     DatabaseConnection(DatabaseConnection *mainConnection,
                        DatabaseConnectionManager *manager);
-    virtual void call(Variant uuid, QueryEvent::type event,
-                      VariantList arguments=VariantList());
     virtual void disconnect() = 0;
     virtual QueryResult connect() = 0;
     virtual QueryResult execute(VariantList arguments) = 0;
@@ -39,6 +37,8 @@ public:
 protected:
     DatabaseConnectionManager *manager;
 
+    void call(Variant uuid, QueryEvent::type event,
+              VariantList arguments=VariantList());
     void run();
     DatabaseConnection *getDatabaseConnection(std::string uuid);
 

@@ -110,6 +110,15 @@ void DatabaseConnection::run()
         // Unlock mutex
         mutex.unlock();
 
+        if (command.arguments.empty()) {
+
+            // If there are no arguments, add a null element. This is so that
+            // when the first argument is optional, the app won't crash. If ever
+            // there is something that requires multiple arguments, this will
+            // need to be revisited.
+            command.arguments.push_back(nullptr);
+        }
+
         switch (command.event) {
         case QueryEvent::DISCONNECT:
             disconnect();
@@ -130,7 +139,8 @@ void DatabaseConnection::run()
             queueData(EXECUTED, VariantList()
                                 << command.uid
                                 << command.event
-                                << getDatabases());
+                                << getDatabases(command.arguments.front()
+                                       .toStringVector()));
             break;
         case QueryEvent::LIST_TABLES:
             queueData(EXECUTED, VariantList()
