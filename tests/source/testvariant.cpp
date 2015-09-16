@@ -34,6 +34,22 @@ TEST_F(TestVariant, ConvertStringVariantToStringVector) {
     EXPECT_EQ(value, value.toStringVector());
 }
 
+// Tests converting a string vector to a variant vector
+TEST_F(TestVariant, ConvertStringVectorToVariantVector) {
+    std::vector<std::string> list;
+    list.push_back("test");
+    Variant value(list);
+    EXPECT_EQ(value, value.toVariantVector());
+}
+
+// Tests converting a variant vector to a string vector
+TEST_F(TestVariant, ConvertVariantVectorToStringVector) {
+    std::vector<std::string> list;
+    list.push_back("test");
+    Variant value(list);
+    EXPECT_EQ(value, value.toStringVector());
+}
+
 // Tests that the Variant::operator== method works for int-int comparison
 TEST_F(TestVariant, OperatorEQIntInt) {
     Variant v1(124);
