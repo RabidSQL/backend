@@ -76,7 +76,7 @@ void DatabaseConnection::run()
 
     result = connect();
     if (result.error.isError) {
-        queueData(EXECUTED, VariantList()
+        queueData(EXECUTED, VariantVector()
                             << command.uid
                             << command.event
                             << result);
@@ -122,48 +122,48 @@ void DatabaseConnection::run()
         switch (command.event) {
         case QueryEvent::DISCONNECT:
             disconnect();
-                queueData(EXECUTED, VariantList()
+                queueData(EXECUTED, VariantVector()
                                     << command.uid
                                     << command.event
                                     << result);
             break;
         case QueryEvent::TEST_CONNECTION:
             if (!result.error.isError) {
-                queueData(EXECUTED, VariantList()
+                queueData(EXECUTED, VariantVector()
                                     << command.uid
                                     << command.event
                                     << result);
             }
             break;
         case QueryEvent::LIST_DATABASES:
-            queueData(EXECUTED, VariantList()
+            queueData(EXECUTED, VariantVector()
                                 << command.uid
                                 << command.event
                                 << getDatabases(command.arguments.front()
                                        .toStringVector()));
             break;
         case QueryEvent::LIST_TABLES:
-            queueData(EXECUTED, VariantList()
+            queueData(EXECUTED, VariantVector()
                                 << command.uid
                                 << command.event
                                 <<
                                 getTables(command.arguments.front().toString()));
             break;
         case QueryEvent::EXECUTE_QUERY:
-            queueData(EXECUTED, VariantList()
+            queueData(EXECUTED, VariantVector()
                                 << command.uid
                                 << command.event
                                 << execute(command.arguments));
             break;
         case QueryEvent::SELECT_DATABASE:
-            queueData(EXECUTED, VariantList()
+            queueData(EXECUTED, VariantVector()
                                 << command.uid
                                 << command.event
                                 << selectDatabase(
                     command.arguments.front().toString()));
             break;
         case QueryEvent::KILL_QUERY:
-            queueData(EXECUTED, VariantList()
+            queueData(EXECUTED, VariantVector()
                                 << command.uid
                                 << command.event
                                 <<
@@ -201,7 +201,7 @@ void DatabaseConnection::run()
  * @return void
  */
 void DatabaseConnection::call(Variant uid, QueryEvent::type event,
-                               VariantList arguments)
+                               VariantVector arguments)
 {
     QueryCommand command;
 

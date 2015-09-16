@@ -10,7 +10,7 @@ namespace RabidSQL {
 struct QueryResult;
 class BinaryStream;
 class JsonStream;
-class VariantList;
+class VariantVector;
 class Variant
 {
 public:
@@ -20,7 +20,7 @@ public:
     Variant(const std::string &value);
     Variant(const char *value);
     Variant(const std::vector<std::string> &value);
-    Variant(const VariantList &value);
+    Variant(const VariantVector &value);
     Variant(const long &value);
     Variant(const unsigned long &value);
     Variant(const int &value);
@@ -33,7 +33,7 @@ public:
     ~Variant();
     const std::string toString() const;
     const std::vector<std::string> toStringVector() const;
-    const VariantList toVariantVector() const;
+    const VariantVector toVariantVector() const;
     const long toLong() const;
     const unsigned long toULong() const;
     const int toInt() const;
@@ -84,10 +84,10 @@ private:
     DataType type;
 };
 
-class VariantList: public std::vector<Variant> {
+class VariantVector : public std::vector<Variant> {
 
 public:
-    VariantList &operator<<(const Variant &value);
+    VariantVector &operator<<(const Variant &value);
     void operator<<(JsonStream &value);
     void operator<<(BinaryStream &value);
     void operator>>(JsonStream &value);

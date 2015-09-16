@@ -28,8 +28,8 @@ public:
     void disconnectQueue(const SmartObject *receiver = nullptr, int id = 0);
 
 protected:
-    void queueData(int id, const VariantList &arguments);
-    virtual void processQueueItem(int id, VariantList arguments);
+    void queueData(int id, const VariantVector &arguments);
+    virtual void processQueueItem(int id, VariantVector arguments);
 
 private:
     void processQueue();
@@ -38,9 +38,9 @@ private:
 
     class Data {
     public:
-        Data(int id, const VariantList &arguments);
+        Data(int id, const VariantVector &arguments);
         int id;
-        VariantList arguments;
+        VariantVector arguments;
     };
 
     SmartObject *parent;

@@ -36,8 +36,8 @@ public:
     static void saveJson(std::vector<ConnectionSettings *> &settings,
                          std::string filename);
 
-    void operator<<(const VariantList &value);
-    void operator>>(VariantList &value);
+    void operator<<(const VariantVector &value);
+    void operator>>(VariantVector &value);
     ~ConnectionSettings();
 
 private:

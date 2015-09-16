@@ -94,7 +94,7 @@ QueryResult DatabaseConnection::connect()
         result = QueryResult();
 
         // Get connection id
-        result = this->execute(VariantList() << "SELECT CONNECTION_ID()");
+        result = this->execute(VariantVector() << "SELECT CONNECTION_ID()");
         if (result.rows.size() == 0 || result.error.isError) {
 
             // No row returned
@@ -126,7 +126,7 @@ QueryResult DatabaseConnection::killQuery(std::string uuid)
     connection = dynamic_cast<DatabaseConnection *>(
                 getDatabaseConnection(uuid));
 
-    return execute(VariantList() << "KILL QUERY "
+    return execute(VariantVector() << "KILL QUERY "
                    + Variant(connection->connection_id).toString());
 }
 
@@ -154,7 +154,7 @@ QueryResult DatabaseConnection::getDatabases(std::vector<std::string> filter)
 {
 
     // Execute query
-    VariantList arguments;
+    VariantVector arguments;
 
     if (filter.size() > 0) {
 
@@ -198,7 +198,7 @@ QueryResult DatabaseConnection::selectDatabase(
 {
 
     // Execute query
-    return execute(VariantList() << "USE ?" << database);
+    return execute(VariantVector() << "USE ?" << database);
 }
 
 /**
@@ -212,19 +212,19 @@ QueryResult DatabaseConnection::getTables(std::string database)
 {
 
     // Execute query
-    return execute(VariantList() << "SHOW TABLES FROM ?" << database);
+    return execute(VariantVector() << "SHOW TABLES FROM ?" << database);
 }
 
 /**
  *
  * Executes a query and returns the result
  *
- * @param VariantList arguments The query arguments. The first argument should
+ * @param VariantVector arguments The query arguments. The first argument should
  * be the query and any subsequent arguments are the bind parameters
  *
  * @return The results from the query
  */
-QueryResult DatabaseConnection::execute(VariantList arguments)
+QueryResult DatabaseConnection::execute(VariantVector arguments)
 {
     int i;
     int count;
@@ -291,7 +291,7 @@ QueryResult DatabaseConnection::execute(VariantList arguments)
 
     // Read rows
     while (sqlResult->next()) {
-        VariantList row;
+        VariantVector row;
         for (i = 1; i <= count; i++) {
             Variant column;
 

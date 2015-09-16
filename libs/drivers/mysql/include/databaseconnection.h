@@ -22,7 +22,7 @@ public:
     static std::vector<SettingsField> getSettingsFields();
 
     QueryResult connect();
-    QueryResult execute(VariantList arguments);
+    QueryResult execute(VariantVector arguments);
     QueryResult getDatabases(
             std::vector<std::string> filter = std::vector<std::string>());
     QueryResult getTables(std::string database);

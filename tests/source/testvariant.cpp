@@ -117,7 +117,7 @@ TEST_F(TestVariant, OperatorEQFloatDouble) {
 // comparison
 TEST_F(TestVariant, OperatorEQFloatVariantVector) {
     Variant v1((float) 124.8);
-    Variant v2(VariantList() << (float) 124.8);
+    Variant v2(VariantVector() << (float) 124.8);
     EXPECT_EQ(v1, v2);
 }
 
@@ -125,34 +125,34 @@ TEST_F(TestVariant, OperatorEQFloatVariantVector) {
 // comparison
 TEST_F(TestVariant, OperatorEQFloatVariantVectorMultiElements) {
     Variant v1((float) 124.8);
-    Variant v2(VariantList() << (float) 124.8 << "1");
+    Variant v2(VariantVector() << (float) 124.8 << "1");
     EXPECT_EQ(v1, v2);
 }
 
 // Tests that the Variant::operator== method works for variant vector-variant
 // vector comparison
 TEST_F(TestVariant, OperatorEQVariantVectorVariantVector) {
-    Variant v1(VariantList() << (float) 124.8 << "1" << (double) 7);
-    Variant v2(VariantList() << (float) 124.8 << "1" << (double) 7);
+    Variant v1(VariantVector() << (float) 124.8 << "1" << (double) 7);
+    Variant v2(VariantVector() << (float) 124.8 << "1" << (double) 7);
     EXPECT_EQ(v1, v2);
 }
 
 // Tests that the Variant::operator== method works for variant vector-variant
 // vector comparison w/ typecasting
 TEST_F(TestVariant, OperatorEQVariantVectorVariantVectorTypeCasting) {
-    Variant v1(VariantList() << (float) 124.8 << "1.0" << (double) 7);
-    Variant v2(VariantList() << (float) 124.8 << 1.0 << (double) 7);
+    Variant v1(VariantVector() << (float) 124.8 << "1.0" << (double) 7);
+    Variant v2(VariantVector() << (float) 124.8 << 1.0 << (double) 7);
     EXPECT_EQ(v1, v2);
 
-    Variant v3(VariantList() << (float) 124.8 << "1" << (double) 7);
-    Variant v4(VariantList() << (float) 124.8 << (float) 1.0 << (double) 7);
+    Variant v3(VariantVector() << (float) 124.8 << "1" << (double) 7);
+    Variant v4(VariantVector() << (float) 124.8 << (float) 1.0 << (double) 7);
     EXPECT_EQ(v3, v4);
 }
 
 // Tests that the Variant::operator== method works for variant vector-string
 // vector comparison
 TEST_F(TestVariant, OperatorEQVariantVectorStringVector) {
-    Variant v1(VariantList() << (float) 124.8 << "1" << (double) 7);
+    Variant v1(VariantVector() << (float) 124.8 << "1" << (double) 7);
     std::vector<std::string> list;
     list.push_back("124.8");
     list.push_back("1");
@@ -171,8 +171,8 @@ TEST_F(TestVariant, OperatorNEFloatDouble) {
 // Tests that the Variant::operator!= method works for variant vector-variant
 // vector comparison w/ typecasting
 TEST_F(TestVariant, OperatorNEVariantVectorVariantVectorTypeCasting) {
-    Variant v1(VariantList() << (float) 7);
-    Variant v2(VariantList() << (double) 7.5);
+    Variant v1(VariantVector() << (float) 7);
+    Variant v2(VariantVector() << (double) 7.5);
     EXPECT_NE(v1, v2);
 }
 
@@ -184,7 +184,7 @@ TEST_F(TestVariant, OperatorEQStringVectorVariantVector) {
     list.push_back("1");
     list.push_back("7");
     Variant v1(list);
-    Variant v2(VariantList() << (float) 124.8 << "1" << (double) 7);
+    Variant v2(VariantVector() << (float) 124.8 << "1" << (double) 7);
     EXPECT_EQ(v1, v2);
 }
 
@@ -321,7 +321,8 @@ TEST_F(TestVariant, FileIOBinaryIOStringVector) {
 // Tests reading and writing of a single Variant vector variant from and to
 // binary files
 TEST_F(TestVariant, FileIOBinaryIOVariantVector) {
-    TEST_BINARY_SINGLE(VariantList, VariantList() << "test" << 123 << nullptr);
+    TEST_BINARY_SINGLE(VariantVector, VariantVector() << "test" << 123
+        << nullptr);
 }
 
 // Tests reading and writing of a single long variant from and to binary files

@@ -23,7 +23,7 @@ public:
                        DatabaseConnectionManager *manager);
     virtual void disconnect() = 0;
     virtual QueryResult connect() = 0;
-    virtual QueryResult execute(VariantList arguments) = 0;
+    virtual QueryResult execute(VariantVector arguments) = 0;
     virtual QueryResult getDatabases(
             std::vector<std::string> filter = std::vector<std::string>()) = 0;
     virtual QueryResult getTables(std::string database) = 0;
@@ -38,7 +38,7 @@ protected:
     DatabaseConnectionManager *manager;
 
     void call(Variant uuid, QueryEvent::type event,
-              VariantList arguments=VariantList());
+              VariantVector arguments= VariantVector());
     void run();
     DatabaseConnection *getDatabaseConnection(std::string uuid);
 

@@ -215,7 +215,7 @@ DatabaseConnection *DatabaseConnectionManager::reserveDatabaseConnectionObj(
  * @param args The arguments passed from the database
  * @return void
  */
-void DatabaseConnectionManager::disconnected(const VariantList &args)
+void DatabaseConnectionManager::disconnected(const VariantVector &args)
 {
     DatabaseConnection *connection;
     std::string uuid;
@@ -313,7 +313,7 @@ void DatabaseConnectionManager::releaseDatabaseConnection(std::string uuid)
 void DatabaseConnectionManager::call(DatabaseConnection *connection,
                                      Variant uid,
                                      QueryEvent::type event,
-                                     VariantList arguments)
+                                     VariantVector arguments)
 {
     connection->call(uid, event, arguments);
 }
@@ -330,7 +330,7 @@ void DatabaseConnectionManager::call(DatabaseConnection *connection,
  */
 void DatabaseConnectionManager::call(std::string uuid, Variant uid,
                                      QueryEvent::type event,
-                                     VariantList arguments)
+                                     VariantVector arguments)
 {
     for (Connections::const_iterator it = connections.begin();
             it != connections.end(); ++it) {
@@ -386,7 +386,7 @@ void DatabaseConnectionManager::killQuery(std::string uuid)
 
             // Kill query
             call(killingConnection, Variant(), QueryEvent::KILL_QUERY,
-                 VariantList() << uuid);
+                 VariantVector() << uuid);
 
             // Release connection, for sanity. Because there is alrady an
             // expiry, it will be auto-freed regardless.

@@ -21,18 +21,18 @@ public:
     void releaseDatabaseConnection(std::string uuid);
     void call(std::string uuid, Variant uid,
               QueryEvent::type event,
-              VariantList arguments=VariantList());
+              VariantVector arguments= VariantVector());
     void killQuery(std::string uuid);
     ConnectionSettings::type getType();
     ~DatabaseConnectionManager();
 
-    void disconnected(const VariantList &args);
+    void disconnected(const VariantVector &args);
 
 private:
 
     void call(DatabaseConnection *connection, Variant uid,
               QueryEvent::type event,
-              VariantList arguments=VariantList());
+              VariantVector arguments= VariantVector());
     DatabaseConnection *getDatabaseConnection(std::string uuid);
     DatabaseConnection *reserveDatabaseConnectionObj(
             int timeout = 0, SmartObject *receiver = nullptr);

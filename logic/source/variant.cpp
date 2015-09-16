@@ -83,10 +83,10 @@ Variant::Variant(const std::vector<std::string> &value)
  * @param value The value to copy
  * @return void
  */
-Variant::Variant(const VariantList &value)
+Variant::Variant(const VariantVector &value)
 {
     type = VARIANTVECTOR;
-    data = new VariantList(value);
+    data = new VariantVector(value);
 }
 
 /**
@@ -225,7 +225,7 @@ void Variant::operator=(const Variant &value)
         data = new std::vector<std::string>(value.toStringVector());
         break;
     case VARIANTVECTOR:
-        data = new VariantList(value.toVariantVector());
+        data = new VariantVector(value.toVariantVector());
         break;
     case LONG:
         data = new long(value.toLong());
@@ -494,7 +494,7 @@ const std::string Variant::toString() const
         return *static_cast<std::string *>(data);
     case VARIANTVECTOR:
     {
-        VariantList vector(*static_cast<VariantList *>(data));
+        VariantVector vector(*static_cast<VariantVector *>(data));
         if (vector.size() == 0) {
             return "";
         }
@@ -556,8 +556,8 @@ const std::vector<std::string> Variant::toStringVector() const
         return *static_cast<std::vector<std::string> *>(data);
     case VARIANTVECTOR:
     {
-        VariantList variantVector = *static_cast<VariantList *>(data);
-        for (VariantList::iterator it = variantVector.begin();
+        VariantVector variantVector = *static_cast<VariantVector *>(data);
+        for (VariantVector::iterator it = variantVector.begin();
                 it != variantVector.end(); ++it) {
             vector.push_back((*it).toString());
         }
@@ -581,13 +581,13 @@ const std::vector<std::string> Variant::toStringVector() const
  *
  * @return The variant vector representation of this variant
  */
-const VariantList Variant::toVariantVector() const
+const VariantVector Variant::toVariantVector() const
 {
-    VariantList vector;
+    VariantVector vector;
 
     switch (type) {
     case VARIANTVECTOR:
-        return *static_cast<VariantList *>(data);
+        return *static_cast<VariantVector *>(data);
     case STRINGVECTOR:
     {
         std::vector<std::string> stringVector = *static_cast<std::vector<
@@ -827,7 +827,7 @@ void Variant::operator<<(BinaryStream &stream)
         stream.read(reinterpret_cast<char *>(&count), sizeof(count));
 
         if (count > 0) {
-            VariantList vector;
+            VariantVector vector;
 
             for (auto i = 0; i < count; i++) {
 
@@ -1080,7 +1080,7 @@ T Variant::numericCast() const
  * @param variant A variant object
  * @return The original variant
  */
-VariantList &VariantList::operator<<(const Variant &variant)
+VariantVector &VariantVector::operator<<(const Variant &variant)
 {
     // Add to collection
     push_back(variant);
@@ -1095,12 +1095,12 @@ VariantList &VariantList::operator<<(const Variant &variant)
  *
  * @return Variant the return variant
  */
-const Variant VariantList::toVariant()
+const Variant VariantVector::toVariant()
 {
     return Variant(*this);
 }
 
-void VariantList::operator<<(BinaryStream &stream)
+void VariantVector::operator<<(BinaryStream &stream)
 {
     Variant variant;
     long count = 0;
@@ -1147,7 +1147,7 @@ void VariantList::operator<<(BinaryStream &stream)
     }
 }
 
-void VariantList::operator>>(BinaryStream &stream)
+void VariantVector::operator>>(BinaryStream &stream)
 {
 
     // Write number of elements to the stream

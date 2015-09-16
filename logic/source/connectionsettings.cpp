@@ -195,7 +195,7 @@ std::vector<ConnectionSettings *> ConnectionSettings::loadBinary(
 {
     std::vector<ConnectionSettings *> connectionList;
     ConnectionSettings *connectionSettings;
-    VariantList settings;
+    VariantVector settings;
     int size;
 
     BinaryStream stream;
@@ -360,7 +360,7 @@ void ConnectionSettings::saveBinary(std::vector<ConnectionSettings *> &settings,
 
         Settings settings = (*it)->settings;
 
-        VariantList variantList;
+        VariantVector variantList;
         for (auto mit = settings.begin(); mit != settings.end(); ++mit) {
             variantList.push_back(mit->first);
             variantList.push_back(mit->second);
@@ -369,7 +369,7 @@ void ConnectionSettings::saveBinary(std::vector<ConnectionSettings *> &settings,
         // Write start of list marker. This is so that we know when we're out of
         // variants and don't end up with an extra blank one at the end (because
         // a blank variant is valid so there is no way to tell if it should be
-        // there or not unless we make it a fatal error in the VariantList
+        // there or not unless we make it a fatal error in the VariantVector
         // class)
         stream.write("SOL", 3);
         variantList >> stream;
@@ -395,7 +395,7 @@ void ConnectionSettings::saveJson(std::vector<ConnectionSettings *> &settings,
     #endif
 }
 
-void ConnectionSettings::operator<<(const VariantList &value)
+void ConnectionSettings::operator<<(const VariantVector &value)
 {
     if (value.size() % 2 == 1) {
         // We've been passed corrupt data!

@@ -11,11 +11,11 @@ public:
     SmartObjectTester(SmartObject *parent = 0);
     static bool contains(SmartObjectTester *value);
     static void reset();
-    void queueData(int id, const VariantList &arguments);
-    void processQueueItem(int id, VariantList arguments);
+    void queueData(int id, const VariantVector &arguments);
+    void processQueueItem(int id, VariantVector arguments);
     ~SmartObjectTester();
 
-    std::map<int, VariantList > data;
+    std::map<int, VariantVector> data;
     static std::vector<SmartObjectTester *> objects;
 };
 

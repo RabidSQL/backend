@@ -97,7 +97,7 @@ TEST(TestDatabaseConnectionManager, getDatabase) {
     std::string uuid = manager->reserveDatabaseConnection(0, receiver);
 
     manager->call(uuid, Variant("uid"), QueryEvent::LIST_DATABASES,
-        VariantList() << "test");
+        VariantVector() << "test");
 
     // Give the thread enough time to startup before we check for it
     std::this_thread::sleep_for(std::chrono::milliseconds(30));

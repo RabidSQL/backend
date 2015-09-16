@@ -231,7 +231,7 @@ void SmartObject::disconnectQueue(const SmartObject *receiver, int id)
  * @param arguments The arguments to pass
  * @return void
  */
-void SmartObject::queueData(int id, const VariantList &arguments)
+void SmartObject::queueData(int id, const VariantVector &arguments)
 {
     // Find all of the connected functions matching this id
     auto its = connectedObjects.equal_range(id);
@@ -293,7 +293,7 @@ void SmartObject::processQueue()
  * @param args Any applicable arguments
  * @return void
  */
-void SmartObject::processQueueItem(int, VariantList)
+void SmartObject::processQueueItem(int, VariantVector)
 {
     #ifdef DEBUG
     rDebug << "Unimplemented SmartObject::processData is receieving data! T_T";
@@ -339,7 +339,7 @@ SmartObject::~SmartObject()
  *
  * @return void
  */
-SmartObject::Data::Data(int id, const VariantList &arguments)
+SmartObject::Data::Data(int id, const VariantVector &arguments)
 {
     this->id = id;
     this->arguments = arguments;

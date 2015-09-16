@@ -74,13 +74,13 @@ struct QueryResult {
     QueryEvent event;
     QueryError error = QueryError();
     std::list<std::string> columns = std::list<std::string>();
-    std::list<VariantList > rows = std::list<VariantList >();
+    std::list<VariantVector> rows = std::list<VariantVector>();
 };
 
 struct QueryCommand {
     Variant uid;
     QueryEvent::type event;
-    VariantList arguments;
+    VariantVector arguments;
 };
 
 // std::fstream "aliases" so different formats can easily be detected

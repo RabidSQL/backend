@@ -63,7 +63,7 @@ TEST_F(TestSmartObject, SingleThreadCommunication) {
     emitter.connectQueue(1, &receiver);
 
     // Send data
-    emitter.queueData(1, VariantList() << "test");
+    emitter.queueData(1, VariantVector() << "test");
 
     // Process queue
     Application::processEvents();
