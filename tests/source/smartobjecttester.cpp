@@ -5,6 +5,7 @@ namespace RabidSQL {
 // This class is used for testing smart object destruction. Because the
 // Application deals with some SmartObject pointers, this is necessary
 // both for testing Application functionality and SmartObject functionality.
+// It is also used for testing the database connection manager data processing
 
 /**
  *
