@@ -332,7 +332,14 @@ SmartObject::~SmartObject()
     }
 }
 
-SmartObject::Data::Data(int id, VariantList arguments)
+/**
+ *
+ * Initializes a Data object. This just creates a class with the provided
+ * queue id and argument list.
+ *
+ * @return void
+ */
+SmartObject::Data::Data(int id, const VariantList &arguments)
 {
     this->id = id;
     this->arguments = arguments;

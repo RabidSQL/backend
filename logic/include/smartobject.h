@@ -38,7 +38,7 @@ private:
 
     class Data {
     public:
-        Data(int id, VariantList arguments);
+        Data(int id, const VariantList &arguments);
         int id;
         VariantList arguments;
     };
