@@ -22,6 +22,18 @@ protected:
     std::string filename;
 };
 
+// Tests converting a string to a variant vector
+TEST_F(TestVariant, ConvertStringVariantToVariantVector) {
+    Variant value("test");
+    EXPECT_EQ(value, value.toVariantVector());
+}
+
+// Tests converting a string to a string vector
+TEST_F(TestVariant, ConvertStringVariantToStringVector) {
+    Variant value("test");
+    EXPECT_EQ(value, value.toStringVector());
+}
+
 // Tests that the Variant::operator== method works for int-int comparison
 TEST_F(TestVariant, OperatorEQIntInt) {
     Variant v1(124);

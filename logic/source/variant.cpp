@@ -3,7 +3,6 @@
 #include "structs.h"
 
 #include <cmath>
-#include <iostream>
 
 namespace RabidSQL {
 
@@ -551,7 +550,6 @@ const std::string Variant::toString() const
 const std::vector<std::string> Variant::toStringVector() const
 {
     std::vector<std::string> vector;
-    int index = 0;
 
     switch (type) {
     case STRINGVECTOR:
@@ -561,14 +559,14 @@ const std::vector<std::string> Variant::toStringVector() const
         VariantList variantVector = *static_cast<VariantList *>(data);
         for (VariantList::iterator it = variantVector.begin();
                 it != variantVector.end(); ++it) {
-            vector[index++] = (*it).toString();
+            vector.push_back((*it).toString());
         }
         break;
     }
     case NONE:
         break;
     default:
-        vector[0] = toString();
+        vector.push_back(toString());
         break;
     }
 
@@ -603,7 +601,7 @@ const VariantList Variant::toVariantVector() const
     case NONE:
         break;
     default:
-        vector[0] = *this;
+        vector.push_back(*this);
         break;
     }
 
