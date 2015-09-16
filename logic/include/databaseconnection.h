@@ -16,7 +16,7 @@ class DatabaseConnection: virtual public Thread
 {
     friend class DatabaseConnectionManager;
 public:
-    static const int EXECUTED = 0x1;
+    static const int EXECUTED;
 
     DatabaseConnection(ConnectionSettings *settings);
     DatabaseConnection(DatabaseConnection *mainConnection,
