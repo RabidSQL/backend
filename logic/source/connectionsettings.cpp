@@ -1,6 +1,7 @@
 #include "app.h"
 #include "application.h"
 #include "connectionsettings.h"
+#include "filestream.h"
 #include "structs.h"
 #include "uuid.h"
 
@@ -201,49 +202,25 @@ std::vector<ConnectionSettings *> ConnectionSettings::loadBinary(
     BinaryStream stream;
 
     // Open the file
-    stream.open(filename, std::ios::binary | std::ios::in);
-
-    if (!stream.is_open()) {
+    if (!stream.open(filename, std::ios::in)) {
 
         // Failed to open stream
         return connectionList;
     }
 
-    if (!stream.eof()) {
-
-        char format[7];
-        // Check format
-        stream.read(format, 6);
-
-        // Ensure null-termination
-        format[6] = 0;
-
-        if (std::string(format) != "RSQAF0") {
-
-            // This file is improperly formatted
-            return connectionList;
-        }
-    }
-
     // Read file
     while (!stream.eof()) {
 
-        char marker[4];
-
-        // Check for marker
-        stream.read(marker, 3);
-
-        // Ensure null-termination
-        marker[3] = 0;
-
-        if (std::string(marker) != "SOL" || stream.eof()) {
+        if (!stream.expectMark()) {
 
             // Stop reading
             break;
         }
 
         // Read a list of variants
-        settings << stream;
+        Variant settingsContainer;
+        stream >> settingsContainer;
+        settings = settingsContainer.toVariantVector();
 
         // Ensure there are an even number of elements (key, value)
         size = settings.size();
@@ -354,8 +331,6 @@ void ConnectionSettings::saveBinary(std::vector<ConnectionSettings *> &settings,
     // Open the file
     stream.open(filename, std::ios::binary | std::ios::out);
 
-    stream.write("RSQAF0", 6);
-
     for (auto it = settings.begin(); it != settings.end(); ++it) {
 
         Settings settings = (*it)->settings;
@@ -371,8 +346,11 @@ void ConnectionSettings::saveBinary(std::vector<ConnectionSettings *> &settings,
         // a blank variant is valid so there is no way to tell if it should be
         // there or not unless we make it a fatal error in the VariantVector
         // class)
-        stream.write("SOL", 3);
-        variantList >> stream;
+        stream.mark();
+
+        // Write these settings to the stream
+        Variant variant(variantList);
+        stream << variant;
     }
 
     // Close file

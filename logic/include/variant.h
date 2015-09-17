@@ -13,6 +13,9 @@ class JsonStream;
 class VariantVector;
 class Variant
 {
+    friend class FileStream;
+    friend class BinaryStream;
+    friend class JsonStream;
 public:
     Variant();
     Variant(const std::nullptr_t &value);
@@ -51,14 +54,8 @@ public:
     bool operator<(const Variant &value) const;
     bool operator>=(const Variant &value) const;
     bool operator<=(const Variant &value) const;
-    void operator<<(JsonStream &value);
-    void operator<<(BinaryStream &value);
-    void operator>>(JsonStream &value);
-    void operator>>(BinaryStream &value);
 
 private:
-    std::string readString(BinaryStream &stream);
-
     template<typename T>
     T numericCast() const;
 
@@ -88,10 +85,6 @@ class VariantVector : public std::vector<Variant> {
 
 public:
     VariantVector &operator<<(const Variant &value);
-    void operator<<(JsonStream &value);
-    void operator<<(BinaryStream &value);
-    void operator>>(JsonStream &value);
-    void operator>>(BinaryStream &value);
     const Variant toVariant();
 };
 

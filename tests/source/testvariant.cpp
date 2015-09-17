@@ -1,8 +1,6 @@
-#include "structs.h"
+#include "filestream.h"
 #include "variant.h"
 #include "gtest/gtest.h"
-
-#define VARIANT_TEMP_FILENAME "/tmp/rabidsql-test-variant"
 
 namespace RabidSQL {
 
@@ -10,7 +8,7 @@ class TestVariant : public ::testing::Test {
 protected:
     void SetUp()
     {
-        filename = "/tmp/rabidsql-test-connection-settings";
+        filename = "/tmp/rabidsql-test-variant";
     }
 
     void TearDown()
@@ -287,12 +285,12 @@ TEST_F(TestVariant, OperatorLTFloatString) {
     BinaryStream stream; \
     T value = V; \
     Variant variant(value); \
-    stream.open(filename, std::ios::binary | std::ios::out); \
-    variant >> stream; \
+    stream.open(filename, std::ios::out); \
+    stream << variant; \
     stream.close(); \
     variant = "a value that must not conflict with the tests"; \
-    stream.open(filename, std::ios::binary | std::ios::in); \
-    variant << stream; \
+    stream.open(filename, std::ios::in); \
+    stream >> variant; \
     stream.close(); \
     EXPECT_EQ(variant, value); \
     char tc; \
@@ -385,29 +383,29 @@ TEST_F(TestVariant, FileIOBinaryIOMultipleTypes) {
     Variant variant3(value3);
 
     // Open stream for writing
-    stream.open(VARIANT_TEMP_FILENAME, std::ios::binary | std::ios::out);
+    stream.open(filename, std::ios::out);
 
     // Write variants
-    variant1 >> stream;
-    variant2 >> stream;
-    variant3 >> stream;
+    stream << variant1;
+    stream << variant2;
+    stream << variant3;
 
     // Close stream
     stream.close();
 
     // Open stream for reading
-    stream.open(VARIANT_TEMP_FILENAME, std::ios::binary | std::ios::in);
+    stream.open(filename, std::ios::in);
 
     // Initialize a final variant for storage of data read from the stream
     Variant variant("a value that must not conflict with the tests");
 
-    variant << stream;
+    stream >> variant;
     EXPECT_EQ(variant, value1);
 
-    variant << stream;
+    stream >> variant;
     EXPECT_EQ(variant, value2);
 
-    variant << stream;
+    stream >> variant;
     EXPECT_EQ(variant, value3);
 
     // Lets make sure this was all the data. We need to read again to set the

@@ -31,6 +31,8 @@ set(LOGIC_SOURCE_FILES
     include/threadlocal.h
     include/variant.h
     include/uuid.h
+    source/filestream.cpp
+    include/filestream.h
 )
 
 add_library(${PROJECT_NAME} STATIC ${LOGIC_SOURCE_FILES})

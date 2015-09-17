@@ -3,7 +3,6 @@
 
 #include "variant.h"
 
-#include <fstream>
 #include <list>
 
 namespace RabidSQL {
@@ -82,10 +81,6 @@ struct QueryCommand {
     QueryEvent::type event;
     VariantVector arguments;
 };
-
-// std::fstream "aliases" so different formats can easily be detected
-class JsonStream : public std::fstream {};
-class BinaryStream : public std::fstream {};
 
 } // namespace RabidSQL
 
