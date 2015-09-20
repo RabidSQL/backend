@@ -2,6 +2,7 @@
 #include "uuid.h"
 #include "gtest/gtest.h"
 
+#include <algorithm>
 
 namespace RabidSQL {
 

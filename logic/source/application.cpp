@@ -1,6 +1,8 @@
 #include "application.h"
 #include "smartobject.h"
 
+#include <algorithm>
+
 namespace RabidSQL {
 
 Application *Application::instance = nullptr;

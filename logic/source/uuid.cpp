@@ -1,5 +1,7 @@
 #include "uuid.h"
 
+#include <cstring>
+
 namespace RabidSQL {
 
 /**

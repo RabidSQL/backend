@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.2.2)
 project(Logic)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -stdlib=libc++")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -std=c++0x")
 include_directories(${PROJECT_NAME} PUBLIC
     include/
     ../

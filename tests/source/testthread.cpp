@@ -1,6 +1,8 @@
 #include "thread.h"
 #include "gtest/gtest.h"
 
+#include <algorithm>
+
 namespace RabidSQL {
 
 class TestThreader : virtual public Thread

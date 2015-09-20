@@ -1,6 +1,7 @@
 #ifndef RABIDSQL_UUID_H
 #define RABIDSQL_UUID_H
 
+#include <mutex>
 #include <random>
 #include <string>
 

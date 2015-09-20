@@ -3,6 +3,7 @@
 #include "variant.h"
 #include "structs.h"
 
+#include <algorithm>
 #include <cmath>
 
 namespace RabidSQL {

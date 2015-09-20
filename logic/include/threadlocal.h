@@ -3,6 +3,7 @@
 
 #include "app.h"
 #include <map>
+#include <mutex>
 #include <thread>
 
 namespace RabidSQL {

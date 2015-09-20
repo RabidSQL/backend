@@ -1,5 +1,7 @@
 #include "smartobjecttester.h"
 
+#include <algorithm>
+
 namespace RabidSQL {
 
 // This class is used for testing smart object destruction. Because the

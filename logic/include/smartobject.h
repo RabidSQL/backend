@@ -2,6 +2,7 @@
 #define RABIDSQL_RSQLOBJECT_H
 
 #include <map>
+#include <mutex>
 #include <queue>
 #include <vector>
 #include <string>
