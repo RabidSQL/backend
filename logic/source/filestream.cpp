@@ -263,6 +263,29 @@ FileStream &BinaryStream::operator>>(Variant &value)
                 value = vector;
             }
             break;
+        case Variant::VARIANTMAP:
+            // Get number of elements
+            read(reinterpret_cast<char *>(&count), sizeof(count));
+
+            if (count > 0) {
+                VariantMap map;
+
+                for (auto i = 0; i < count; i++) {
+
+                    Variant key;
+                    Variant value;
+
+                    // Read from stream
+                    *this >> key;
+                    *this >> value;
+
+                    // Read a string and push it into the vector
+                    map[key.toString()] = value;
+                }
+
+                value = map;
+            }
+            break;
         case Variant::LONG:
         {
             long data = 0;
@@ -306,6 +329,14 @@ FileStream &BinaryStream::operator>>(Variant &value)
         case Variant::USHORT:
         {
             unsigned short data = 0;
+            read(reinterpret_cast<char *>(&data), sizeof(data));
+
+            value = data;
+            break;
+        }
+        case Variant::BOOL:
+        {
+            bool data = 0;
             read(reinterpret_cast<char *>(&data), sizeof(data));
 
             value = data;
@@ -387,6 +418,20 @@ FileStream &BinaryStream::operator<<(const Variant &value)
             }
             break;
         }
+        case Variant::VARIANTMAP:
+        {
+            auto map(value.toVariantMap());
+            auto count = map.size();
+
+            write(reinterpret_cast<char *>(&count), sizeof(count));
+            if (count > 0) {
+                for (auto it = map.cbegin(); it != map.cend(); ++it) {
+                    *this << Variant(it->first);
+                    *this << it->second;
+                }
+            }
+            break;
+        }
         case Variant::QUERYRESULT:
             #ifdef DEBUG
             rDebug << "Attempting to write QueryResult to stream. WARNING: This"
@@ -426,6 +471,12 @@ FileStream &BinaryStream::operator<<(const Variant &value)
         case Variant::USHORT:
         {
             auto data = value.toUShort();
+            write((char *)(&data), sizeof(data));
+            break;
+        }
+        case Variant::BOOL:
+        {
+            auto data = value.toBool();
             write((char *)(&data), sizeof(data));
             break;
         }

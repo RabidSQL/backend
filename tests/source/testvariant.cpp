@@ -159,6 +159,32 @@ TEST_F(TestVariant, OperatorEQVariantVectorStringVector) {
     EXPECT_EQ(v1, v2);
 }
 
+// Tests that the Variant::operator== method returns true for variant vector-
+// variant map comparison (no data)
+TEST_F(TestVariant, OperatorEQVariantVectorVariantMap) {
+    Variant v1 = VariantVector();
+    Variant v2 = VariantMap();
+    EXPECT_EQ(v1, v2);
+}
+
+// Tests that the Variant::operator== method returns true for variant map-
+// variant map comparison (shuffled data)
+TEST_F(TestVariant, OperatorEQShuffledVariantMap) {
+    VariantMap m1;
+    m1["abc"] = "123";
+    m1["def"] = "456";
+    m1["ghi"] = "789";
+    m1["jkl"] = "012";
+
+    VariantMap m2;
+    m2["def"] = "456";
+    m2["jkl"] = "012";
+    m2["abc"] = "123";
+    m2["ghi"] = "789";
+
+    EXPECT_EQ(m1, m2);
+}
+
 // Tests that the Variant::operator== method works for float-double comparison
 TEST_F(TestVariant, OperatorNEFloatDouble) {
     Variant v1((float) 124.8);
@@ -198,6 +224,25 @@ TEST_F(TestVariant, OperatorNEnullptrBlankInt) {
     Variant v1;
     Variant v2(0);
     EXPECT_NE(v1, v2);
+}
+
+// Tests that the Variant::operator!= method returns true for variant vector-
+// variant map comparison (with data)
+TEST_F(TestVariant, OperatorNEVariantVectorVariantMap) {
+    {
+        Variant v1 = VariantVector() << "123";
+        VariantMap map;
+        map["123"] = "456";
+        Variant v2(map);
+        EXPECT_NE(v1, v2);
+    }
+    {
+        Variant v1 = VariantVector() << "123";
+        VariantMap map;
+        map["456"] = "123";
+        Variant v2(map);
+        EXPECT_NE(v1, v2);
+    }
 }
 
 // Tests that the Variant::operator> method works for float-double comparison
@@ -323,6 +368,17 @@ TEST_F(TestVariant, FileIOBinaryIOVariantVector) {
         << nullptr);
 }
 
+// Tests reading and writing of a single Variant map variant from and to
+// binary files
+TEST_F(TestVariant, FileIOBinaryIOVariantMap) {
+    VariantMap map;
+    map["int"] = 123;
+    map["bool"] = false;
+    map["string"] = "test";
+
+    TEST_BINARY_SINGLE(VariantMap, map);
+}
+
 // Tests reading and writing of a single long variant from and to binary files
 TEST_F(TestVariant, FileIOBinaryIOULong) {
     TEST_BINARY_SINGLE(unsigned long, 1);
@@ -351,6 +407,16 @@ TEST_F(TestVariant, FileIOBinaryIOUShort) {
 // Tests reading and writing of a single long variant from and to binary files
 TEST_F(TestVariant, FileIOBinaryIOShort) {
     TEST_BINARY_SINGLE(short, 1);
+}
+
+// Tests reading and writing of a single bool variant from and to binary files
+TEST_F(TestVariant, FileIOBinaryIOBool) {
+    {
+        TEST_BINARY_SINGLE(bool, true);
+    }
+    {
+        TEST_BINARY_SINGLE(bool, false);
+    }
 }
 
 // Tests reading and writing of a single long variant from and to binary files

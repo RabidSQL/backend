@@ -91,6 +91,18 @@ Variant::Variant(const VariantVector &value)
 }
 
 /**
+ * Initializes a variant based on a variant map
+ *
+ * @param value The value to copy
+ * @return void
+ */
+Variant::Variant(const VariantMap &value)
+{
+    type = VARIANTMAP;
+    data = new VariantMap(value);
+}
+
+/**
  * Initializes a variant based on a long
  *
  * @param value The value to copy
@@ -163,6 +175,18 @@ Variant::Variant(const unsigned short &value)
 }
 
 /**
+ * Initializes a variant based on a bool
+ *
+ * @param value The value to copy
+ * @return void
+ */
+Variant::Variant(const bool &value)
+{
+    type = BOOL;
+    data = new bool(value);
+}
+
+/**
  * Initializes a variant based on a double
  *
  * @param value The value to copy
@@ -228,6 +252,9 @@ void Variant::operator=(const Variant &value)
     case VARIANTVECTOR:
         data = new VariantVector(value.toVariantVector());
         break;
+    case VARIANTMAP:
+        data = new VariantMap(value.toVariantMap());
+        break;
     case LONG:
         data = new long(value.toLong());
         break;
@@ -245,6 +272,9 @@ void Variant::operator=(const Variant &value)
         break;
     case USHORT:
         data = new unsigned short(value.toLong());
+        break;
+    case BOOL:
+        data = new bool(value.toBool());
         break;
     case DOUBLE:
         data = new double(value.toDouble());
@@ -303,6 +333,8 @@ bool Variant::operator==(const Variant &value) const
         return toStringVector() == value.toStringVector();
     case VARIANTVECTOR:
         return toVariantVector() == value.toVariantVector();
+    case VARIANTMAP:
+        return toVariantMap() == value.toVariantMap();
     case DOUBLE:
         return toDouble() == value.toDouble();
     case FLOAT:
@@ -311,6 +343,8 @@ bool Variant::operator==(const Variant &value) const
         return toShort() == value.toShort();
     case USHORT:
         return toUShort() == value.toUShort();
+    case BOOL:
+        return toBool() == value.toBool();
     case INT:
         return toInt() == value.toInt();
     case UINT:
@@ -355,6 +389,8 @@ bool Variant::operator>(const Variant &value) const
         return toStringVector() > value.toStringVector();
     case VARIANTVECTOR:
         return toVariantVector() > value.toVariantVector();
+    case VARIANTMAP:
+        return toVariantMap() > value.toVariantMap();
     case DOUBLE:
         return toDouble() > value.toDouble();
     case FLOAT:
@@ -363,6 +399,8 @@ bool Variant::operator>(const Variant &value) const
         return toShort() > value.toShort();
     case USHORT:
         return toUShort() > value.toUShort();
+    case BOOL:
+        return toBool() > value.toBool();
     case INT:
         return toInt() > value.toInt();
     case UINT:
@@ -406,6 +444,8 @@ bool Variant::operator<(const Variant &value) const
         return toStringVector() < value.toStringVector();
     case VARIANTVECTOR:
         return toVariantVector() < value.toVariantVector();
+    case VARIANTMAP:
+        return toVariantMap() < value.toVariantMap();
     case DOUBLE:
         return toDouble() < value.toDouble();
     case FLOAT:
@@ -414,6 +454,8 @@ bool Variant::operator<(const Variant &value) const
         return toShort() < value.toShort();
     case USHORT:
         return toUShort() < value.toUShort();
+    case BOOL:
+        return toBool() < value.toBool();
     case INT:
         return toInt() < value.toInt();
     case UINT:
@@ -522,6 +564,12 @@ const std::string Variant::toString() const
     case USHORT:
         stream << *static_cast<unsigned short *>(data);
         return stream.str();
+    case BOOL:
+        if (toBool()) {
+            return "true";
+        } else {
+            return "false";
+        }
     case INT:
         stream << *static_cast<int *>(data);
         return stream.str();
@@ -535,6 +583,7 @@ const std::string Variant::toString() const
         stream << *static_cast<unsigned long *>(data);
         return stream.str();
     case NONE:
+    case VARIANTMAP:
     default:
         return "";
     }
@@ -565,6 +614,7 @@ const std::vector<std::string> Variant::toStringVector() const
         break;
     }
     case NONE:
+    case VARIANTMAP:
         break;
     default:
         vector.push_back(toString());
@@ -600,6 +650,7 @@ const VariantVector Variant::toVariantVector() const
         break;
     }
     case NONE:
+    case VARIANTMAP:
         break;
     default:
         vector.push_back(*this);
@@ -707,6 +758,35 @@ const unsigned short Variant::toUShort() const
 
 /**
  *
+ * Converts this variant to a bool. In the event if a vector, the first element
+ * will be returned.
+ *
+ * @return The unsigned short representation of this object
+ */
+const bool Variant::toBool() const
+{
+    if (type == BOOL) {
+
+        // Cast to bool
+        return numericCast<bool>();
+    }
+    auto data = toString();
+
+    // Convert to lowercase
+    std::transform(data.begin(), data.end(), data.begin(), ::tolower);
+
+    if (data == "true") {
+
+        return true;
+    } else {
+
+        // Return true if numeric cast evaluates to true
+        return numericCast<bool>();
+    }
+}
+
+/**
+ *
  * Converts this variant to a query result. If the stored type is not a query
  * result, returns an empty QueryResult
  *
@@ -720,6 +800,23 @@ const QueryResult &Variant::toQueryResult() const
     }
 
     return *new QueryResult();
+}
+
+/**
+ *
+ * Converts this variant to a variant map. If the stored type is not a variant
+ * map, returns an empty variant map
+ *
+ * @return The variant map representation of this object
+ */
+const VariantMap Variant::toVariantMap() const
+{
+    if (type == VARIANTMAP) {
+
+        return *static_cast<VariantMap *>(data);
+    }
+
+    return *new VariantMap();
 }
 
 /**
@@ -761,6 +858,17 @@ T Variant::numericCast() const
     default:
         return 0;
     }
+}
+
+/**
+ *
+ * Returns the type of this variant
+ *
+ * @return The type
+ */
+Variant::DataType Variant::getType()
+{
+    return type;
 }
 
 /**
