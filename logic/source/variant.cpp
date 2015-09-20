@@ -792,14 +792,14 @@ const bool Variant::toBool() const
  *
  * @return The QueryResult representation of this object
  */
-const QueryResult &Variant::toQueryResult() const
+const QueryResult Variant::toQueryResult() const
 {
     if (type == QUERYRESULT) {
 
         return *static_cast<QueryResult *>(data);
     }
 
-    return *new QueryResult();
+    return QueryResult();
 }
 
 /**
@@ -816,7 +816,7 @@ const VariantMap Variant::toVariantMap() const
         return *static_cast<VariantMap *>(data);
     }
 
-    return *new VariantMap();
+    return VariantMap();
 }
 
 /**

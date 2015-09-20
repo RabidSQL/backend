@@ -72,7 +72,7 @@ public:
     const float toFloat() const;
     const double toDouble() const;
     const bool isNull() const;
-    const QueryResult &toQueryResult() const;
+    const QueryResult toQueryResult() const;
     void operator=(const Variant &value);
     bool operator!=(const Variant &value) const;
     bool operator==(const Variant &value) const;
