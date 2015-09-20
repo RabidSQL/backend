@@ -143,6 +143,11 @@ void BinaryStream::mark()
     write("SOL", 3);
 }
 
+/**
+ * Reads a string from the open binary stream
+ *
+ * @return string
+ */
 std::string BinaryStream::readString()
 {
     long size = 0;
@@ -183,6 +188,13 @@ std::string BinaryStream::readString()
     return string;
 }
 
+/**
+ *
+ * Reads a variant from the open binary stream
+ *
+ * @param value The value to write to
+ * @return FileStream a reference to the current stream
+ */
 FileStream &BinaryStream::operator>>(Variant &value)
 {
     #ifdef DEBUG
@@ -370,6 +382,13 @@ FileStream &BinaryStream::operator>>(Variant &value)
     return *this;
 }
 
+/**
+ *
+ * Writes a variant to the open binary stream
+ *
+ * @param value The value to read from
+ * @return FileStream a reference to the current stream
+ */
 FileStream &BinaryStream::operator<<(const Variant &value)
 {
     // Write the data type
@@ -508,11 +527,25 @@ FileFormat::format JsonStream::getFormat()
     return FileFormat::JSON;
 }
 
+/**
+ *
+ * Writes a variant to the open json stream
+ *
+ * @param value The value to read from
+ * @return FileStream a reference to the current stream
+ */
 FileStream &JsonStream::operator<<(const Variant &value)
 {
     return *this;
 }
 
+/**
+ *
+ * Reads a variant from the open json stream
+ *
+ * @param value The value to write to
+ * @return FileStream a reference to the current stream
+ */
 FileStream &JsonStream::operator>>(Variant &value)
 {
     return *this;
