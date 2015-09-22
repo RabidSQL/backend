@@ -18,10 +18,20 @@ public:
 
 class JsonStream : virtual public FileStream {
 public:
+    static char ws[5];
+
     FileFormat::format getFormat();
+    std::string prepare(std::string string);
     virtual ~JsonStream() {}
     FileStream &operator<<(const Variant &value);
     FileStream &operator>>(Variant &value);
+private:
+    Variant readNumber();
+    Variant readString();
+    Variant readObject();
+    Variant readList();
+    char ignoreWhitespace();
+    Variant readVariant(char ch);
 };
 
 class BinaryStream : virtual public FileStream {

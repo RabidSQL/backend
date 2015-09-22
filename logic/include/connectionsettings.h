@@ -10,6 +10,7 @@
 
 namespace RabidSQL {
 
+class JsonStream;
 class ConnectionSettings : public SmartObject
 {
 public:
@@ -30,17 +31,18 @@ public:
     static std::vector<ConnectionSettings *> loadJson(std::string filename);
 
     static void save(std::vector<ConnectionSettings *> &settings,
-        FileFormat::format format, std::string filename, bool destroy);
-    static void saveBinary(std::vector<ConnectionSettings *> &settings,
-                           std::string filename);
-    static void saveJson(std::vector<ConnectionSettings *> &settings,
-                         std::string filename);
+        FileFormat::format format, std::string filename);
 
-    void operator<<(const VariantVector &value);
+    void operator<<(const VariantMap &value);
     void operator>>(VariantVector &value);
     ~ConnectionSettings();
 
 private:
+    VariantMap toVariantMap();
+    VariantVector getChildren(ConnectionSettings *parent);
+    static void reparentChildren(
+            std::vector<ConnectionSettings *> &connectionList,
+            ConnectionSettings *currentSettings);
     typedef std::map<std::string, Variant> Settings;
     Settings settings;
 };

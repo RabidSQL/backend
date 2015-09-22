@@ -80,7 +80,7 @@ public:
     bool operator<(const Variant &value) const;
     bool operator>=(const Variant &value) const;
     bool operator<=(const Variant &value) const;
-    DataType getType();
+    const DataType getType() const;
 
 private:
     template<typename T>

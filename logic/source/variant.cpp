@@ -566,7 +566,7 @@ const std::string Variant::toString() const
         stream << *static_cast<unsigned short *>(data);
         return stream.str();
     case BOOL:
-        if (toBool()) {
+        if (*static_cast<bool *>(data)) {
             return "true";
         } else {
             return "false";
@@ -867,7 +867,7 @@ T Variant::numericCast() const
  *
  * @return The type
  */
-Variant::DataType Variant::getType()
+const Variant::DataType Variant::getType() const
 {
     return type;
 }

@@ -486,5 +486,63 @@ TEST_F(TestVariant, FileIOBinaryIOMultipleTypes) {
     stream.close();
 }
 
+#define TEST_JSON_SINGLE(T, V) \
+    JsonStream stream; \
+    T value = V; \
+    Variant variant(value); \
+    stream.open(filename, std::ios::out); \
+    stream << variant; \
+    stream.close(); \
+    variant = "a value that must not conflict with the tests"; \
+    stream.open(filename, std::ios::in); \
+    stream >> variant; \
+    stream.close(); \
+    EXPECT_EQ(variant, value); \
+    char tc; \
+    EXPECT_FALSE(stream.get(tc)); \
+    EXPECT_TRUE(stream.eof());
+
+// Tests reading and writing of a single nullptr variant from and to binary files
+TEST_F(TestVariant, FileIOJsonIONull) {
+    TEST_JSON_SINGLE(std::nullptr_t, nullptr);
+}
+
+// Tests reading and writing of a single String variant from and to binary files
+TEST_F(TestVariant, FileIOJsonIOString) {
+    TEST_BINARY_SINGLE(std::string, "test");
+}
+
+// Tests reading and writing of a single String vector variant from and to
+// binary files
+TEST_F(TestVariant, FileIOJsonIOStringVector) {
+    std::vector<std::string> vector;
+    vector.push_back("value 1");
+    vector.push_back("value 2");
+    TEST_JSON_SINGLE(std::vector<std::string>, vector);
+}
+
+// Tests reading and writing of a single Variant vector variant from and to
+// binary files
+TEST_F(TestVariant, FileIOJsonIOVariantVector) {
+    TEST_JSON_SINGLE(VariantVector, VariantVector() << "test" << 123
+                                    << nullptr);
+}
+
+// Tests reading and writing of a single Variant map variant from and to
+// binary files
+TEST_F(TestVariant, FileIOJsonIOVariantMap) {
+    VariantMap map;
+    map["int"] = 123;
+    map["bool"] = false;
+    map["string"] = "test";
+
+    TEST_JSON_SINGLE(VariantMap, map);
+}
+
+// Tests reading and writing of a single long variant from and to binary files
+TEST_F(TestVariant, FileIOJsonIOULong) {
+    TEST_JSON_SINGLE(unsigned long, 1);
+}
+
 } // namespace RabidSQL
 

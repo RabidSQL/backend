@@ -1,6 +1,8 @@
 #include "app.h"
 #include "filestream.h"
 
+#include <cstring>
+
 namespace RabidSQL {
 
 /**
@@ -536,6 +538,88 @@ FileFormat::format JsonStream::getFormat()
  */
 FileStream &JsonStream::operator<<(const Variant &value)
 {
+    switch (value.type) {
+        case Variant::STRING:
+        {
+            *static_cast<std::fstream *>(this) << prepare(value.toString());
+            break;
+        }
+        case Variant::STRINGVECTOR:
+        case Variant::VARIANTVECTOR:
+        {
+            write("[", 1);
+
+            // Use variant vector for both string and variant since they will
+            // be stored the same
+            auto data = value.toVariantVector();
+
+            for (auto it = data.begin(); it != data.end(); ++it) {
+
+                if (it != data.begin()) {
+
+                    // Add a comma as there were preceding elements
+                    write(",", 1);
+                }
+
+                // Write element
+                *this << *it;
+            }
+
+            write("]", 1);
+            break;
+        }
+        case Variant::VARIANTMAP:
+        {
+            write("{", 1);
+
+            auto map(value.toVariantMap());
+
+            for (auto it = map.cbegin(); it != map.cend(); ++it) {
+
+                if (it != map.cbegin()) {
+
+                    // Add a comma as there were preceding elements
+                    write(",", 1);
+                }
+
+                // Write key. Convert to string
+                *this << Variant(it->first);
+
+                // Write separator
+                write(":", 1);
+
+                // Write value
+                *this << it->second;
+            }
+
+            write("}", 1);
+            break;
+        }
+        case Variant::DOUBLE:
+        case Variant::FLOAT:
+        case Variant::SHORT:
+        case Variant::USHORT:
+        case Variant::INT:
+        case Variant::UINT:
+        case Variant::LONG:
+        case Variant::ULONG:
+        {
+            *static_cast<std::fstream *>(this) << value.toString();
+            break;
+        }
+        case Variant::BOOL:
+            if (value.toBool()) {
+                *static_cast<std::fstream *>(this) << "true";
+            } else {
+                *static_cast<std::fstream *>(this) << "false";
+            }
+            break;
+        case Variant::NONE:
+        case Variant::QUERYRESULT:
+            *static_cast<std::fstream *>(this) << "null";
+            break;
+    }
+
     return *this;
 }
 
@@ -548,7 +632,389 @@ FileStream &JsonStream::operator<<(const Variant &value)
  */
 FileStream &JsonStream::operator>>(Variant &value)
 {
+    char ch = ignoreWhitespace();
+
+    value = readVariant(ch);
+
     return *this;
 }
 
+Variant JsonStream::readNumber()
+{
+    char ch;
+    bool decimal = false;
+    std::string buffer;
+
+    while (!eof()) {
+
+        // Read character
+        ch = 0;
+        read(&ch, 1);
+
+        if (ch == '-') {
+
+            if (buffer.size() > 0) {
+
+                // Not the first character
+                // @TODO: raise an error
+                return nullptr;
+            } else {
+
+                // Add to buffer
+                buffer.push_back('-');
+            }
+        } else if (ch == '.') {
+
+            // Get last character. There is always at least one character
+            // because the << operator requires 0-9 or -
+            ch = buffer.back();
+            decimal = true;
+
+            if (ch >= '0' && ch <= '9') {
+
+                // Add to buffer
+                buffer.push_back('.');
+            } else {
+
+                // Not a valid number
+                // @TODO: raise an error
+                return nullptr;
+            }
+        } else if (ch >= '0' && ch <= '9') {
+
+            // Add to buffer
+            buffer.push_back(ch);
+        } else {
+
+            // End of the number
+            // Rewind 1 byte
+            seekp(-1, std::ios_base::cur);
+
+            char lch = tolower(ch);
+            if (lch == 'n' || lch == 't' || lch == 'f') {
+
+                // Number is immediately followed by an n, t, or f. This will
+                // not be caught by the main stream reader, so we need to report
+                // it as an error here
+                // @TODO: raise an error
+                return nullptr;
+            }
+
+            // Valid number and all done processing!
+            if (decimal) {
+
+                // Convert to double
+                return std::stod(buffer);
+            } else {
+
+                // Convert to long
+                return std::stol(buffer);
+            }
+        }
+    }
+
+    return nullptr;
+}
+
+Variant JsonStream::readString()
+{
+    char ch;
+    std::string buffer;
+
+    while (!eof()) {
+
+        // Read character
+        ch = 0;
+        read(&ch, 1);
+
+        switch (ch) {
+            case '\\':
+
+                // Read next character
+                ch = 0;
+                read(&ch, 1);
+
+                // Un-escape certain special characters
+                switch (ch) {
+                    case 'b':
+                        buffer.push_back('\b');
+                        break;
+                    case 'f':
+                        buffer.push_back('\f');
+                        break;
+                    case 'n':
+                        buffer.push_back('\n');
+                        break;
+                    case 'r':
+                        buffer.push_back('\r');
+                        break;
+                    case 't':
+                        buffer.push_back('\t');
+                        break;
+                    case '"':
+                        buffer.push_back('"');
+                        break;
+                    case '\\':
+                        buffer.push_back('\\');
+                        break;
+                    case 'u':
+                    {
+                        char ch[5] = { 0 };
+                        read(ch, 4);
+
+                        // Ensure null termination
+                        ch[4] = 0;
+                        // decode this!
+                    }
+                    default:
+                        buffer.push_back('\\');
+                        buffer.push_back(ch);
+                        break;
+                }
+            case '"':
+
+                // All done!
+                return buffer;
+            default:
+
+                // Add to buffer;
+                buffer.push_back(ch);
+        }
+    }
+
+    return nullptr;
+}
+
+Variant JsonStream::readObject()
+{
+    VariantMap map;
+    char ch;
+
+    while (!eof()) {
+
+        ch = ignoreWhitespace();
+
+        switch (ch) {
+            case '}':
+
+                // end of object
+                return map;
+            case ',':
+
+                // keep processing
+                break;
+            case '"':
+            {
+
+                // Start of a key
+                auto key = readString();
+
+                // Get next character
+                ch = ignoreWhitespace();
+
+                if (ch != ':') {
+
+                    // Must be a colon (separator), or this is invalid
+                    return nullptr;
+                }
+
+                // Get next character
+                ch = ignoreWhitespace();
+
+                // Read the value and add to our map
+                map[key.toString()] = readVariant(ch);
+                break;
+            }
+            default:
+
+                // This is an invalid object
+                return nullptr;
+        }
+    }
+
+    return nullptr;
+}
+
+Variant JsonStream::readList()
+{
+    VariantVector list;
+    char ch;
+
+    while (!eof()) {
+
+        ch = ignoreWhitespace();
+
+        switch (ch) {
+            case ']':
+
+                // end of list
+                return list;
+            case ',':
+
+                // keep processing
+                continue;
+            default:
+                list.push_back(readVariant(ch));
+        }
+    }
+
+    return nullptr;
+}
+
+Variant JsonStream::readVariant(char ch)
+{
+    if (ch >= '0' && ch <= '9') {
+
+        // Set to 0 for easier access in the switch. We'll re-read this byte.
+        ch = '0';
+    }
+
+    switch (ch) {
+        case '"':
+
+            // string
+            return readString();
+        case '{':
+
+            // object
+            return readObject();
+        case '[':
+
+            // list
+            return readList();
+        case 'n':
+        case 'N':
+        {
+
+            // NULL value
+            char buffer[4] = { 0 };
+            read(buffer, 3);
+
+            // Ensure null termination
+            buffer[3] = 0;
+
+            if (strcasecmp(buffer, "ull") == 0) {
+
+                // Found null!
+                return Variant(nullptr);
+            }
+
+            // Invalid data
+            return nullptr;
+        }
+        case 't':
+        case 'T':
+        {
+
+            // TRUE value
+            char buffer[4] = { 0 };
+            read(buffer, 3);
+
+            // Ensure null termination
+            buffer[3] = 0;
+
+            if (strcasecmp(buffer, "rue") == 0) {
+
+                // Found true!
+                return Variant(true);
+            }
+
+            // Invalid data
+            return nullptr;
+        }
+        case 'f':
+        case 'F':
+        {
+
+            // FALSE value
+            char buffer[5] = { 0 };
+            read(buffer, 4);
+
+            // Ensure null termination
+            buffer[4] = 0;
+
+            if (strcasecmp(buffer, "alse") == 0) {
+
+                // Found false!
+                return Variant(false);
+            }
+
+            // Invalid data
+            return nullptr;
+        }
+        case '0':
+        case '-':
+
+            // Rewind 1 byte
+            seekp(-1, std::ios_base::cur);
+
+            // number
+            return readNumber();
+        default:
+
+            return nullptr;
+    }
+}
+
+char JsonStream::ignoreWhitespace()
+{
+    char ch;
+
+    while (!eof()) {
+
+        // Read byte
+        ch = 0;
+        read(&ch, 1);
+
+        if (strchr(ws, ch) != nullptr || ch == 0) {
+
+            // Found a whitespace character
+            continue;
+        }
+
+        return ch;
+    }
+
+    // Nothing found
+    return 0;
+}
+
+std::string JsonStream::prepare(std::string string)
+{
+    std::string buffer("\"");
+
+    for (auto it = string.begin(); it != string.end(); ++it) {
+        switch (*it) {
+            case '\b':
+                buffer.append("\\b");
+                break;
+            case '\f':
+                buffer.append("\\f");
+                break;
+            case '\n':
+                buffer.append("\\n");
+                break;
+            case '\r':
+                buffer.append("\\r");
+                break;
+            case '\t':
+                buffer.append("\\t");
+                break;
+            case '\"':
+                buffer.append("\\\"");
+                break;
+            case '\\':
+                buffer.append("\\\\");
+                break;
+            default:
+                buffer.append(1, *it);
+        }
+    }
+
+    buffer.append("\"");
+
+    return buffer;
+}
+
+char JsonStream::ws[] = { 0x20, 0x09, 0x0a, 0x0d };
 } // namespace RabidSQL

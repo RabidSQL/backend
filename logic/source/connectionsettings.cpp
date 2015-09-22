@@ -6,7 +6,6 @@
 #include "uuid.h"
 
 #include <fstream>
-#include <iostream>
 
 namespace RabidSQL {
 
@@ -154,20 +153,58 @@ std::vector<ConnectionSettings *> ConnectionSettings::load(
 {
     std::vector<ConnectionSettings *> connectionList;
     ConnectionSettings *connectionSettings;
-    Variant parent, uid;
+    FileStream *stream;
+    Variant data;
 
     switch (format) {
     case FileFormat::BINARY:
 
-        // Load from a binary file
-        connectionList = loadBinary(filename);
+        stream = new BinaryStream();
         break;
     case FileFormat::JSON:
 
-        // Load from a JSON file
-        connectionList = loadJson(filename);
+        stream = new JsonStream();
         break;
     }
+
+    // Open the file
+    if (!stream->open(filename, std::ios::in)) {
+
+        // Failed to open file
+        return connectionList;
+    }
+
+    // Load stream
+    *stream >> data;
+
+    if (data.getType() == Variant::VARIANTVECTOR) {
+
+        auto connections = data.toVariantVector();
+
+        for (auto it = connections.begin(); it != connections.end(); ++it) {
+
+            if (it->getType() == Variant::VARIANTMAP) {
+                // Initialize settings
+                connectionSettings = new ConnectionSettings();
+
+                // Load from map
+                *connectionSettings << it->toVariantMap();
+
+                // Add to collection
+                connectionList.push_back(connectionSettings);
+
+                // Reparent the children and add to the connectionList
+                // connection
+                reparentChildren(connectionList, connectionSettings);
+            }
+        }
+    }
+
+    // Close stream
+    stream->close();
+
+    // Free memory
+    delete stream;
 
     if (connectionList.size() == 0) {
 
@@ -176,9 +213,6 @@ std::vector<ConnectionSettings *> ConnectionSettings::load(
         connectionSettings->set("name", "Default");
         connectionSettings->set("type", MYSQL);
         connectionList.push_back(connectionSettings);
-    } else {
-
-        // @TODO: Configure tree hierarchy
     }
 
     return connectionList;
@@ -186,90 +220,41 @@ std::vector<ConnectionSettings *> ConnectionSettings::load(
 
 /**
  *
- * Loads all connection settings from a configuration file formatted as binary
+ * Recursively finds children in the connection list and re-parents them
  *
- * @param filename The filename to load
- * @return An array of connection settings pointers
+ * @return void
  */
-std::vector<ConnectionSettings *> ConnectionSettings::loadBinary(
-        std::string filename)
+void ConnectionSettings::reparentChildren(
+        std::vector<ConnectionSettings *> &connectionList,
+        ConnectionSettings *currentSettings)
 {
-    std::vector<ConnectionSettings *> connectionList;
-    ConnectionSettings *connectionSettings;
-    VariantVector settings;
-    int size;
+    if (!currentSettings->contains("children")) {
 
-    BinaryStream stream;
-
-    // Open the file
-    if (!stream.open(filename, std::ios::in)) {
-
-        // Failed to open stream
-        return connectionList;
+        // This connection has no children. Look no further.
+        return;
     }
 
-    // Read file
-    while (!stream.eof()) {
+    // Get children for the current connection settings
+    auto children = currentSettings->get("children").toVariantVector();
 
-        if (!stream.expectMark()) {
+    // Iterate collection
+    for (auto it = children.begin(); it != children.end(); ++it) {
 
-            // Stop reading
-            break;
-        }
+        // Initialize settings
+        auto connectionSettings = new ConnectionSettings();
 
-        // Read a list of variants
-        Variant settingsContainer;
-        stream >> settingsContainer;
-        settings = settingsContainer.toVariantVector();
+        // Load from map
+        *connectionSettings << it->toVariantMap();
 
-        // Ensure there are an even number of elements (key, value)
-        size = settings.size();
-        assert(size % 2 == 0);
+        // Set the parent for this connection to the correct parent
+        connectionSettings->setParent(currentSettings);
 
-        // The file is corrupt or there are no connections
-        if (size == 0 || size % 2 == 1) {
-
-            // Iterate to find any connections we've already created
-            for (auto it = connectionList.begin(); it != connectionList.end();
-                    ++it) {
-
-                // Free memory
-                delete *it;
-            }
-
-            // Erase settings from the list
-            connectionList.clear();
-
-            // Return our empty list
-            return connectionList;
-        }
-        // This is valid, lets load it into a settings object
-        connectionSettings = new ConnectionSettings();
-        *connectionSettings << settings;
-
+        // Add to collection
         connectionList.push_back(connectionSettings);
+
+        // Extract children
+        reparentChildren(connectionList, connectionSettings);
     }
-
-    // Close file
-    stream.close();
-
-    return connectionList;
-}
-
-/**
- *
- * Loads all connection settings from a configuration file formatted as JSON
- *
- * @param filename The filename to load
- * @return An array of connection settings pointers
- */
-std::vector<ConnectionSettings *> ConnectionSettings::loadJson(
-        std::string filename)
-{
-    #ifdef DEBUG
-    rDebug << "ConnectionSettings::loadJson not implemented!";
-    #endif
-    return std::vector<ConnectionSettings *>();
 }
 
 /**
@@ -280,113 +265,104 @@ std::vector<ConnectionSettings *> ConnectionSettings::loadJson(
  * @param settings An array of connection settings
  * @param format The file format to use
  * @param filename The filename to save to
- * @param destroy A boolean indicating whether or not to destroy the settings
- * after saving
  * @return void
  */
 void ConnectionSettings::save(
         std::vector<ConnectionSettings *> &settings, FileFormat::format format,
-        std::string filename, bool destroy)
+        std::string filename)
 {
+    VariantVector connections;
+    FileStream *stream;
+
+    for (auto it = settings.cbegin(); it != settings.cend(); ++it) {
+
+        auto connection = (*it);
+
+        if (connection->getParent() == nullptr) {
+
+            // Add to collection
+            connections.push_back(connection->toVariantMap());
+        }
+    }
 
     switch (format) {
         case FileFormat::BINARY:
 
-            // Load from a binary file
-            saveBinary(settings, filename);
+            stream = new BinaryStream();
             break;
         case FileFormat::JSON:
 
-            // Load from a JSON file
-            saveJson(settings, filename);
-            break;
+            stream = new JsonStream();
     }
 
-    if (destroy) {
+    // Open stream
+    stream->open(filename, std::ios::out);
 
-        for (auto it = settings.begin(); it != settings.end(); ++it) {
+    // Save connections
+    *stream << connections;
 
-            // Free memory
-            delete *it;
-        }
+    // Close stream
+    stream->close();
 
-        // Clear settings
-        settings.clear();
-    }
+    // Free memory
+    delete stream;
 }
 
-/**
- *
- * Saves connection settings given an array of settings.
- *
- * @param settings An array of connection settings
- * @param filename The filename to save to
- * @return void
- */
-void ConnectionSettings::saveBinary(std::vector<ConnectionSettings *> &settings,
-        std::string filename)
+VariantMap ConnectionSettings::toVariantMap()
 {
-    BinaryStream stream;
+    VariantMap map;
 
-    // Open the file
-    stream.open(filename, std::ios::binary | std::ios::out);
+    // Ensure UUID is generated already in the event this is a new
+    // connection
+    get("uuid");
 
     for (auto it = settings.begin(); it != settings.end(); ++it) {
 
-        Settings settings = (*it)->settings;
+        if (it->first == "parent") {
 
-        VariantVector variantList;
-        for (auto mit = settings.begin(); mit != settings.end(); ++mit) {
-            variantList.push_back(mit->first);
-            variantList.push_back(mit->second);
+            // Do not store parent
+            continue;
         }
 
-        // Write start of list marker. This is so that we know when we're out of
-        // variants and don't end up with an extra blank one at the end (because
-        // a blank variant is valid so there is no way to tell if it should be
-        // there or not unless we make it a fatal error in the VariantVector
-        // class)
-        stream.mark();
-
-        // Write these settings to the stream
-        Variant variant(variantList);
-        stream << variant;
+        // Add to variant map
+        map[it->first] = it->second;
     }
 
-    // Close file
-    stream.close();
-}
+    // Get children
+    auto children = getChildren(this);
 
-/**
- *
- * Saves connection settings given an array of settings.
- *
- * @param settings An array of connection settings
- * @param filename The filename to save to
- * @return void
- */
-void ConnectionSettings::saveJson(std::vector<ConnectionSettings *> &settings,
-                                    std::string filename)
-{
-    #ifdef DEBUG
-    rDebug << "ConnectionSettings::saveJson not implemented!";
-    #endif
-}
+    if (children.size() > 0) {
 
-void ConnectionSettings::operator<<(const VariantVector &value)
-{
-    if (value.size() % 2 == 1) {
-        // We've been passed corrupt data!
-        #ifdef DEBUG
-        rDebug << "Corrupt data (uneven list) passed to ConnectionSettings<<";
-        #endif
-        return;
+        // Add children
+        map["children"] = children;
     }
 
+    return map;
+}
+
+VariantVector ConnectionSettings::getChildren(ConnectionSettings *parent)
+{
+    VariantVector vector;
+
+    // Get children
+    auto children = SmartObject::getChildren();
+
+    for (auto it = children.begin(); it != children.end(); ++it) {
+
+        auto child = static_cast<ConnectionSettings *>(*it);
+
+        // Add to collection
+        vector.push_back(child->toVariantMap());
+    }
+
+    return vector;
+}
+
+void ConnectionSettings::operator<<(const VariantMap &value)
+{
     for (auto it = value.begin(); it != value.end(); ++it) {
-        std::string key = (*it).toString();
-        it++;
-        Variant value = *it;
+        std::string key = it->first;
+        Variant value = it->second;
 
         // Set the key-value pair
         set(key, value);
