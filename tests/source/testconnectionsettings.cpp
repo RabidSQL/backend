@@ -117,6 +117,58 @@ TEST_F(TestConnectionSettings, BinaryIOMultiConnections) {
     delete connection2;
 }
 
+// Tests reading and writing binary files (multiple connection with inheritance)
+TEST_F(TestConnectionSettings, BinaryIOMultiConnectionInheritance) {
+    std::vector<ConnectionSettings *> connections;
+    ConnectionSettings *connection1 = new ConnectionSettings();
+    ConnectionSettings *connection2 = new ConnectionSettings();
+
+    // Configure connection settings
+    connection1->set("type", ConnectionSettings::MYSQL);
+    connection1->set("hostname", "test");
+    connection1->set("port", 1234);
+
+    // Configure second connection settings
+    connection2->set("type", ConnectionSettings::MYSQL);
+    connection2->set("hostname", "test2");
+    connection2->set("port", 3306);
+
+    // Set parent
+    connection2->setParent(connection1);
+
+    // Add to collection
+    connections.push_back(connection1);
+    connections.push_back(connection2);
+
+    // Save to file
+    ConnectionSettings::save(connections, FileFormat::BINARY, filename);
+
+    // Free memory
+    delete connection1;
+
+    // Load it up
+    connections = ConnectionSettings::load(FileFormat::BINARY, filename);
+
+    // Make sure exactly 1 connection was returned
+    ASSERT_EQ(2, connections.size());
+
+    connection1 = connections[0];
+    connection2 = connections[1];
+
+    ASSERT_EQ(connection1, connection2->getParent());
+
+    ASSERT_EQ(ConnectionSettings::MYSQL, connection1->get("type").toUInt());
+    ASSERT_EQ("test", connection1->get("hostname").toString());
+    ASSERT_EQ(1234, connection1->get("port").toUInt());
+
+    ASSERT_EQ(ConnectionSettings::MYSQL, connection2->get("type").toUInt());
+    ASSERT_EQ("test2", connection2->get("hostname").toString());
+    ASSERT_EQ(3306, connection2->get("port").toUInt());
+
+    // Free memory
+    delete connection1;
+}
+
 // Tests reading and writing JSON files (single connection)
 TEST_F(TestConnectionSettings, JsonIOSingleConnection) {
     std::vector<ConnectionSettings *> connections;
