@@ -237,6 +237,9 @@ void ConnectionSettings::reparentChildren(
     // Get children for the current connection settings
     auto children = currentSettings->get("children").toVariantVector();
 
+    // Remove children vector
+    currentSettings->remove("children");
+
     // Iterate collection
     for (auto it = children.begin(); it != children.end(); ++it) {
 
