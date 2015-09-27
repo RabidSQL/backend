@@ -1,14 +1,14 @@
 #ifndef RABIDSQL_VARIANT_H
 #define RABIDSQL_VARIANT_H
 
+#include "nsenums.h"
+
 #include <map>
 #include <string>
 #include <sstream>
 #include <vector>
 
 namespace RabidSQL {
-
-#include "enums.h"
 
 struct QueryResult;
 class BinaryStream;

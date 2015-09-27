@@ -5,9 +5,9 @@
 
 #include <list>
 
-namespace RabidSQL {
+#include "nsenums.h"
 
-#include "enums.h"
+namespace RabidSQL {
 
 struct QueryError {
     bool isError = false;

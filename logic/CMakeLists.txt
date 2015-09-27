@@ -34,6 +34,7 @@ set(LOGIC_SOURCE_FILES
     source/filestream.cpp
     include/filestream.h
     include/enums.h
+    include/nsenums.h
 )
 
 add_library(${PROJECT_NAME} STATIC ${LOGIC_SOURCE_FILES})

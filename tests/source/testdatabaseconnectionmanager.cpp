@@ -2,12 +2,11 @@
 #include "connectionsettings.h"
 #include "databaseconnection.h"
 #include "databaseconnectionfactory.h"
+#include "nsenums.h"
 #include "smartobjecttester.h"
 #include "gtest/gtest.h"
 
 namespace RabidSQL {
-
-#include "enums.h"
 
 class TestDatabaseConnectionManager : public ::testing::Test {
 protected:
