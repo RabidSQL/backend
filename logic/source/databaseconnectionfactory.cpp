@@ -16,7 +16,7 @@ DatabaseConnection *DatabaseConnectionFactory::makeConnection(
         ConnectionSettings *settings)
 {
     switch (settings->getType()) {
-    case ConnectionSettings::MYSQL:
+    case MYSQL:
     default:
         return new MySQLDriver::DatabaseConnection(settings);
     }
@@ -44,10 +44,10 @@ DatabaseConnectionManager *DatabaseConnectionFactory::makeManager(
  * @return A QWidget to be injected into the settings form
  */
 std::vector<SettingsField> DatabaseConnectionFactory::getSettingsFields(
-        ConnectionSettings::type type)
+        ConnectionType type)
 {
     switch (type) {
-    case ConnectionSettings::MYSQL:
+    case MYSQL:
     default:
         return MySQLDriver::DatabaseConnection::getSettingsFields();
     }
@@ -59,12 +59,12 @@ std::vector<SettingsField> DatabaseConnectionFactory::getSettingsFields(
  *
  * @return The map
  */
-std::map<ConnectionSettings::type, std::string> DatabaseConnectionFactory::getTypeMap()
+std::map<ConnectionType, std::string> DatabaseConnectionFactory::getTypeMap()
 {
-    std::map<ConnectionSettings::type, std::string> map;
+    std::map<ConnectionType, std::string> map;
 
-    map[ConnectionSettings::INHERIT] = "Inherit";
-    map[ConnectionSettings::MYSQL] = "MySQL";
+    map[INHERIT] = "Inherit";
+    map[MYSQL] = "MySQL";
 
     return map;
 }

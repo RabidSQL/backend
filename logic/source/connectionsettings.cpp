@@ -149,7 +149,7 @@ void ConnectionSettings::remove(std::string key)
  * @return An array of connection settings pointers
  */
 std::vector<ConnectionSettings *> ConnectionSettings::load(
-        FileFormat::format format, std::string filename)
+        FileFormat format, std::string filename)
 {
     std::vector<ConnectionSettings *> connectionList;
     ConnectionSettings *connectionSettings;
@@ -157,11 +157,11 @@ std::vector<ConnectionSettings *> ConnectionSettings::load(
     Variant data;
 
     switch (format) {
-    case FileFormat::BINARY:
+    case BINARY:
 
         stream = new BinaryStream();
         break;
-    case FileFormat::JSON:
+    case JSON:
 
         stream = new JsonStream();
         break;
@@ -177,13 +177,13 @@ std::vector<ConnectionSettings *> ConnectionSettings::load(
     // Load stream
     *stream >> data;
 
-    if (data.getType() == Variant::VARIANTVECTOR) {
+    if (data.getType() == VARIANTVECTOR) {
 
         auto connections = data.toVariantVector();
 
         for (auto it = connections.begin(); it != connections.end(); ++it) {
 
-            if (it->getType() == Variant::VARIANTMAP) {
+            if (it->getType() == VARIANTMAP) {
                 // Initialize settings
                 connectionSettings = new ConnectionSettings();
 
@@ -271,7 +271,7 @@ void ConnectionSettings::reparentChildren(
  * @return void
  */
 void ConnectionSettings::save(
-        std::vector<ConnectionSettings *> &settings, FileFormat::format format,
+        std::vector<ConnectionSettings *> &settings, FileFormat format,
         std::string filename)
 {
     VariantVector connections;
@@ -378,9 +378,9 @@ void ConnectionSettings::operator<<(const VariantMap &value)
  *
  * @return type The type of connection these settings belong to
  */
-ConnectionSettings::type ConnectionSettings::getType()
+ConnectionType ConnectionSettings::getType()
 {
-    return static_cast<type>(get("type").toUInt());
+    return static_cast<ConnectionType>(get("type").toUInt());
 }
 
 /**

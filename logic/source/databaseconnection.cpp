@@ -104,7 +104,7 @@ void DatabaseConnection::run()
 
             // There's no commands right now. Mark this thread is not busy
             busy = false;
-            command.event = QueryEvent::NONE;
+            command.event = NO_EVENT;
         }
 
         // Unlock mutex
@@ -120,14 +120,14 @@ void DatabaseConnection::run()
         }
 
         switch (command.event) {
-        case QueryEvent::DISCONNECT:
+        case DISCONNECT:
             disconnect();
                 queueData(EXECUTED, VariantVector()
                                     << command.uid
                                     << command.event
                                     << result);
             break;
-        case QueryEvent::TEST_CONNECTION:
+        case TEST_CONNECTION:
             if (!result.error.isError) {
                 queueData(EXECUTED, VariantVector()
                                     << command.uid
@@ -135,44 +135,44 @@ void DatabaseConnection::run()
                                     << result);
             }
             break;
-        case QueryEvent::LIST_DATABASES:
+        case LIST_DATABASES:
             queueData(EXECUTED, VariantVector()
                                 << command.uid
                                 << command.event
                                 << getDatabases(command.arguments.front()
                                        .toStringVector()));
             break;
-        case QueryEvent::LIST_TABLES:
+        case LIST_TABLES:
             queueData(EXECUTED, VariantVector()
                                 << command.uid
                                 << command.event
                                 <<
                                 getTables(command.arguments.front().toString()));
             break;
-        case QueryEvent::EXECUTE_QUERY:
+        case EXECUTE_QUERY:
             queueData(EXECUTED, VariantVector()
                                 << command.uid
                                 << command.event
                                 << execute(command.arguments));
             break;
-        case QueryEvent::SELECT_DATABASE:
+        case SELECT_DATABASE:
             queueData(EXECUTED, VariantVector()
                                 << command.uid
                                 << command.event
                                 << selectDatabase(
                     command.arguments.front().toString()));
             break;
-        case QueryEvent::KILL_QUERY:
+        case KILL_QUERY:
             queueData(EXECUTED, VariantVector()
                                 << command.uid
                                 << command.event
                                 <<
                                 killQuery(command.arguments.front().toString()));
             break;
-        case QueryEvent::CLEAN_STATE:
+        case CLEAN_STATE:
             // @TODO: Finish up any current transactions if applicable
             break;
-        case QueryEvent::NONE:
+        case NO_EVENT:
             // Sleep for 100ms. We don't want to pin the cpu on nothingness
             std::this_thread::sleep_for(std::chrono::milliseconds(100));
             break;
@@ -200,7 +200,7 @@ void DatabaseConnection::run()
  * @param arguments The arguments to use
  * @return void
  */
-void DatabaseConnection::call(Variant uid, QueryEvent::type event,
+void DatabaseConnection::call(Variant uid, QueryEvent event,
                                VariantVector arguments)
 {
     QueryCommand command;

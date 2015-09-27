@@ -7,6 +7,8 @@
 
 namespace RabidSQL {
 
+#include "enums.h"
+
 struct QueryError {
     bool isError = false;
     Variant code = "";
@@ -20,49 +22,16 @@ struct SettingsField {
     int width = 100;
 };
 
-class MessageType {
-public:
-    typedef enum {
-        _NONE,
-        WARNING,
-        ERROR,
-        CRITICAL,
-    } type;
-};
-
 class Message {
 public:
-    MessageType::type type = MessageType::_NONE;
+    MessageType type = NO_MESSAGE;
     std::string label;
     Variant data;
 
     bool operator!() const
     {
-        return type == MessageType::_NONE;
+        return type == MessageType::NO_MESSAGE;
     }
-};
-
-class QueryEvent {
-public:
-    typedef enum {
-        NONE,
-        TEST_CONNECTION,
-        LIST_DATABASES,
-        LIST_TABLES,
-        EXECUTE_QUERY,
-        KILL_QUERY,
-        DISCONNECT,
-        CLEAN_STATE,
-        SELECT_DATABASE,
-    } type;
-};
-
-class FileFormat {
-public:
-    typedef enum {
-        JSON,
-        BINARY,
-    } format;
 };
 
 struct QueryResult {
@@ -78,7 +47,7 @@ struct QueryResult {
 
 struct QueryCommand {
     Variant uid;
-    QueryEvent::type event;
+    QueryEvent event;
     VariantVector arguments;
 };
 

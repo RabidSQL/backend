@@ -27,7 +27,7 @@ DatabaseConnectionManager::DatabaseConnectionManager(
     rDebug << "DatabaseConnectionManager::construct" << this;
     #endif
 
-    type = static_cast<ConnectionSettings::type>(
+    type = static_cast<ConnectionType>(
         settings->get("type").toUInt());
     this->mainConnection = mainConnection;
 
@@ -45,7 +45,7 @@ DatabaseConnectionManager::DatabaseConnectionManager(
  *
  * @return The type of sql connection
  */
-ConnectionSettings::type DatabaseConnectionManager::getType()
+ConnectionType DatabaseConnectionManager::getType()
 {
     return type;
 }
@@ -312,7 +312,7 @@ void DatabaseConnectionManager::releaseDatabaseConnection(std::string uuid)
  */
 void DatabaseConnectionManager::call(DatabaseConnection *connection,
                                      Variant uid,
-                                     QueryEvent::type event,
+                                     QueryEvent event,
                                      VariantVector arguments)
 {
     connection->call(uid, event, arguments);
@@ -329,7 +329,7 @@ void DatabaseConnectionManager::call(DatabaseConnection *connection,
  * @return void
  */
 void DatabaseConnectionManager::call(std::string uuid, Variant uid,
-                                     QueryEvent::type event,
+                                     QueryEvent event,
                                      VariantVector arguments)
 {
     for (Connections::const_iterator it = connections.begin();

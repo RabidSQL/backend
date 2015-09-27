@@ -12,8 +12,8 @@ class DatabaseConnectionFactory
 public:
     static DatabaseConnection *makeConnection(ConnectionSettings *settings);
     static DatabaseConnectionManager *makeManager(ConnectionSettings *settings);
-    static std::vector<SettingsField> getSettingsFields(ConnectionSettings::type type);
-    static std::map<ConnectionSettings::type, std::string> getTypeMap();
+    static std::vector<SettingsField> getSettingsFields(ConnectionType type);
+    static std::map<ConnectionType, std::string> getTypeMap();
 };
 
 } // namespace RabidSQL

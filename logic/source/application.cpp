@@ -59,8 +59,7 @@ void Application::processEvents()
  * string, but is a Variant so a StringList can also be used.
  * @return void
  */
-void Application::postMessage(MessageType::type type, std::string label,
-                              Variant data)
+void Application::postMessage(MessageType type, std::string label, Variant data)
 {
     auto app = Application::getInstance();
 

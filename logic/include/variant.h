@@ -8,6 +8,8 @@
 
 namespace RabidSQL {
 
+#include "enums.h"
+
 struct QueryResult;
 class BinaryStream;
 class JsonStream;
@@ -19,26 +21,6 @@ class Variant
     friend class BinaryStream;
     friend class JsonStream;
 public:
-    enum DataType {
-        NONE,
-        STRING,
-        STRINGVECTOR,
-        VARIANTVECTOR,
-        VARIANTMAP,
-        ULONG,
-        LONG,
-        UINT,
-        INT,
-        USHORT,
-        SHORT,
-        QUERYRESULT,
-        FLOAT,
-        DOUBLE,
-        BOOL,
-        _FIRST = NONE,
-        _LAST = BOOL,
-    };
-
     Variant();
     Variant(const std::nullptr_t &value);
     Variant(const Variant &value);

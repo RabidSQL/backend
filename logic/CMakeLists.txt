@@ -33,6 +33,7 @@ set(LOGIC_SOURCE_FILES
     include/uuid.h
     source/filestream.cpp
     include/filestream.h
+    include/enums.h
 )
 
 add_library(${PROJECT_NAME} STATIC ${LOGIC_SOURCE_FILES})

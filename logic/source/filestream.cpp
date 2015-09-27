@@ -103,9 +103,9 @@ bool BinaryStream::open(std::string filename, std::ios_base::openmode mode)
  *
  * @return FileFormat
  */
-FileFormat::format BinaryStream::getFormat()
+FileFormat BinaryStream::getFormat()
 {
-    return FileFormat::BINARY;
+    return BINARY;
 }
 
 /**
@@ -202,7 +202,7 @@ FileStream &BinaryStream::operator>>(Variant &value)
     #ifdef DEBUG
     rDebug << "READ";
     #endif
-    Variant::DataType type;
+    DataType type;
     long count = 0;
     int data = 0;
 
@@ -215,33 +215,33 @@ FileStream &BinaryStream::operator>>(Variant &value)
     // Get the type. Put it in a long first so we can error-check it
     read(reinterpret_cast<char *>(&data), sizeof(data));
 
-    assert(data >= Variant::_FIRST);
-    assert(data <= Variant::_LAST);
+    assert(data >= _FIRST);
+    assert(data <= _LAST);
 
-    if (data < Variant::_FIRST || data > Variant::_LAST) {
+    if (data < _FIRST || data > _LAST) {
 
         // Invalid data
         return *this;
     }
 
     // Convert data
-    type = static_cast<Variant::DataType>(data);
+    type = static_cast<DataType>(data);
 
-    if (type != Variant::NONE && eof()) {
+    if (type != NO_DATA && eof()) {
 
         // Invalid data
         return *this;
     }
 
     switch (type) {
-        case Variant::NONE:
+        case NO_DATA:
             // Variant is nullptr by default. We need not do any more work
             value = nullptr;
             break;
-        case Variant::STRING:
+        case STRING:
             value = readString();
             break;
-        case Variant::STRINGVECTOR:
+        case STRINGVECTOR:
             // Get number of strings
             read(reinterpret_cast<char *>(&count), sizeof(count));
             if (count > 0) {
@@ -256,7 +256,7 @@ FileStream &BinaryStream::operator>>(Variant &value)
                 value = vector;
             }
             break;
-        case Variant::VARIANTVECTOR:
+        case VARIANTVECTOR:
             // Get number of variants
             read(reinterpret_cast<char *>(&count), sizeof(count));
 
@@ -277,7 +277,7 @@ FileStream &BinaryStream::operator>>(Variant &value)
                 value = vector;
             }
             break;
-        case Variant::VARIANTMAP:
+        case VARIANTMAP:
             // Get number of elements
             read(reinterpret_cast<char *>(&count), sizeof(count));
 
@@ -300,7 +300,7 @@ FileStream &BinaryStream::operator>>(Variant &value)
                 value = map;
             }
             break;
-        case Variant::LONG:
+        case LONG:
         {
             long data = 0;
             read(reinterpret_cast<char *>(&data), sizeof(data));
@@ -308,7 +308,7 @@ FileStream &BinaryStream::operator>>(Variant &value)
             value = data;
             break;
         }
-        case Variant::ULONG:
+        case ULONG:
         {
             unsigned long data = 0;
             read(reinterpret_cast<char *>(&data), sizeof(data));
@@ -316,7 +316,7 @@ FileStream &BinaryStream::operator>>(Variant &value)
             value = data;
             break;
         }
-        case Variant::INT:
+        case INT:
         {
             int data = 0;
             read(reinterpret_cast<char *>(&data), sizeof(data));
@@ -324,7 +324,7 @@ FileStream &BinaryStream::operator>>(Variant &value)
             value = data;
             break;
         }
-        case Variant::UINT:
+        case UINT:
         {
             unsigned int data = 0;
             read(reinterpret_cast<char *>(&data), sizeof(data));
@@ -332,7 +332,7 @@ FileStream &BinaryStream::operator>>(Variant &value)
             value = data;
             break;
         }
-        case Variant::SHORT:
+        case SHORT:
         {
             short data = 0;
             read(reinterpret_cast<char *>(&data), sizeof(data));
@@ -340,7 +340,7 @@ FileStream &BinaryStream::operator>>(Variant &value)
             value = data;
             break;
         }
-        case Variant::USHORT:
+        case USHORT:
         {
             unsigned short data = 0;
             read(reinterpret_cast<char *>(&data), sizeof(data));
@@ -348,7 +348,7 @@ FileStream &BinaryStream::operator>>(Variant &value)
             value = data;
             break;
         }
-        case Variant::BOOL:
+        case BOOL:
         {
             bool data = 0;
             read(reinterpret_cast<char *>(&data), sizeof(data));
@@ -356,7 +356,7 @@ FileStream &BinaryStream::operator>>(Variant &value)
             value = data;
             break;
         }
-        case Variant::FLOAT:
+        case FLOAT:
         {
             float data = 0;
             read(reinterpret_cast<char *>(&data), sizeof(data));
@@ -364,7 +364,7 @@ FileStream &BinaryStream::operator>>(Variant &value)
             value = data;
             break;
         }
-        case Variant::DOUBLE:
+        case DOUBLE:
         {
             double data = 0;
             read(reinterpret_cast<char *>(&data), sizeof(data));
@@ -372,7 +372,7 @@ FileStream &BinaryStream::operator>>(Variant &value)
             value = data;
             break;
         }
-        case Variant::QUERYRESULT:
+        case QUERYRESULT:
             #ifdef DEBUG
             rDebug << "QueryResult binary loading not implemented!";
             #endif
@@ -398,10 +398,10 @@ FileStream &BinaryStream::operator<<(const Variant &value)
     write((char *)(&type), sizeof(type));
 
     switch (type) {
-        case Variant::NONE:
+        case NO_DATA:
             // Variant is nullptr by default. We need not do any more work
             break;
-        case Variant::STRING:
+        case STRING:
         {
             std::string data = value.toString();
             auto size = data.size();
@@ -409,7 +409,7 @@ FileStream &BinaryStream::operator<<(const Variant &value)
             write(data.c_str(), size);
             break;
         }
-        case Variant::STRINGVECTOR:
+        case STRINGVECTOR:
         {
             auto vector(value.toStringVector());
             auto count = vector.size();
@@ -425,7 +425,7 @@ FileStream &BinaryStream::operator<<(const Variant &value)
             }
             break;
         }
-        case Variant::VARIANTVECTOR:
+        case VARIANTVECTOR:
         {
             auto vector(value.toVariantVector());
             auto count = vector.size();
@@ -439,7 +439,7 @@ FileStream &BinaryStream::operator<<(const Variant &value)
             }
             break;
         }
-        case Variant::VARIANTMAP:
+        case VARIANTMAP:
         {
             auto map(value.toVariantMap());
             auto count = map.size();
@@ -453,61 +453,61 @@ FileStream &BinaryStream::operator<<(const Variant &value)
             }
             break;
         }
-        case Variant::QUERYRESULT:
+        case QUERYRESULT:
             #ifdef DEBUG
             rDebug << "Attempting to write QueryResult to stream. WARNING: This"
                 << "will write/return only an empty QueryResult structure!";
             #endif
             break;
-        case Variant::LONG:
+        case LONG:
         {
             auto data = value.toLong();
             write((char *)(&data), sizeof(data));
             break;
         }
-        case Variant::ULONG:
+        case ULONG:
         {
             auto data = value.toULong();
             write((char *)(&data), sizeof(data));
             break;
         }
-        case Variant::INT:
+        case INT:
         {
             auto data = value.toInt();
             write((char *)(&data), sizeof(data));
             break;
         }
-        case Variant::UINT:
+        case UINT:
         {
             auto data = value.toUInt();
             write((char *)(&data), sizeof(data));
             break;
         }
-        case Variant::SHORT:
+        case SHORT:
         {
             auto data = value.toShort();
             write((char *)(&data), sizeof(data));
             break;
         }
-        case Variant::USHORT:
+        case USHORT:
         {
             auto data = value.toUShort();
             write((char *)(&data), sizeof(data));
             break;
         }
-        case Variant::BOOL:
+        case BOOL:
         {
             auto data = value.toBool();
             write((char *)(&data), sizeof(data));
             break;
         }
-        case Variant::FLOAT:
+        case FLOAT:
         {
             auto data = value.toFloat();
             write((char *)(&data), sizeof(data));
             break;
         }
-        case Variant::DOUBLE:
+        case DOUBLE:
         {
             auto data = value.toDouble();
             write((char *)(&data), sizeof(data));
@@ -524,9 +524,9 @@ FileStream &BinaryStream::operator<<(const Variant &value)
  *
  * @return FileFormat
  */
-FileFormat::format JsonStream::getFormat()
+FileFormat JsonStream::getFormat()
 {
-    return FileFormat::JSON;
+    return JSON;
 }
 
 /**
@@ -539,13 +539,13 @@ FileFormat::format JsonStream::getFormat()
 FileStream &JsonStream::operator<<(const Variant &value)
 {
     switch (value.type) {
-        case Variant::STRING:
+        case STRING:
         {
             *static_cast<std::fstream *>(this) << prepare(value.toString());
             break;
         }
-        case Variant::STRINGVECTOR:
-        case Variant::VARIANTVECTOR:
+        case STRINGVECTOR:
+        case VARIANTVECTOR:
         {
             write("[", 1);
 
@@ -568,7 +568,7 @@ FileStream &JsonStream::operator<<(const Variant &value)
             write("]", 1);
             break;
         }
-        case Variant::VARIANTMAP:
+        case VARIANTMAP:
         {
             write("{", 1);
 
@@ -595,27 +595,27 @@ FileStream &JsonStream::operator<<(const Variant &value)
             write("}", 1);
             break;
         }
-        case Variant::DOUBLE:
-        case Variant::FLOAT:
-        case Variant::SHORT:
-        case Variant::USHORT:
-        case Variant::INT:
-        case Variant::UINT:
-        case Variant::LONG:
-        case Variant::ULONG:
+        case DOUBLE:
+        case FLOAT:
+        case SHORT:
+        case USHORT:
+        case INT:
+        case UINT:
+        case LONG:
+        case ULONG:
         {
             *static_cast<std::fstream *>(this) << value.toString();
             break;
         }
-        case Variant::BOOL:
+        case BOOL:
             if (value.toBool()) {
                 *static_cast<std::fstream *>(this) << "true";
             } else {
                 *static_cast<std::fstream *>(this) << "false";
             }
             break;
-        case Variant::NONE:
-        case Variant::QUERYRESULT:
+        case NO_DATA:
+        case QUERYRESULT:
             *static_cast<std::fstream *>(this) << "null";
             break;
     }

@@ -297,38 +297,38 @@ QueryResult DatabaseConnection::execute(VariantVector arguments)
 
             switch (sqlMetadata->getColumnType(i)) {
             default:
-            case DataType::UNKNOWN:
-            case DataType::CHAR:
-            case DataType::VARCHAR:
-            case DataType::LONGVARCHAR:
-            case DataType::BINARY:
-            case DataType::VARBINARY:
-            case DataType::LONGVARBINARY:
-            case DataType::TIMESTAMP:
-            case DataType::DATE:
-            case DataType::GEOMETRY:
-            case DataType::ENUM:
-            case DataType::SET:
-            case DataType::BIGINT:
-            case DataType::REAL:
-            case DataType::DOUBLE:
-            case DataType::DECIMAL:
+            case ::DataType::UNKNOWN:
+            case ::DataType::CHAR:
+            case ::DataType::VARCHAR:
+            case ::DataType::LONGVARCHAR:
+            case ::DataType::BINARY:
+            case ::DataType::VARBINARY:
+            case ::DataType::LONGVARBINARY:
+            case ::DataType::TIMESTAMP:
+            case ::DataType::DATE:
+            case ::DataType::GEOMETRY:
+            case ::DataType::ENUM:
+            case ::DataType::SET:
+            case ::DataType::BIGINT:
+            case ::DataType::REAL:
+            case ::DataType::DOUBLE:
+            case ::DataType::DECIMAL:
                 // @TODO: store binary, timestamp, date, & geometry differently
                 // Also numeric types (need to be added to Variant class)
                 column = sqlResult->getString(i).asStdString();
                 break;
-            case DataType::SQLNULL:
+            case ::DataType::SQLNULL:
                 column = Variant();
                 break;
-            case DataType::BIT:
-            case DataType::TINYINT:
-            case DataType::SMALLINT:
-            case DataType::MEDIUMINT:
-            case DataType::INTEGER:
-            case DataType::NUMERIC:
+            case ::DataType::BIT:
+            case ::DataType::TINYINT:
+            case ::DataType::SMALLINT:
+            case ::DataType::MEDIUMINT:
+            case ::DataType::INTEGER:
+            case ::DataType::NUMERIC:
                 column = sqlResult->getInt(i);
                 break;
-            case DataType::YEAR:
+            case ::DataType::YEAR:
                 column = static_cast<unsigned short>(sqlResult->getUInt(i));
                 break;
             }

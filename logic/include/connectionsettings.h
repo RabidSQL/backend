@@ -10,12 +10,12 @@
 
 namespace RabidSQL {
 
+#include "enums.h"
+
 class JsonStream;
 class ConnectionSettings : public SmartObject
 {
 public:
-    typedef enum { INHERIT, MYSQL } type;
-
     explicit ConnectionSettings(ConnectionSettings *parent = 0);
     ConnectionSettings *getParent();
     virtual void setParent(ConnectionSettings *parent);
@@ -23,15 +23,15 @@ public:
     bool contains(std::string key);
     Variant get(std::string key, bool bubble = true);
     void set(std::string key, const Variant value);
-    type getType();
+    ConnectionType getType();
 
-    static std::vector<ConnectionSettings *> load(FileFormat::format format,
+    static std::vector<ConnectionSettings *> load(FileFormat format,
         std::string filename);
     static std::vector<ConnectionSettings *> loadBinary(std::string filename);
     static std::vector<ConnectionSettings *> loadJson(std::string filename);
 
     static void save(std::vector<ConnectionSettings *> &settings,
-        FileFormat::format format, std::string filename);
+        FileFormat format, std::string filename);
 
     void operator<<(const VariantMap &value);
     void operator>>(VariantVector &value);

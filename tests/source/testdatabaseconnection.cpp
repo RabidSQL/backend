@@ -15,7 +15,7 @@ TEST(TestDatabaseConnection, ConnectionFailure) {
     QueryResult result;
 
     // Configure connection settings
-    settings.set("type", ConnectionSettings::MYSQL);
+    settings.set("type", MYSQL);
     settings.set("hostname", "fake-host.fake");
     settings.set("username", "fake-username");
     settings.set("port", 1234);
@@ -40,7 +40,7 @@ TEST(TestDatabaseConnection, ConnectionSuccess) {
     QueryResult result;
 
     // Configure connection settings
-    settings.set("type", ConnectionSettings::MYSQL);
+    settings.set("type", MYSQL);
     settings.set("hostname", "localhost");
     settings.set("username", "test");
 
@@ -63,7 +63,7 @@ TEST(TestDatabaseConnection, GetData) {
     QueryResult result;
 
     // Configure connection settings
-    settings.set("type", ConnectionSettings::MYSQL);
+    settings.set("type", MYSQL);
     settings.set("hostname", "localhost");
     settings.set("username", "test");
 

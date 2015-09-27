@@ -37,8 +37,8 @@ public:
 protected:
     DatabaseConnectionManager *manager;
 
-    void call(Variant uuid, QueryEvent::type event,
-              VariantVector arguments= VariantVector());
+    void call(Variant uuid, QueryEvent event,
+        VariantVector arguments = VariantVector());
     void run();
     DatabaseConnection *getDatabaseConnection(std::string uuid);
 

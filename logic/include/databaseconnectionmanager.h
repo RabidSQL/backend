@@ -19,25 +19,23 @@ public:
     std::string reserveDatabaseConnection(int expiry = 0,
                                           SmartObject *receiver = nullptr);
     void releaseDatabaseConnection(std::string uuid);
-    void call(std::string uuid, Variant uid,
-              QueryEvent::type event,
-              VariantVector arguments= VariantVector());
+    void call(std::string uuid, Variant uid, QueryEvent event,
+        VariantVector arguments= VariantVector());
     void killQuery(std::string uuid);
-    ConnectionSettings::type getType();
+    ConnectionType getType();
     ~DatabaseConnectionManager();
 
     void disconnected(const VariantVector &args);
 
 private:
 
-    void call(DatabaseConnection *connection, Variant uid,
-              QueryEvent::type event,
+    void call(DatabaseConnection *connection, Variant uid, QueryEvent event,
               VariantVector arguments= VariantVector());
     DatabaseConnection *getDatabaseConnection(std::string uuid);
     DatabaseConnection *reserveDatabaseConnectionObj(
             int timeout = 0, SmartObject *receiver = nullptr);
 
-    ConnectionSettings::type type;
+    ConnectionType type;
     DatabaseConnection *mainConnection;
 
     struct ConnectionRecord {

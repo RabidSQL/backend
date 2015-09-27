@@ -7,6 +7,8 @@
 
 namespace RabidSQL {
 
+#include "enums.h"
+
 class TestDatabaseConnectionManager : public ::testing::Test {
 protected:
     void TearDown()
@@ -23,7 +25,7 @@ TEST(TestDatabaseConnectionManager, reserveReleaseShutdown) {
     DatabaseConnectionManager *manager;
 
     // Configure connection settings
-    settings.set("type", ConnectionSettings::MYSQL);
+    settings.set("type", MYSQL);
     settings.set("hostname", "localhost");
     settings.set("username", "test");
     settings.set("max_connections", 5);
@@ -54,7 +56,7 @@ TEST(TestDatabaseConnectionManager, implicitShutdown) {
     DatabaseConnectionManager *manager;
 
     // Configure connection settings
-    settings.set("type", ConnectionSettings::MYSQL);
+    settings.set("type", MYSQL);
     settings.set("hostname", "localhost");
     settings.set("username", "test");
     settings.set("max_connections", 5);
@@ -82,7 +84,7 @@ TEST(TestDatabaseConnectionManager, getDatabase) {
     DatabaseConnectionManager *manager;
 
     // Configure connection settings
-    settings.set("type", ConnectionSettings::MYSQL);
+    settings.set("type", MYSQL);
     settings.set("hostname", "localhost");
     settings.set("username", "test");
     settings.set("max_connections", 5);
@@ -96,7 +98,7 @@ TEST(TestDatabaseConnectionManager, getDatabase) {
     // Reserve connection
     std::string uuid = manager->reserveDatabaseConnection(0, receiver);
 
-    manager->call(uuid, Variant("uid"), QueryEvent::LIST_DATABASES,
+    manager->call(uuid, Variant("uid"), LIST_DATABASES,
         VariantVector() << "test");
 
     // Give the thread enough time to startup before we check for it
@@ -121,7 +123,7 @@ TEST(TestDatabaseConnectionManager, getDatabase) {
 
     ASSERT_EQ(receiver->data.size(), 1);
     ASSERT_NE(receiver->data.find(DatabaseConnection::EXECUTED),
-              receiver->data.end());
+        receiver->data.end());
 
     // Get first result
     auto meta = receiver->data[DatabaseConnection::EXECUTED];
@@ -131,7 +133,7 @@ TEST(TestDatabaseConnectionManager, getDatabase) {
 
     ASSERT_EQ(meta.size(), 3);
     ASSERT_EQ(meta[0], "uid");
-    ASSERT_EQ(meta[1], QueryEvent::LIST_DATABASES);
+    ASSERT_EQ(meta[1], LIST_DATABASES);
 
     auto result = meta[2].toQueryResult();
 
@@ -152,7 +154,7 @@ TEST(TestDatabaseConnectionManager, getAllDatabases) {
     DatabaseConnectionManager *manager;
 
     // Configure connection settings
-    settings.set("type", ConnectionSettings::MYSQL);
+    settings.set("type", MYSQL);
     settings.set("hostname", "localhost");
     settings.set("username", "test");
     settings.set("max_connections", 5);
@@ -166,7 +168,7 @@ TEST(TestDatabaseConnectionManager, getAllDatabases) {
     // Reserve connection
     std::string uuid = manager->reserveDatabaseConnection(0, receiver);
 
-    manager->call(uuid, Variant("uid"), QueryEvent::LIST_DATABASES);
+    manager->call(uuid, Variant("uid"), LIST_DATABASES);
 
     // Give the thread enough time to startup before we check for it
     std::this_thread::sleep_for(std::chrono::milliseconds(30));
@@ -200,7 +202,7 @@ TEST(TestDatabaseConnectionManager, getAllDatabases) {
 
     ASSERT_EQ(meta.size(), 3);
     ASSERT_EQ(meta[0], "uid");
-    ASSERT_EQ(meta[1], QueryEvent::LIST_DATABASES);
+    ASSERT_EQ(meta[1], LIST_DATABASES);
 
     auto result = meta[2].toQueryResult();
 

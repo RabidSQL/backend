@@ -15,7 +15,7 @@ namespace RabidSQL {
  */
 Variant::Variant()
 {
-    type = NONE;
+    type = NO_DATA;
     data = nullptr;
 }
 
@@ -26,7 +26,7 @@ Variant::Variant()
  */
 Variant::Variant(const std::nullptr_t &value)
 {
-    type = NONE;
+    type = NO_DATA;
     data = nullptr;
 }
 
@@ -39,7 +39,7 @@ Variant::Variant(const std::nullptr_t &value)
  */
 Variant::Variant(const Variant &value)
 {
-    type = NONE;
+    type = NO_DATA;
     *this = value;
 }
 
@@ -233,7 +233,7 @@ Variant::Variant(const QueryResult &value)
  */
 void Variant::operator=(const Variant &value)
 {
-    if (type != NONE) {
+    if (type != NO_DATA) {
 
         // Free memory. Convert to char * to clean up compiler warnings
         delete reinterpret_cast<char *>(data);
@@ -241,7 +241,7 @@ void Variant::operator=(const Variant &value)
 
     type = value.type;
     switch (type) {
-    case NONE:
+    case NO_DATA:
         data = nullptr;
         break;
     case STRING:
@@ -321,7 +321,7 @@ bool Variant::operator==(const Variant &value) const
     // types. NONE is a special case and is not simply put at the end of the
     // DataType list because if types get added in the future, that would change
     // the id of it and break any saved server configs.
-    if (type != NONE && (value.type == NONE || value.type > type)) {
+    if (type != NO_DATA && (value.type == NO_DATA || value.type > type)) {
 
         // Set type to the right side's type (greater than left or NONE)
         type = value.type;
@@ -356,7 +356,7 @@ bool Variant::operator==(const Variant &value) const
         return toULong() == value.toULong();
     case QUERYRESULT:
         return toQueryResult().uid == value.toQueryResult().uid;
-    case NONE:
+    case NO_DATA:
         return isNull() == value.isNull();
     }
 }
@@ -412,7 +412,7 @@ bool Variant::operator>(const Variant &value) const
         return toULong() > value.toULong();
     case QUERYRESULT:
         return toQueryResult().uid > value.toQueryResult().uid;
-    case NONE:
+    case NO_DATA:
         return value.isNull();
     }
 }
@@ -467,7 +467,7 @@ bool Variant::operator<(const Variant &value) const
         return toULong() < value.toULong();
     case QUERYRESULT:
         return toQueryResult().uid < value.toQueryResult().uid;
-    case NONE:
+    case NO_DATA:
         return value.isNull();
     }
 }
@@ -519,7 +519,7 @@ bool Variant::operator<=(const Variant &value) const
  */
 const bool Variant::isNull() const
 {
-    return type == NONE;
+    return type == NO_DATA;
 }
 
 /**
@@ -583,7 +583,7 @@ const std::string Variant::toString() const
     case ULONG:
         stream << *static_cast<unsigned long *>(data);
         return stream.str();
-    case NONE:
+    case NO_DATA:
     case VARIANTMAP:
     default:
         return "";
@@ -614,7 +614,7 @@ const std::vector<std::string> Variant::toStringVector() const
         }
         break;
     }
-    case NONE:
+    case NO_DATA:
     case VARIANTMAP:
         break;
     default:
@@ -650,7 +650,7 @@ const VariantVector Variant::toVariantVector() const
         }
         break;
     }
-    case NONE:
+    case NO_DATA:
     case VARIANTMAP:
         break;
     default:
@@ -855,7 +855,7 @@ T Variant::numericCast() const
         return *static_cast<long *>(data);
     case ULONG:
         return *static_cast<unsigned long *>(data);
-    case NONE:
+    case NO_DATA:
     default:
         return 0;
     }
@@ -867,7 +867,7 @@ T Variant::numericCast() const
  *
  * @return The type
  */
-const Variant::DataType Variant::getType() const
+const DataType Variant::getType() const
 {
     return type;
 }

@@ -14,8 +14,7 @@ class Application
 {
     friend class SmartObject;
 public:
-    static void postMessage(MessageType::type type, std::string label,
-        Variant data);
+    static void postMessage(MessageType type, std::string label, Variant data);
     static void processEvents();
     static Message getNextMessage();
     static void shutdown();
