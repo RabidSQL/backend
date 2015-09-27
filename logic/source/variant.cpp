@@ -15,7 +15,7 @@ namespace RabidSQL {
  */
 Variant::Variant()
 {
-    type = NO_DATA;
+    type = D_NULL;
     data = nullptr;
 }
 
@@ -26,7 +26,7 @@ Variant::Variant()
  */
 Variant::Variant(const std::nullptr_t &value)
 {
-    type = NO_DATA;
+    type = D_NULL;
     data = nullptr;
 }
 
@@ -39,7 +39,7 @@ Variant::Variant(const std::nullptr_t &value)
  */
 Variant::Variant(const Variant &value)
 {
-    type = NO_DATA;
+    type = D_NULL;
     *this = value;
 }
 
@@ -51,7 +51,7 @@ Variant::Variant(const Variant &value)
  */
 Variant::Variant(const std::string &value)
 {
-    type = STRING;
+    type = D_STRING;
     data = new std::string(value);
 }
 
@@ -63,7 +63,7 @@ Variant::Variant(const std::string &value)
  */
 Variant::Variant(const char *value)
 {
-    type = STRING;
+    type = D_STRING;
     data = new std::string(value);
 }
 
@@ -75,7 +75,7 @@ Variant::Variant(const char *value)
  */
 Variant::Variant(const std::vector<std::string> &value)
 {
-    type = STRINGVECTOR;
+    type = D_STRINGVECTOR;
     data = new std::vector<std::string>(value);
 }
 
@@ -87,7 +87,7 @@ Variant::Variant(const std::vector<std::string> &value)
  */
 Variant::Variant(const VariantVector &value)
 {
-    type = VARIANTVECTOR;
+    type = D_VARIANTVECTOR;
     data = new VariantVector(value);
 }
 
@@ -99,7 +99,7 @@ Variant::Variant(const VariantVector &value)
  */
 Variant::Variant(const VariantMap &value)
 {
-    type = VARIANTMAP;
+    type = D_VARIANTMAP;
     data = new VariantMap(value);
 }
 
@@ -111,7 +111,7 @@ Variant::Variant(const VariantMap &value)
  */
 Variant::Variant(const long &value)
 {
-    type = LONG;
+    type = D_LONG;
     data = new long(value);
 }
 
@@ -123,7 +123,7 @@ Variant::Variant(const long &value)
  */
 Variant::Variant(const unsigned long &value)
 {
-    type = ULONG;
+    type = D_ULONG;
     data = new unsigned long(value);
 }
 
@@ -135,7 +135,7 @@ Variant::Variant(const unsigned long &value)
  */
 Variant::Variant(const int &value)
 {
-    type = INT;
+    type = D_INT;
     data = new int(value);
 }
 
@@ -147,7 +147,7 @@ Variant::Variant(const int &value)
  */
 Variant::Variant(const unsigned int &value)
 {
-    type = UINT;
+    type = D_UINT;
     data = new unsigned int(value);
 }
 
@@ -159,7 +159,7 @@ Variant::Variant(const unsigned int &value)
  */
 Variant::Variant(const short &value)
 {
-    type = SHORT;
+    type = D_SHORT;
     data = new short(value);
 }
 
@@ -171,7 +171,7 @@ Variant::Variant(const short &value)
  */
 Variant::Variant(const unsigned short &value)
 {
-    type = USHORT;
+    type = D_USHORT;
     data = new unsigned short(value);
 }
 
@@ -183,7 +183,7 @@ Variant::Variant(const unsigned short &value)
  */
 Variant::Variant(const bool &value)
 {
-    type = BOOL;
+    type = D_BOOLEAN;
     data = new bool(value);
 }
 
@@ -195,7 +195,7 @@ Variant::Variant(const bool &value)
  */
 Variant::Variant(const double &value)
 {
-    type = DOUBLE;
+    type = D_DOUBLE;
     data = new double(value);
 }
 
@@ -207,7 +207,7 @@ Variant::Variant(const double &value)
  */
 Variant::Variant(const float &value)
 {
-    type = FLOAT;
+    type = D_FLOAT;
     data = new float(value);
 }
 
@@ -219,7 +219,7 @@ Variant::Variant(const float &value)
  */
 Variant::Variant(const QueryResult &value)
 {
-    type = QUERYRESULT;
+    type = D_QUERYRESULT;
     data = new QueryResult(value);
 }
 
@@ -233,7 +233,7 @@ Variant::Variant(const QueryResult &value)
  */
 void Variant::operator=(const Variant &value)
 {
-    if (type != NO_DATA) {
+    if (type != D_NULL) {
 
         // Free memory. Convert to char * to clean up compiler warnings
         delete reinterpret_cast<char *>(data);
@@ -241,49 +241,49 @@ void Variant::operator=(const Variant &value)
 
     type = value.type;
     switch (type) {
-    case NO_DATA:
+    case D_NULL:
         data = nullptr;
         break;
-    case STRING:
+    case D_STRING:
         data = new std::string(value.toString());
         break;
-    case STRINGVECTOR:
+    case D_STRINGVECTOR:
         data = new std::vector<std::string>(value.toStringVector());
         break;
-    case VARIANTVECTOR:
+    case D_VARIANTVECTOR:
         data = new VariantVector(value.toVariantVector());
         break;
-    case VARIANTMAP:
+    case D_VARIANTMAP:
         data = new VariantMap(value.toVariantMap());
         break;
-    case LONG:
+    case D_LONG:
         data = new long(value.toLong());
         break;
-    case ULONG:
+    case D_ULONG:
         data = new unsigned long(value.toLong());
         break;
-    case INT:
+    case D_INT:
         data = new int(value.toLong());
         break;
-    case UINT:
+    case D_UINT:
         data = new unsigned int(value.toLong());
         break;
-    case SHORT:
+    case D_SHORT:
         data = new short(value.toLong());
         break;
-    case USHORT:
+    case D_USHORT:
         data = new unsigned short(value.toLong());
         break;
-    case BOOL:
+    case D_BOOLEAN:
         data = new bool(value.toBool());
         break;
-    case DOUBLE:
+    case D_DOUBLE:
         data = new double(value.toDouble());
         break;
-    case FLOAT:
+    case D_FLOAT:
         data = new float(value.toFloat());
         break;
-    case QUERYRESULT:
+    case D_QUERYRESULT:
         data = new QueryResult(value.toQueryResult());
         break;
     }
@@ -306,10 +306,10 @@ bool Variant::operator==(const Variant &value) const
     // Because of precision differences, we need to treat double-float
     // comparisons specially. Realistically, this comparison shouldn't ever
     // happen >.<
-    if (type == FLOAT && value.type == DOUBLE) {
+    if (type == D_FLOAT && value.type == D_DOUBLE) {
 
         return fabs(toFloat() - value.toDouble()) < 0.00001;
-    } else if (type == DOUBLE && value.type == FLOAT) {
+    } else if (type == D_DOUBLE && value.type == D_FLOAT) {
 
         return fabs(toDouble() - value.toFloat()) < 0.00001;
     }
@@ -321,42 +321,42 @@ bool Variant::operator==(const Variant &value) const
     // types. NONE is a special case and is not simply put at the end of the
     // DataType list because if types get added in the future, that would change
     // the id of it and break any saved server configs.
-    if (type != NO_DATA && (value.type == NO_DATA || value.type > type)) {
+    if (type != D_NULL && (value.type == D_NULL || value.type > type)) {
 
         // Set type to the right side's type (greater than left or NONE)
         type = value.type;
     }
 
     switch (type) {
-    case STRING:
+    case D_STRING:
         return toString() == value.toString();
-    case STRINGVECTOR:
+    case D_STRINGVECTOR:
         return toStringVector() == value.toStringVector();
-    case VARIANTVECTOR:
+    case D_VARIANTVECTOR:
         return toVariantVector() == value.toVariantVector();
-    case VARIANTMAP:
+    case D_VARIANTMAP:
         return toVariantMap() == value.toVariantMap();
-    case DOUBLE:
+    case D_DOUBLE:
         return toDouble() == value.toDouble();
-    case FLOAT:
+    case D_FLOAT:
         return toFloat() == value.toFloat();
-    case SHORT:
+    case D_SHORT:
         return toShort() == value.toShort();
-    case USHORT:
+    case D_USHORT:
         return toUShort() == value.toUShort();
-    case BOOL:
+    case D_BOOLEAN:
         return toBool() == value.toBool();
-    case INT:
+    case D_INT:
         return toInt() == value.toInt();
-    case UINT:
+    case D_UINT:
         return toUInt() == value.toUInt();
-    case LONG:
+    case D_LONG:
         return toLong() == value.toLong();
-    case ULONG:
+    case D_ULONG:
         return toULong() == value.toULong();
-    case QUERYRESULT:
+    case D_QUERYRESULT:
         return toQueryResult().uid == value.toQueryResult().uid;
-    case NO_DATA:
+    case D_NULL:
         return isNull() == value.isNull();
     }
 }
@@ -384,35 +384,35 @@ bool Variant::operator>(const Variant &value) const
     }
 
     switch (type) {
-    case STRING:
+    case D_STRING:
         return toString() > value.toString();
-    case STRINGVECTOR:
+    case D_STRINGVECTOR:
         return toStringVector() > value.toStringVector();
-    case VARIANTVECTOR:
+    case D_VARIANTVECTOR:
         return toVariantVector() > value.toVariantVector();
-    case VARIANTMAP:
+    case D_VARIANTMAP:
         return toVariantMap() > value.toVariantMap();
-    case DOUBLE:
+    case D_DOUBLE:
         return toDouble() > value.toDouble();
-    case FLOAT:
+    case D_FLOAT:
         return toFloat() > value.toFloat();
-    case SHORT:
+    case D_SHORT:
         return toShort() > value.toShort();
-    case USHORT:
+    case D_USHORT:
         return toUShort() > value.toUShort();
-    case BOOL:
+    case D_BOOLEAN:
         return toBool() > value.toBool();
-    case INT:
+    case D_INT:
         return toInt() > value.toInt();
-    case UINT:
+    case D_UINT:
         return toUInt() > value.toUInt();
-    case LONG:
+    case D_LONG:
         return toLong() > value.toLong();
-    case ULONG:
+    case D_ULONG:
         return toULong() > value.toULong();
-    case QUERYRESULT:
+    case D_QUERYRESULT:
         return toQueryResult().uid > value.toQueryResult().uid;
-    case NO_DATA:
+    case D_NULL:
         return value.isNull();
     }
 }
@@ -439,35 +439,35 @@ bool Variant::operator<(const Variant &value) const
     }
 
     switch (type) {
-    case STRING:
+    case D_STRING:
         return toString() < value.toString();
-    case STRINGVECTOR:
+    case D_STRINGVECTOR:
         return toStringVector() < value.toStringVector();
-    case VARIANTVECTOR:
+    case D_VARIANTVECTOR:
         return toVariantVector() < value.toVariantVector();
-    case VARIANTMAP:
+    case D_VARIANTMAP:
         return toVariantMap() < value.toVariantMap();
-    case DOUBLE:
+    case D_DOUBLE:
         return toDouble() < value.toDouble();
-    case FLOAT:
+    case D_FLOAT:
         return toFloat() < value.toFloat();
-    case SHORT:
+    case D_SHORT:
         return toShort() < value.toShort();
-    case USHORT:
+    case D_USHORT:
         return toUShort() < value.toUShort();
-    case BOOL:
+    case D_BOOLEAN:
         return toBool() < value.toBool();
-    case INT:
+    case D_INT:
         return toInt() < value.toInt();
-    case UINT:
+    case D_UINT:
         return toUInt() < value.toUInt();
-    case LONG:
+    case D_LONG:
         return toLong() < value.toLong();
-    case ULONG:
+    case D_ULONG:
         return toULong() < value.toULong();
-    case QUERYRESULT:
+    case D_QUERYRESULT:
         return toQueryResult().uid < value.toQueryResult().uid;
-    case NO_DATA:
+    case D_NULL:
         return value.isNull();
     }
 }
@@ -519,7 +519,7 @@ bool Variant::operator<=(const Variant &value) const
  */
 const bool Variant::isNull() const
 {
-    return type == NO_DATA;
+    return type == D_NULL;
 }
 
 /**
@@ -534,9 +534,9 @@ const std::string Variant::toString() const
     std::stringstream stream;
 
     switch (type) {
-    case STRING:
+    case D_STRING:
         return *static_cast<std::string *>(data);
-    case VARIANTVECTOR:
+    case D_VARIANTVECTOR:
     {
         VariantVector vector(*static_cast<VariantVector *>(data));
         if (vector.size() == 0) {
@@ -544,7 +544,7 @@ const std::string Variant::toString() const
         }
         return vector.at(0).toString();
     }
-    case STRINGVECTOR:
+    case D_STRINGVECTOR:
     {
         std::vector<std::string> vector(
                     *static_cast<std::vector<std::string> *>(data));
@@ -553,38 +553,38 @@ const std::string Variant::toString() const
         }
         return vector.at(0);
     }
-    case DOUBLE:
+    case D_DOUBLE:
         stream << *static_cast<double *>(data);
         return stream.str();
-    case FLOAT:
+    case D_FLOAT:
         stream << *static_cast<float *>(data);
         return stream.str();
-    case SHORT:
+    case D_SHORT:
         stream << *static_cast<short *>(data);
         return stream.str();
-    case USHORT:
+    case D_USHORT:
         stream << *static_cast<unsigned short *>(data);
         return stream.str();
-    case BOOL:
+    case D_BOOLEAN:
         if (*static_cast<bool *>(data)) {
             return "true";
         } else {
             return "false";
         }
-    case INT:
+    case D_INT:
         stream << *static_cast<int *>(data);
         return stream.str();
-    case UINT:
+    case D_UINT:
         stream << *static_cast<unsigned int *>(data);
         return stream.str();
-    case LONG:
+    case D_LONG:
         stream << *static_cast<long *>(data);
         return stream.str();
-    case ULONG:
+    case D_ULONG:
         stream << *static_cast<unsigned long *>(data);
         return stream.str();
-    case NO_DATA:
-    case VARIANTMAP:
+    case D_NULL:
+    case D_VARIANTMAP:
     default:
         return "";
     }
@@ -603,9 +603,9 @@ const std::vector<std::string> Variant::toStringVector() const
     std::vector<std::string> vector;
 
     switch (type) {
-    case STRINGVECTOR:
+    case D_STRINGVECTOR:
         return *static_cast<std::vector<std::string> *>(data);
-    case VARIANTVECTOR:
+    case D_VARIANTVECTOR:
     {
         VariantVector variantVector = *static_cast<VariantVector *>(data);
         for (VariantVector::iterator it = variantVector.begin();
@@ -614,8 +614,8 @@ const std::vector<std::string> Variant::toStringVector() const
         }
         break;
     }
-    case NO_DATA:
-    case VARIANTMAP:
+    case D_NULL:
+    case D_VARIANTMAP:
         break;
     default:
         vector.push_back(toString());
@@ -638,9 +638,9 @@ const VariantVector Variant::toVariantVector() const
     VariantVector vector;
 
     switch (type) {
-    case VARIANTVECTOR:
+    case D_VARIANTVECTOR:
         return *static_cast<VariantVector *>(data);
-    case STRINGVECTOR:
+    case D_STRINGVECTOR:
     {
         std::vector<std::string> stringVector = *static_cast<std::vector<
                 std::string> *>(data);
@@ -650,8 +650,8 @@ const VariantVector Variant::toVariantVector() const
         }
         break;
     }
-    case NO_DATA:
-    case VARIANTMAP:
+    case D_NULL:
+    case D_VARIANTMAP:
         break;
     default:
         vector.push_back(*this);
@@ -766,7 +766,7 @@ const unsigned short Variant::toUShort() const
  */
 const bool Variant::toBool() const
 {
-    if (type == BOOL) {
+    if (type == D_BOOLEAN) {
 
         // Cast to bool
         return numericCast<bool>();
@@ -795,7 +795,7 @@ const bool Variant::toBool() const
  */
 const QueryResult Variant::toQueryResult() const
 {
-    if (type == QUERYRESULT) {
+    if (type == D_QUERYRESULT) {
 
         return *static_cast<QueryResult *>(data);
     }
@@ -812,7 +812,7 @@ const QueryResult Variant::toQueryResult() const
  */
 const VariantMap Variant::toVariantMap() const
 {
-    if (type == VARIANTMAP) {
+    if (type == D_VARIANTMAP) {
 
         return *static_cast<VariantMap *>(data);
     }
@@ -830,32 +830,32 @@ template<typename T>
 T Variant::numericCast() const
 {
     switch (type) {
-    case STRING:
-    case STRINGVECTOR:
-    case VARIANTVECTOR:
+    case D_STRING:
+    case D_STRINGVECTOR:
+    case D_VARIANTVECTOR:
     {
         T number;
         std::istringstream stream(toString());
         stream >> number;
         return number;
     }
-    case DOUBLE:
+    case D_DOUBLE:
         return *static_cast<double *>(data);
-    case FLOAT:
+    case D_FLOAT:
         return *static_cast<float *>(data);
-    case SHORT:
+    case D_SHORT:
         return *static_cast<short *>(data);
-    case USHORT:
+    case D_USHORT:
         return *static_cast<unsigned short *>(data);
-    case INT:
+    case D_INT:
         return *static_cast<int *>(data);
-    case UINT:
+    case D_UINT:
         return *static_cast<unsigned int *>(data);
-    case LONG:
+    case D_LONG:
         return *static_cast<long *>(data);
-    case ULONG:
+    case D_ULONG:
         return *static_cast<unsigned long *>(data);
-    case NO_DATA:
+    case D_NULL:
     default:
         return 0;
     }

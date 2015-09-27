@@ -177,13 +177,13 @@ std::vector<ConnectionSettings *> ConnectionSettings::load(
     // Load stream
     *stream >> data;
 
-    if (data.getType() == VARIANTVECTOR) {
+    if (data.getType() == D_VARIANTVECTOR) {
 
         auto connections = data.toVariantVector();
 
         for (auto it = connections.begin(); it != connections.end(); ++it) {
 
-            if (it->getType() == VARIANTMAP) {
+            if (it->getType() == D_VARIANTMAP) {
                 // Initialize settings
                 connectionSettings = new ConnectionSettings();
 
