@@ -20,7 +20,7 @@ public:
                                           SmartObject *receiver = nullptr);
     void releaseDatabaseConnection(std::string uuid);
     void call(std::string uuid, Variant uid, QueryEvent event,
-        VariantVector arguments= VariantVector());
+        VariantVector arguments = VariantVector(), bool blocking = false);
     void killQuery(std::string uuid);
     ConnectionType getType();
     ~DatabaseConnectionManager();

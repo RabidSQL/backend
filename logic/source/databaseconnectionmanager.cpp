@@ -326,16 +326,28 @@ void DatabaseConnectionManager::call(DatabaseConnection *connection,
  * @param uid The uid of the query
  * @param event The event to execute
  * @param arguments Any necessary arguments
+ * @param blocking Should we block until the command completes? This should only
+ * be used for unit testing as it completely defeats the purpose of threading.
  * @return void
  */
 void DatabaseConnectionManager::call(std::string uuid, Variant uid,
                                      QueryEvent event,
-                                     VariantVector arguments)
+                                     VariantVector arguments, bool blocking)
 {
     for (Connections::const_iterator it = connections.begin();
             it != connections.end(); ++it) {
         if (it->second.uuid == uuid) {
+
+            // Execute query
             call(it->first, uid, event, arguments);
+
+            while (blocking && it->first->busy) {
+
+                // Sleep for 100 ms and then check again if the thread is
+                // done working
+                std::this_thread::sleep_for(std::chrono::milliseconds(100));
+            }
+
             return;
         }
     }
