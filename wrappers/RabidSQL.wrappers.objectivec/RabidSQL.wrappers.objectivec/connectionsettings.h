@@ -3,7 +3,7 @@
 
 #include <Foundation/Foundation.h>
 
-#include "logic/include/enums.h"
+#include "enums.h"
 
 @class Variant;
 
