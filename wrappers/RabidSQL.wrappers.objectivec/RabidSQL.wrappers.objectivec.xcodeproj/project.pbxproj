@@ -1,0 +1,492 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		5E2390AE1BB9DDFC00B415F3 /* application.h in Headers */ = {isa = PBXBuildFile; fileRef = 5E2390991BB9DDFC00B415F3 /* application.h */; settings = {ASSET_TAGS = (); }; };
+		5E2390AF1BB9DDFC00B415F3 /* application.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5E23909A1BB9DDFC00B415F3 /* application.mm */; settings = {ASSET_TAGS = (); }; };
+		5E2390B01BB9DDFC00B415F3 /* connectionsettings.h in Headers */ = {isa = PBXBuildFile; fileRef = 5E23909B1BB9DDFC00B415F3 /* connectionsettings.h */; settings = {ASSET_TAGS = (); }; };
+		5E2390B11BB9DDFC00B415F3 /* connectionsettings.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5E23909C1BB9DDFC00B415F3 /* connectionsettings.mm */; settings = {ASSET_TAGS = (); }; };
+		5E2390B21BB9DDFC00B415F3 /* databaseconnection.h in Headers */ = {isa = PBXBuildFile; fileRef = 5E23909D1BB9DDFC00B415F3 /* databaseconnection.h */; settings = {ASSET_TAGS = (); }; };
+		5E2390B31BB9DDFC00B415F3 /* databaseconnection.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5E23909E1BB9DDFC00B415F3 /* databaseconnection.mm */; settings = {ASSET_TAGS = (); }; };
+		5E2390B41BB9DDFC00B415F3 /* databaseconnectionmanager.h in Headers */ = {isa = PBXBuildFile; fileRef = 5E23909F1BB9DDFC00B415F3 /* databaseconnectionmanager.h */; settings = {ASSET_TAGS = (); }; };
+		5E2390B51BB9DDFC00B415F3 /* databaseconnectionmanager.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5E2390A01BB9DDFC00B415F3 /* databaseconnectionmanager.mm */; settings = {ASSET_TAGS = (); }; };
+		5E2390B61BB9DDFC00B415F3 /* object.h in Headers */ = {isa = PBXBuildFile; fileRef = 5E2390A11BB9DDFC00B415F3 /* object.h */; settings = {ASSET_TAGS = (); }; };
+		5E2390B71BB9DDFC00B415F3 /* object.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5E2390A21BB9DDFC00B415F3 /* object.mm */; settings = {ASSET_TAGS = (); }; };
+		5E2390B81BB9DDFC00B415F3 /* prototypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 5E2390A31BB9DDFC00B415F3 /* prototypes.h */; settings = {ASSET_TAGS = (); }; };
+		5E2390B91BB9DDFC00B415F3 /* smartobject.h in Headers */ = {isa = PBXBuildFile; fileRef = 5E2390A41BB9DDFC00B415F3 /* smartobject.h */; settings = {ASSET_TAGS = (); }; };
+		5E2390BA1BB9DDFC00B415F3 /* smartobject.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5E2390A51BB9DDFC00B415F3 /* smartobject.mm */; settings = {ASSET_TAGS = (); }; };
+		5E2390BB1BB9DDFC00B415F3 /* smartobjectwrapper.h in Headers */ = {isa = PBXBuildFile; fileRef = 5E2390A61BB9DDFC00B415F3 /* smartobjectwrapper.h */; settings = {ASSET_TAGS = (); }; };
+		5E2390BC1BB9DDFC00B415F3 /* smartobjectwrapper.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5E2390A71BB9DDFC00B415F3 /* smartobjectwrapper.mm */; settings = {ASSET_TAGS = (); }; };
+		5E2390BD1BB9DDFC00B415F3 /* structures.h in Headers */ = {isa = PBXBuildFile; fileRef = 5E2390A81BB9DDFC00B415F3 /* structures.h */; settings = {ASSET_TAGS = (); }; };
+		5E2390BE1BB9DDFC00B415F3 /* structures.m in Sources */ = {isa = PBXBuildFile; fileRef = 5E2390A91BB9DDFC00B415F3 /* structures.m */; settings = {ASSET_TAGS = (); }; };
+		5E2390BF1BB9DDFC00B415F3 /* uuid.h in Headers */ = {isa = PBXBuildFile; fileRef = 5E2390AA1BB9DDFC00B415F3 /* uuid.h */; settings = {ASSET_TAGS = (); }; };
+		5E2390C01BB9DDFC00B415F3 /* uuid.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5E2390AB1BB9DDFC00B415F3 /* uuid.mm */; settings = {ASSET_TAGS = (); }; };
+		5E2390C11BB9DDFC00B415F3 /* variant.h in Headers */ = {isa = PBXBuildFile; fileRef = 5E2390AC1BB9DDFC00B415F3 /* variant.h */; settings = {ASSET_TAGS = (); }; };
+		5E2390C21BB9DDFC00B415F3 /* variant.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5E2390AD1BB9DDFC00B415F3 /* variant.mm */; settings = {ASSET_TAGS = (); }; };
+		5E2390C51BB9DE2400B415F3 /* libLogic.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E2390C31BB9DE2400B415F3 /* libLogic.a */; };
+		5E2390C61BB9DE2400B415F3 /* libMySQL.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E2390C41BB9DE2400B415F3 /* libMySQL.a */; };
+		5E2390D01BB9DF8300B415F3 /* libRabidSQL.wrappers.objectivec.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E23908D1BB9DD9F00B415F3 /* libRabidSQL.wrappers.objectivec.a */; settings = {ASSET_TAGS = (); }; };
+		5E2390D81BB9DFD900B415F3 /* TestObjectCommunication.m in Sources */ = {isa = PBXBuildFile; fileRef = 5E2390D61BB9DFD900B415F3 /* TestObjectCommunication.m */; settings = {ASSET_TAGS = (); }; };
+		5E2390D91BB9DFD900B415F3 /* TestSimpleWrappers.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5E2390D71BB9DFD900B415F3 /* TestSimpleWrappers.mm */; settings = {ASSET_TAGS = (); }; };
+		5E2390DD1BB9E18C00B415F3 /* databaseconnectionfactory.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5E2390DC1BB9E18C00B415F3 /* databaseconnectionfactory.mm */; settings = {ASSET_TAGS = (); }; };
+		5E2390E81BB9E92E00B415F3 /* libmysqlcppconn.7.1.1.6.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E2390E71BB9E92E00B415F3 /* libmysqlcppconn.7.1.1.6.dylib */; };
+		5E2390EA1BB9EAC200B415F3 /* TestDatabaseConnectionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 5E2390E91BB9EAC200B415F3 /* TestDatabaseConnectionManager.m */; settings = {ASSET_TAGS = (); }; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		5E2390D11BB9DF8300B415F3 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 5E2390851BB9DD9F00B415F3 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 5E23908C1BB9DD9F00B415F3;
+			remoteInfo = RabidSQL.wrappers.objectivec;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		5E23908D1BB9DD9F00B415F3 /* libRabidSQL.wrappers.objectivec.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libRabidSQL.wrappers.objectivec.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		5E2390991BB9DDFC00B415F3 /* application.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = application.h; sourceTree = "<group>"; };
+		5E23909A1BB9DDFC00B415F3 /* application.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = application.mm; sourceTree = "<group>"; };
+		5E23909B1BB9DDFC00B415F3 /* connectionsettings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = connectionsettings.h; sourceTree = "<group>"; };
+		5E23909C1BB9DDFC00B415F3 /* connectionsettings.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = connectionsettings.mm; sourceTree = "<group>"; };
+		5E23909D1BB9DDFC00B415F3 /* databaseconnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = databaseconnection.h; sourceTree = "<group>"; };
+		5E23909E1BB9DDFC00B415F3 /* databaseconnection.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = databaseconnection.mm; sourceTree = "<group>"; };
+		5E23909F1BB9DDFC00B415F3 /* databaseconnectionmanager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = databaseconnectionmanager.h; sourceTree = "<group>"; };
+		5E2390A01BB9DDFC00B415F3 /* databaseconnectionmanager.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = databaseconnectionmanager.mm; sourceTree = "<group>"; };
+		5E2390A11BB9DDFC00B415F3 /* object.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = object.h; sourceTree = "<group>"; };
+		5E2390A21BB9DDFC00B415F3 /* object.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = object.mm; sourceTree = "<group>"; };
+		5E2390A31BB9DDFC00B415F3 /* prototypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = prototypes.h; sourceTree = "<group>"; };
+		5E2390A41BB9DDFC00B415F3 /* smartobject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = smartobject.h; sourceTree = "<group>"; };
+		5E2390A51BB9DDFC00B415F3 /* smartobject.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = smartobject.mm; sourceTree = "<group>"; };
+		5E2390A61BB9DDFC00B415F3 /* smartobjectwrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = smartobjectwrapper.h; sourceTree = "<group>"; };
+		5E2390A71BB9DDFC00B415F3 /* smartobjectwrapper.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = smartobjectwrapper.mm; sourceTree = "<group>"; };
+		5E2390A81BB9DDFC00B415F3 /* structures.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = structures.h; sourceTree = "<group>"; };
+		5E2390A91BB9DDFC00B415F3 /* structures.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = structures.m; sourceTree = "<group>"; };
+		5E2390AA1BB9DDFC00B415F3 /* uuid.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = uuid.h; sourceTree = "<group>"; };
+		5E2390AB1BB9DDFC00B415F3 /* uuid.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = uuid.mm; sourceTree = "<group>"; };
+		5E2390AC1BB9DDFC00B415F3 /* variant.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = variant.h; sourceTree = "<group>"; };
+		5E2390AD1BB9DDFC00B415F3 /* variant.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = variant.mm; sourceTree = "<group>"; };
+		5E2390C31BB9DE2400B415F3 /* libLogic.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libLogic.a; path = ../../build/bin/libLogic.a; sourceTree = "<group>"; };
+		5E2390C41BB9DE2400B415F3 /* libMySQL.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libMySQL.a; path = ../../build/bin/libMySQL.a; sourceTree = "<group>"; };
+		5E2390CB1BB9DF8300B415F3 /* Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		5E2390CF1BB9DF8300B415F3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		5E2390D61BB9DFD900B415F3 /* TestObjectCommunication.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestObjectCommunication.m; sourceTree = "<group>"; };
+		5E2390D71BB9DFD900B415F3 /* TestSimpleWrappers.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TestSimpleWrappers.mm; sourceTree = "<group>"; };
+		5E2390DA1BB9E01700B415F3 /* swiftbridgeheader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = swiftbridgeheader.h; sourceTree = "<group>"; };
+		5E2390DB1BB9E11500B415F3 /* databaseconnectionfactory.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = databaseconnectionfactory.h; sourceTree = "<group>"; };
+		5E2390DC1BB9E18C00B415F3 /* databaseconnectionfactory.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = databaseconnectionfactory.mm; sourceTree = "<group>"; };
+		5E2390E71BB9E92E00B415F3 /* libmysqlcppconn.7.1.1.6.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libmysqlcppconn.7.1.1.6.dylib; path = ../../../../../../usr/local/lib/libmysqlcppconn.7.1.1.6.dylib; sourceTree = "<group>"; };
+		5E2390E91BB9EAC200B415F3 /* TestDatabaseConnectionManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestDatabaseConnectionManager.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		5E23908A1BB9DD9F00B415F3 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5E2390C51BB9DE2400B415F3 /* libLogic.a in Frameworks */,
+				5E2390C61BB9DE2400B415F3 /* libMySQL.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5E2390C81BB9DF8300B415F3 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5E2390E81BB9E92E00B415F3 /* libmysqlcppconn.7.1.1.6.dylib in Frameworks */,
+				5E2390D01BB9DF8300B415F3 /* libRabidSQL.wrappers.objectivec.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		5E2390841BB9DD9F00B415F3 = {
+			isa = PBXGroup;
+			children = (
+				5E2390E71BB9E92E00B415F3 /* libmysqlcppconn.7.1.1.6.dylib */,
+				5E2390C31BB9DE2400B415F3 /* libLogic.a */,
+				5E2390C41BB9DE2400B415F3 /* libMySQL.a */,
+				5E23908F1BB9DD9F00B415F3 /* Wrapper */,
+				5E2390CC1BB9DF8300B415F3 /* Tests */,
+				5E23908E1BB9DD9F00B415F3 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		5E23908E1BB9DD9F00B415F3 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				5E23908D1BB9DD9F00B415F3 /* libRabidSQL.wrappers.objectivec.a */,
+				5E2390CB1BB9DF8300B415F3 /* Tests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		5E23908F1BB9DD9F00B415F3 /* Wrapper */ = {
+			isa = PBXGroup;
+			children = (
+				5E2390991BB9DDFC00B415F3 /* application.h */,
+				5E23909A1BB9DDFC00B415F3 /* application.mm */,
+				5E23909B1BB9DDFC00B415F3 /* connectionsettings.h */,
+				5E23909C1BB9DDFC00B415F3 /* connectionsettings.mm */,
+				5E23909D1BB9DDFC00B415F3 /* databaseconnection.h */,
+				5E23909E1BB9DDFC00B415F3 /* databaseconnection.mm */,
+				5E2390DB1BB9E11500B415F3 /* databaseconnectionfactory.h */,
+				5E2390DC1BB9E18C00B415F3 /* databaseconnectionfactory.mm */,
+				5E23909F1BB9DDFC00B415F3 /* databaseconnectionmanager.h */,
+				5E2390A01BB9DDFC00B415F3 /* databaseconnectionmanager.mm */,
+				5E2390A11BB9DDFC00B415F3 /* object.h */,
+				5E2390A21BB9DDFC00B415F3 /* object.mm */,
+				5E2390A31BB9DDFC00B415F3 /* prototypes.h */,
+				5E2390A41BB9DDFC00B415F3 /* smartobject.h */,
+				5E2390A51BB9DDFC00B415F3 /* smartobject.mm */,
+				5E2390A61BB9DDFC00B415F3 /* smartobjectwrapper.h */,
+				5E2390A71BB9DDFC00B415F3 /* smartobjectwrapper.mm */,
+				5E2390A81BB9DDFC00B415F3 /* structures.h */,
+				5E2390A91BB9DDFC00B415F3 /* structures.m */,
+				5E2390AA1BB9DDFC00B415F3 /* uuid.h */,
+				5E2390AB1BB9DDFC00B415F3 /* uuid.mm */,
+				5E2390AC1BB9DDFC00B415F3 /* variant.h */,
+				5E2390AD1BB9DDFC00B415F3 /* variant.mm */,
+				5E2390DA1BB9E01700B415F3 /* swiftbridgeheader.h */,
+			);
+			name = Wrapper;
+			path = RabidSQL.wrappers.objectivec;
+			sourceTree = "<group>";
+		};
+		5E2390CC1BB9DF8300B415F3 /* Tests */ = {
+			isa = PBXGroup;
+			children = (
+				5E2390D61BB9DFD900B415F3 /* TestObjectCommunication.m */,
+				5E2390D71BB9DFD900B415F3 /* TestSimpleWrappers.mm */,
+				5E2390CF1BB9DF8300B415F3 /* Info.plist */,
+				5E2390E91BB9EAC200B415F3 /* TestDatabaseConnectionManager.m */,
+			);
+			path = Tests;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		5E23908B1BB9DD9F00B415F3 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5E2390C11BB9DDFC00B415F3 /* variant.h in Headers */,
+				5E2390AE1BB9DDFC00B415F3 /* application.h in Headers */,
+				5E2390BB1BB9DDFC00B415F3 /* smartobjectwrapper.h in Headers */,
+				5E2390B81BB9DDFC00B415F3 /* prototypes.h in Headers */,
+				5E2390B41BB9DDFC00B415F3 /* databaseconnectionmanager.h in Headers */,
+				5E2390B61BB9DDFC00B415F3 /* object.h in Headers */,
+				5E2390BF1BB9DDFC00B415F3 /* uuid.h in Headers */,
+				5E2390B21BB9DDFC00B415F3 /* databaseconnection.h in Headers */,
+				5E2390BD1BB9DDFC00B415F3 /* structures.h in Headers */,
+				5E2390B91BB9DDFC00B415F3 /* smartobject.h in Headers */,
+				5E2390B01BB9DDFC00B415F3 /* connectionsettings.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		5E23908C1BB9DD9F00B415F3 /* RabidSQL.wrappers.objectivec */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5E2390961BB9DD9F00B415F3 /* Build configuration list for PBXNativeTarget "RabidSQL.wrappers.objectivec" */;
+			buildPhases = (
+				5E2390891BB9DD9F00B415F3 /* Sources */,
+				5E23908A1BB9DD9F00B415F3 /* Frameworks */,
+				5E23908B1BB9DD9F00B415F3 /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = RabidSQL.wrappers.objectivec;
+			productName = RabidSQL.wrappers.objectivec;
+			productReference = 5E23908D1BB9DD9F00B415F3 /* libRabidSQL.wrappers.objectivec.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		5E2390CA1BB9DF8300B415F3 /* Tests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5E2390D31BB9DF8300B415F3 /* Build configuration list for PBXNativeTarget "Tests" */;
+			buildPhases = (
+				5E2390C71BB9DF8300B415F3 /* Sources */,
+				5E2390C81BB9DF8300B415F3 /* Frameworks */,
+				5E2390C91BB9DF8300B415F3 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				5E2390D21BB9DF8300B415F3 /* PBXTargetDependency */,
+			);
+			name = Tests;
+			productName = Tests;
+			productReference = 5E2390CB1BB9DF8300B415F3 /* Tests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		5E2390851BB9DD9F00B415F3 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0700;
+				ORGANIZATIONNAME = "Chelsea Urquhart";
+				TargetAttributes = {
+					5E23908C1BB9DD9F00B415F3 = {
+						CreatedOnToolsVersion = 7.0;
+					};
+					5E2390CA1BB9DF8300B415F3 = {
+						CreatedOnToolsVersion = 7.0;
+					};
+				};
+			};
+			buildConfigurationList = 5E2390881BB9DD9F00B415F3 /* Build configuration list for PBXProject "RabidSQL.wrappers.objectivec" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 5E2390841BB9DD9F00B415F3;
+			productRefGroup = 5E23908E1BB9DD9F00B415F3 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				5E23908C1BB9DD9F00B415F3 /* RabidSQL.wrappers.objectivec */,
+				5E2390CA1BB9DF8300B415F3 /* Tests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		5E2390C91BB9DF8300B415F3 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		5E2390891BB9DD9F00B415F3 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5E2390C01BB9DDFC00B415F3 /* uuid.mm in Sources */,
+				5E2390BA1BB9DDFC00B415F3 /* smartobject.mm in Sources */,
+				5E2390B51BB9DDFC00B415F3 /* databaseconnectionmanager.mm in Sources */,
+				5E2390C21BB9DDFC00B415F3 /* variant.mm in Sources */,
+				5E2390B31BB9DDFC00B415F3 /* databaseconnection.mm in Sources */,
+				5E2390BE1BB9DDFC00B415F3 /* structures.m in Sources */,
+				5E2390BC1BB9DDFC00B415F3 /* smartobjectwrapper.mm in Sources */,
+				5E2390B11BB9DDFC00B415F3 /* connectionsettings.mm in Sources */,
+				5E2390AF1BB9DDFC00B415F3 /* application.mm in Sources */,
+				5E2390B71BB9DDFC00B415F3 /* object.mm in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5E2390C71BB9DF8300B415F3 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5E2390EA1BB9EAC200B415F3 /* TestDatabaseConnectionManager.m in Sources */,
+				5E2390DD1BB9E18C00B415F3 /* databaseconnectionfactory.mm in Sources */,
+				5E2390D81BB9DFD900B415F3 /* TestObjectCommunication.m in Sources */,
+				5E2390D91BB9DFD900B415F3 /* TestSimpleWrappers.mm in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		5E2390D21BB9DF8300B415F3 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 5E23908C1BB9DD9F00B415F3 /* RabidSQL.wrappers.objectivec */;
+			targetProxy = 5E2390D11BB9DF8300B415F3 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		5E2390941BB9DD9F00B415F3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				"HEADER_SEARCH_PATHS[arch=*]" = $SRCROOT/../../;
+				"LIBRARY_SEARCH_PATHS[arch=*]" = (
+					/usr/local/lib/,
+					/usr/local/mysql/lib,
+					$SRCROOT/../../build/bin/,
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		5E2390951BB9DD9F00B415F3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				"HEADER_SEARCH_PATHS[arch=*]" = $SRCROOT/../../;
+				LIBRARY_SEARCH_PATHS = "";
+				"LIBRARY_SEARCH_PATHS[arch=*]" = (
+					/usr/local/lib/,
+					/usr/local/mysql/lib,
+					$SRCROOT/../../build/bin/,
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		5E2390971BB9DD9F00B415F3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				EXECUTABLE_PREFIX = lib;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"/usr/local/mysql-5.6.20-osx10.8-x86_64/lib",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		5E2390981BB9DD9F00B415F3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				EXECUTABLE_PREFIX = lib;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"/usr/local/mysql-5.6.20-osx10.8-x86_64/lib",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		5E2390D41BB9DF8300B415F3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = Tests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"/usr/local/mysql-5.6.20-osx10.8-x86_64/lib",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.chelseaurquhart.Tests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		5E2390D51BB9DF8300B415F3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = Tests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"/usr/local/mysql-5.6.20-osx10.8-x86_64/lib",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.chelseaurquhart.Tests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		5E2390881BB9DD9F00B415F3 /* Build configuration list for PBXProject "RabidSQL.wrappers.objectivec" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5E2390941BB9DD9F00B415F3 /* Debug */,
+				5E2390951BB9DD9F00B415F3 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5E2390961BB9DD9F00B415F3 /* Build configuration list for PBXNativeTarget "RabidSQL.wrappers.objectivec" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5E2390971BB9DD9F00B415F3 /* Debug */,
+				5E2390981BB9DD9F00B415F3 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5E2390D31BB9DF8300B415F3 /* Build configuration list for PBXNativeTarget "Tests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5E2390D41BB9DF8300B415F3 /* Debug */,
+				5E2390D51BB9DF8300B415F3 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 5E2390851BB9DD9F00B415F3 /* Project object */;
+}
