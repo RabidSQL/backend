@@ -502,18 +502,18 @@ TEST_F(TestVariant, FileIOBinaryIOMultipleTypes) {
     EXPECT_FALSE(stream.get(tc)); \
     EXPECT_TRUE(stream.eof());
 
-// Tests reading and writing of a single nullptr variant from and to binary files
+// Tests reading and writing of a single nullptr variant from and to json files
 TEST_F(TestVariant, FileIOJsonIONull) {
     TEST_JSON_SINGLE(std::nullptr_t, nullptr);
 }
 
-// Tests reading and writing of a single String variant from and to binary files
+// Tests reading and writing of a single String variant from and to json files
 TEST_F(TestVariant, FileIOJsonIOString) {
-    TEST_BINARY_SINGLE(std::string, "test");
+    TEST_JSON_SINGLE(std::string, "test");
 }
 
 // Tests reading and writing of a single String vector variant from and to
-// binary files
+// json files
 TEST_F(TestVariant, FileIOJsonIOStringVector) {
     std::vector<std::string> vector;
     vector.push_back("value 1");
@@ -522,14 +522,14 @@ TEST_F(TestVariant, FileIOJsonIOStringVector) {
 }
 
 // Tests reading and writing of a single Variant vector variant from and to
-// binary files
+// json files
 TEST_F(TestVariant, FileIOJsonIOVariantVector) {
     TEST_JSON_SINGLE(VariantVector, VariantVector() << "test" << 123
                                     << nullptr);
 }
 
 // Tests reading and writing of a single Variant map variant from and to
-// binary files
+// json files
 TEST_F(TestVariant, FileIOJsonIOVariantMap) {
     VariantMap map;
     map["int"] = 123;
@@ -539,7 +539,7 @@ TEST_F(TestVariant, FileIOJsonIOVariantMap) {
     TEST_JSON_SINGLE(VariantMap, map);
 }
 
-// Tests reading and writing of a single long variant from and to binary files
+// Tests reading and writing of a single long variant from and to json files
 TEST_F(TestVariant, FileIOJsonIOULong) {
     TEST_JSON_SINGLE(unsigned long, 1);
 }
