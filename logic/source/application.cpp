@@ -79,6 +79,34 @@ void Application::postMessage(MessageType type, std::string label, Variant data)
     app->mutex.unlock();
 }
 
+/**
+ *
+ * Checks if there are any available messages. Returns true if there are any
+ * or false if not
+ *
+ * @return bool
+ */
+bool Application::hasMessage()
+{
+    auto app = Application::getInstance();
+
+    // Lock mutex
+    app->mutex.lock();
+
+    bool hasMessages = !app->messages.empty();
+
+    // Unlock mutex
+    app->mutex.unlock();
+
+    return hasMessages;
+}
+
+/**
+ *
+ * Returns the next available message
+ *
+ * @return Message
+ */
 Message Application::getNextMessage()
 {
     auto app = Application::getInstance();

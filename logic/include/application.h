@@ -16,6 +16,7 @@ class Application
 public:
     static void postMessage(MessageType type, std::string label, Variant data);
     static void processEvents();
+    static bool hasMessage();
     static Message getNextMessage();
     static void shutdown();
 
