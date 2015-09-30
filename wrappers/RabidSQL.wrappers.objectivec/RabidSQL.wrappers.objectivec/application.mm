@@ -14,7 +14,15 @@
 
 + (Message *) getNextMessage
 {
-    return Object::convert(RabidSQL::Application::getNextMessage());
+    if (RabidSQL::Application::hasMessage()) {
+
+        // Convert and return a message
+        return Object::convert(RabidSQL::Application::getNextMessage());
+    } else {
+
+        // Return a null pointer
+        return nullptr;
+    }
 }
 
 + (void) shutdown

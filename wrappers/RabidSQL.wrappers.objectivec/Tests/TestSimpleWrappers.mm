@@ -35,7 +35,7 @@ struct RVariant
     XCTAssertEqualObjects([message.data toString], @"Data");
 
     message = [Application getNextMessage];
-    XCTAssertEqual(message.type, NO_MESSAGE);
+    XCTAssertEqual(message, nullptr);
 }
 
 - (void) testConnectionSettingsWrapper {
