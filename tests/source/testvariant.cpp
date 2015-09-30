@@ -512,6 +512,12 @@ TEST_F(TestVariant, FileIOJsonIOString) {
     TEST_JSON_SINGLE(std::string, "test");
 }
 
+// Tests reading and writing of a single quoted String variant from and to json
+// files
+TEST_F(TestVariant, FileIOJsonIOQuotedString) {
+    TEST_JSON_SINGLE(std::string, "\"test\"");
+}
+
 // Tests reading and writing of a single String vector variant from and to
 // json files
 TEST_F(TestVariant, FileIOJsonIOStringVector) {

@@ -771,6 +771,7 @@ Variant JsonStream::readString()
                         buffer.push_back(ch);
                         break;
                 }
+                break;
             case '"':
 
                 // All done!
