@@ -15,7 +15,6 @@
     if (self) {
 
         _data = new RVariant();
-        _data->object = new RabidSQL::Variant();
     }
 
     return self;
