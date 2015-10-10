@@ -6,7 +6,7 @@ include_directories(${PROJECT_NAME} PUBLIC
     include
     ../logic/include
     ../
-    /development/libs/gtest-1.7.0/include/
+    ../libs/googletest/googletest/include/
 )
 
 set(TEST_SOURCE_FILES
@@ -27,6 +27,7 @@ LINK_DIRECTORIES(
     /usr/local/mysql/lib
 )
 
+add_subdirectory(../libs/googletest/googletest googletest)
 add_subdirectory(../logic/ logic)
 add_subdirectory(../libs/drivers/mysql mysql)
 
