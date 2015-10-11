@@ -308,9 +308,25 @@ FileStream &BinaryStream::operator>>(Variant &value)
             value = data;
             break;
         }
+        case D_LONGLONG:
+        {
+            long long data = 0;
+            read(reinterpret_cast<char *>(&data), sizeof(data));
+
+            value = data;
+            break;
+        }
         case D_ULONG:
         {
             unsigned long data = 0;
+            read(reinterpret_cast<char *>(&data), sizeof(data));
+
+            value = data;
+            break;
+        }
+        case D_ULONGLONG:
+        {
+            unsigned long long data = 0;
             read(reinterpret_cast<char *>(&data), sizeof(data));
 
             value = data;
@@ -602,7 +618,9 @@ FileStream &JsonStream::operator<<(const Variant &value)
         case D_INT:
         case D_UINT:
         case D_LONG:
+        case D_LONGLONG:
         case D_ULONG:
+        case D_ULONGLONG:
         {
             *static_cast<std::fstream *>(this) << value.toString();
             break;

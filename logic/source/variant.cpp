@@ -116,6 +116,18 @@ Variant::Variant(const long &value)
 }
 
 /**
+ * Initializes a variant based on an unsigned long long
+ *
+ * @param value The value to copy
+ * @return void
+ */
+Variant::Variant(const long long &value)
+{
+    type = D_LONGLONG;
+    data = new long long(value);
+}
+
+/**
  * Initializes a variant based on an unsigned long
  *
  * @param value The value to copy
@@ -125,6 +137,18 @@ Variant::Variant(const unsigned long &value)
 {
     type = D_ULONG;
     data = new unsigned long(value);
+}
+
+/**
+ * Initializes a variant based on an unsigned long long
+ *
+ * @param value The value to copy
+ * @return void
+ */
+Variant::Variant(const unsigned long long &value)
+{
+    type = D_ULONGLONG;
+    data = new unsigned long long(value);
 }
 
 /**
@@ -259,8 +283,14 @@ void Variant::operator=(const Variant &value)
     case D_LONG:
         data = new long(value.toLong());
         break;
+    case D_LONGLONG:
+        data = new unsigned long long(value.toLong());
+        break;
     case D_ULONG:
         data = new unsigned long(value.toLong());
+        break;
+    case D_ULONGLONG:
+        data = new unsigned long long(value.toLong());
         break;
     case D_INT:
         data = new int(value.toLong());
@@ -352,8 +382,12 @@ bool Variant::operator==(const Variant &value) const
         return toUInt() == value.toUInt();
     case D_LONG:
         return toLong() == value.toLong();
+    case D_LONGLONG:
+        return toLongLong() == value.toLongLong();
     case D_ULONG:
         return toULong() == value.toULong();
+    case D_ULONGLONG:
+        return toULongLong() == value.toULongLong();
     case D_QUERYRESULT:
         return toQueryResult().uid == value.toQueryResult().uid;
     case D_NULL:
@@ -408,8 +442,12 @@ bool Variant::operator>(const Variant &value) const
         return toUInt() > value.toUInt();
     case D_LONG:
         return toLong() > value.toLong();
+    case D_LONGLONG:
+        return toLongLong() > value.toLongLong();
     case D_ULONG:
         return toULong() > value.toULong();
+    case D_ULONGLONG:
+        return toULongLong() > value.toULongLong();
     case D_QUERYRESULT:
         return toQueryResult().uid > value.toQueryResult().uid;
     case D_NULL:
@@ -463,8 +501,12 @@ bool Variant::operator<(const Variant &value) const
         return toUInt() < value.toUInt();
     case D_LONG:
         return toLong() < value.toLong();
+    case D_LONGLONG:
+        return toLongLong() < value.toLongLong();
     case D_ULONG:
         return toULong() < value.toULong();
+    case D_ULONGLONG:
+        return toULongLong() < value.toULongLong();
     case D_QUERYRESULT:
         return toQueryResult().uid < value.toQueryResult().uid;
     case D_NULL:
@@ -699,6 +741,18 @@ const long Variant::toLong() const
 
 /**
  *
+ * Converts this variant to a long long. In the event if a vector, the first
+ * element will be returned.
+ *
+ * @return The long representation of this object
+ */
+const long long Variant::toLongLong() const
+{
+    return numericCast<long long>();
+}
+
+/**
+ *
  * Converts this variant to an unsigned long. In the event if a vector, the
  * first element will be returned.
  *
@@ -707,6 +761,18 @@ const long Variant::toLong() const
 const unsigned long Variant::toULong() const
 {
     return numericCast<unsigned long>();
+}
+
+/**
+ *
+ * Converts this variant to an unsigned long long. In the event if a vector, the
+ * first element will be returned.
+ *
+ * @return The unsigned long representation of this object
+ */
+const unsigned long long Variant::toULongLong() const
+{
+    return numericCast<unsigned long long>();
 }
 
 /**

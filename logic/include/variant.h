@@ -30,7 +30,9 @@ public:
     Variant(const VariantVector &value);
     Variant(const VariantMap &value);
     Variant(const long &value);
+    Variant(const long long &value);
     Variant(const unsigned long &value);
+    Variant(const unsigned long long &value);
     Variant(const int &value);
     Variant(const unsigned int &value);
     Variant(const short &value);
@@ -45,7 +47,9 @@ public:
     const VariantVector toVariantVector() const;
     const VariantMap toVariantMap() const;
     const long toLong() const;
+    const long long toLongLong() const;
     const unsigned long toULong() const;
+    const unsigned long long toULongLong() const;
     const int toInt() const;
     const unsigned int toUInt() const;
     const short toShort() const;
