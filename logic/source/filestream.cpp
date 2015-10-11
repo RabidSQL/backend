@@ -1,7 +1,10 @@
 #include "app.h"
 #include "filestream.h"
-
-#include <cstring>
+#include "libs/rapidjson/include/rapidjson/reader.h"
+#include "libs/rapidjson/include/rapidjson/error/en.h"
+#include "libs/rapidjson/include/rapidjson/writer.h"
+#include "libs/rapidjson/include/rapidjson/stringbuffer.h"
+#include <memory>
 
 namespace RabidSQL {
 
@@ -535,6 +538,482 @@ FileStream &BinaryStream::operator<<(const Variant &value)
 }
 
 /**
+ * Sets or appends the top element in the stack with the value provided
+ *
+ * @return bool True on success or false on failure
+ */
+bool JsonHandler::set(Variant data) {
+
+    if (stack.empty()) {
+
+        stack.push(new Data(data));
+
+        return true;
+    }
+
+    auto top = stack.top();
+
+    switch (top->type()) {
+        case PRIMITIVE:
+
+            // Root is a primitive
+            *stack.top()->primitive() = data;
+            break;
+        case ARRAY:
+            stack.top()->array()->push_back(data);
+            break;
+        case OBJECT:
+            if (keys.empty()) {
+
+                // Empty key
+                return false;
+            }
+
+            (*top->object())[keys.top()] = data;
+            keys.pop();
+            break;
+    }
+
+    return true;
+}
+
+/**
+ * Gets a variant representing the JSON data. This deletes all of the local data
+ * at the same time.
+ *
+ * @return Variant
+ */
+Variant JsonHandler::get()
+{
+    Variant value;
+    auto root = stack.top();
+
+    switch (root->type()) {
+        case JsonHandler::PRIMITIVE:
+            value = *root->primitive();
+            break;
+        case JsonHandler::ARRAY:
+            value = *root->array();
+            break;
+        case JsonHandler::OBJECT:
+            value = *root->object();
+            break;
+    }
+
+    while (!stack.empty()) {
+
+        delete stack.top();
+        stack.pop();
+    }
+
+    return value;
+}
+
+/**
+ * Sets the current value to Null
+ *
+ * @return bool True on success, false on failure
+ */
+bool JsonHandler::Null()
+{
+    return set(nullptr);
+}
+
+/**
+ * Sets the current value to the provided boolean value
+ *
+ * @param bool
+ * @return bool True on success, false on failure
+ */
+bool JsonHandler::Bool(bool b)
+{
+    return set(b);
+}
+
+/**
+ * Sets the current value to the provided numeric value
+ *
+ * @param i
+ * @return bool True on success, false on failure
+ */
+bool JsonHandler::Int(int i)
+{
+    return set(i);
+}
+
+/**
+ * Sets the current value to the provided unsigned numeric value
+ *
+ * @param u
+ * @return bool True on success, false on failure
+ */
+bool JsonHandler::Uint(unsigned u)
+{
+    return set(u);
+}
+
+/**
+ * Sets the current value to the provided 64bit int value
+ *
+ * @param i
+ * @return bool True on success, false on failure
+ */
+bool JsonHandler::Int64(int64_t i)
+{
+    return set(i);
+}
+
+/**
+ * Sets the current value to the provided 64bit (unsigned) int value
+ *
+ * @param u
+ * @return bool True on success, false on failure
+ */
+bool JsonHandler::Uint64(uint64_t u)
+{
+    return set(u);
+}
+
+/**
+ * Sets the current value to the provided double value
+ *
+ * @param d
+ * @return bool True on success, false on failure
+ */
+bool JsonHandler::Double(double d)
+{
+    return set(d);
+}
+
+/**
+ * Sets the current value to the provided string value. This must be UTF8.
+ *
+ * @param str
+ * @param length
+ * @param copy
+ * @return bool True on success, false on failure
+ */
+bool JsonHandler::String(const char* str, rapidjson::SizeType length, bool copy)
+{
+    return set(str);
+}
+
+/**
+ * Starts a variant map on top of the stack
+ *
+ * @return bool True on success, false on failure
+ */
+bool JsonHandler::StartObject()
+{
+    stack.push(new Data(VariantMap()));
+
+    return true;
+}
+
+/**
+ * Pushes a key onto the key stack for use in processing objects. This must be
+ * UTF8
+ *
+ * @param str
+ * @param length
+ * @pram copy
+ * @return bool True on success, false on failure
+ */
+bool JsonHandler::Key(const char* str, rapidjson::SizeType length, bool copy)
+{
+    keys.push(str);
+    return true;
+}
+
+/**
+ * Closes an object. Returns false if the data is bad.
+ *
+ * @param memberCount
+ * @return bool True on success, false on failure
+ */
+bool JsonHandler::EndObject(rapidjson::SizeType memberCount)
+{
+    auto size = stack.size();
+
+    if (size == 0) {
+
+        // Invalid data
+        return false;
+    } else if (size == 1) {
+
+        // This is the root node. We don't need to do anything else
+        return true;
+    }
+
+    std::unique_ptr<Data> data(stack.top());
+    stack.pop();
+
+    if (data->type() != OBJECT) {
+
+        // Invalid data
+        return false;
+    }
+
+    auto object = data->object();
+
+    if (object->size() != memberCount) {
+
+        // Invalid data
+        return false;
+    }
+
+    auto top = stack.top();
+
+    switch (top->type()) {
+        case PRIMITIVE:
+
+            // This is an impossible case. Mark as a parsing error
+            return false;
+        case ARRAY:
+            top->array()->push_back(*object);
+            break;
+        case OBJECT:
+            if (keys.empty()) {
+
+                // Empty key
+                return false;
+            }
+            (*top->object())[keys.top()] = *object;
+            keys.pop();
+            break;
+    }
+
+    return true;
+}
+
+/**
+ * Pushes a new array onto the top of the stack
+ *
+ * @return bool True on success, false on failure
+ */
+bool JsonHandler::StartArray()
+{
+    stack.push(new Data(VariantVector()));
+
+    return true;
+}
+
+/**
+ * Closes an array. Returns false if the data is bad.
+ *
+ * @param elementCount
+ * @return bool True on success, false on failure
+ */
+bool JsonHandler::EndArray(rapidjson::SizeType elementCount)
+{
+    auto size = stack.size();
+
+    if (size == 0) {
+
+        // Invalid data
+        return false;
+    } else if (size == 1) {
+
+        // This is the root node. We don't need to do anything else
+        return true;
+    }
+
+    std::unique_ptr<Data> data(stack.top());
+    stack.pop();
+
+    if (data->type() != ARRAY) {
+
+        // Invalid data
+        return false;
+    }
+
+    auto array = data->array();
+
+    if (array->size() != elementCount) {
+
+        // Invalid data
+        return false;
+    }
+
+    auto top = stack.top();
+
+    switch (top->type()) {
+        case PRIMITIVE:
+
+            // This is an impossible case. Mark as a parsing error
+            return false;
+        case ARRAY:
+            top->array()->push_back(*array);
+            break;
+        case OBJECT:
+            if (keys.empty()) {
+
+                // Empty key
+                return false;
+            }
+            (*top->object())[keys.top()] = *array;
+            keys.pop();
+            break;
+    }
+
+    return true;
+}
+
+/**
+ * Initializes an empty Data instance.
+ *
+ * @return void
+ */
+JsonHandler::Data::Data()
+{
+    _data = nullptr;
+}
+
+/**
+ * Initializes a Data instance using the data from the provided primitive.
+ * Note that while Variant does support both VariantVector and VariantMap,
+ * neither is supported in this constructor.
+ *
+ * @return void
+ */
+JsonHandler::Data::Data(const Variant &primitive)
+{
+    _data = nullptr;
+    *this->primitive() = primitive;
+}
+
+/**
+ * Initializes a Data instance using the data from the provided vector.
+ *
+ * @return void
+ */
+JsonHandler::Data::Data(const VariantVector &list)
+{
+    _data = nullptr;
+    *this->array() = list;
+}
+
+/**
+ * Initializes a Data instance using the data from the provided object.
+ *
+ * @return void
+ */
+JsonHandler::Data::Data(const VariantMap &object)
+{
+    _data = nullptr;
+    *this->object() = object;
+}
+
+/**
+ * Switches to the provided type. Frees memory if applicable
+ *
+ * @param type
+ * @return void
+ */
+void JsonHandler::Data::switchType(JsonHandler::Type type)
+{
+
+    if (_data != nullptr) {
+
+        if (_type == type) {
+
+            // We're already using the correct type
+            return;
+        }
+
+        // Free memory for whatever was allocated previously
+        delete reinterpret_cast<char *>(_data);
+        _data = nullptr;
+    }
+
+    _type = type;
+    switch (type) {
+        case PRIMITIVE:
+            _data = new Variant();
+            break;
+        case ARRAY:
+            _data = new VariantVector();
+            break;
+        case OBJECT:
+            _data = new VariantMap();
+            break;
+    }
+}
+
+/**
+ * Returns the current type
+ *
+ * @return Type
+ */
+JsonHandler::Type JsonHandler::Data::type()
+{
+    return _type;
+}
+
+/**
+ * Returns the current primitive. If this is not currently a primitive, it is
+ * deleted and a blank primitive returned.
+ *
+ * @return Variant
+ */
+Variant *JsonHandler::Data::primitive()
+{
+    switchType(PRIMITIVE);
+
+    return static_cast<Variant *>(_data);
+}
+
+/**
+ * Returns the current array. If this is not currently a array, it is
+ * deleted and a blank array returned.
+ *
+ * @return VariantVector
+ */
+VariantVector *JsonHandler::Data::array()
+{
+    switchType(ARRAY);
+
+    return static_cast<VariantVector *>(_data);
+}
+
+/**
+ * Returns the current object. If this is not currently a array, it is
+ * deleted and a blank object returned.
+ *
+ * @return VariantMap
+ */
+VariantMap *JsonHandler::Data::object()
+{
+    switchType(OBJECT);
+
+    return static_cast<VariantMap *>(_data);
+}
+
+/**
+ * Destroys the current data
+ *
+ * @return void
+ */
+JsonHandler::Data::~Data()
+{
+    if (_data != nullptr) {
+
+        // Free memory for whatever was allocated previously
+        delete reinterpret_cast<char *>(_data);
+    }
+}
+
+/**
+ * Initializes the json stream, setting the writer to a null pointer
+ *
+ * @return void
+ */
+JsonStream::JsonStream()
+{
+    writer = nullptr;
+}
+
+/**
  *
  * Returns the format of this stream. For possible future use.
  *
@@ -554,61 +1033,64 @@ FileFormat JsonStream::getFormat()
  */
 FileStream &JsonStream::operator<<(const Variant &value)
 {
+    if (writer == nullptr) {
+
+        // Initialize writer
+        writer = new rapidjson::Writer<JsonStream>(*this);
+    }
+
+    auto writer = reinterpret_cast<rapidjson::Writer<JsonStream> *>(
+            this->writer);
+
     switch (value.type) {
         case D_STRING:
         {
-            *static_cast<std::fstream *>(this) << prepare(value.toString());
+            writer->String(value.toString().c_str());
             break;
         }
         case D_STRINGVECTOR:
         case D_VARIANTVECTOR:
         {
-            write("[", 1);
+            writer->StartArray();
 
             // Use variant vector for both string and variant since they will
             // be stored the same
             auto data = value.toVariantVector();
 
+            size_t count = 0;
+
             for (auto it = data.begin(); it != data.end(); ++it) {
-
-                if (it != data.begin()) {
-
-                    // Add a comma as there were preceding elements
-                    write(",", 1);
-                }
 
                 // Write element
                 *this << *it;
+                count++;
             }
 
-            write("]", 1);
+            writer->EndArray(count);
+
             break;
         }
         case D_VARIANTMAP:
         {
-            write("{", 1);
+
+            writer->StartObject();
 
             auto map(value.toVariantMap());
 
+            size_t count = 0;
+
             for (auto it = map.cbegin(); it != map.cend(); ++it) {
 
-                if (it != map.cbegin()) {
-
-                    // Add a comma as there were preceding elements
-                    write(",", 1);
-                }
-
                 // Write key. Convert to string
-                *this << Variant(it->first);
-
-                // Write separator
-                write(":", 1);
+                writer->String(it->first.c_str());
 
                 // Write value
                 *this << it->second;
+                count++;
             }
 
-            write("}", 1);
+            writer->EndObject(count);
+
             break;
         }
         case D_DOUBLE:
@@ -621,20 +1103,14 @@ FileStream &JsonStream::operator<<(const Variant &value)
         case D_LONGLONG:
         case D_ULONG:
         case D_ULONGLONG:
-        {
-            *static_cast<std::fstream *>(this) << value.toString();
+            writer->Int64(value.toLongLong());
             break;
-        }
         case D_BOOLEAN:
-            if (value.toBool()) {
-                *static_cast<std::fstream *>(this) << "true";
-            } else {
-                *static_cast<std::fstream *>(this) << "false";
-            }
+            writer->Bool(value.toBool());
             break;
         case D_NULL:
         case D_QUERYRESULT:
-            *static_cast<std::fstream *>(this) << "null";
+            writer->Null();
             break;
     }
 
@@ -650,351 +1126,65 @@ FileStream &JsonStream::operator<<(const Variant &value)
  */
 FileStream &JsonStream::operator>>(Variant &value)
 {
-    char ch = ignoreWhitespace();
+    rapidjson::Reader reader;
+    JsonHandler handler;
+    current = 0;
+    count = 0;
+    Take();
+    reader.Parse(*this, handler);
 
-    value = readVariant(ch);
+    if (reader.HasParseError()) {
+
+        return *this;
+    }
+
+    value = handler.get();
 
     return *this;
 }
 
-Variant JsonStream::readNumber()
+JsonStream::Ch JsonStream::Peek() const
 {
-    char ch;
-    bool decimal = false;
-    std::string buffer;
-
-    while (!eof()) {
-
-        // Read character
-        ch = 0;
-        read(&ch, 1);
-
-        if (ch == '-') {
-
-            if (buffer.size() > 0) {
-
-                // Not the first character
-                // @TODO: raise an error
-                return nullptr;
-            } else {
-
-                // Add to buffer
-                buffer.push_back('-');
-            }
-        } else if (ch == '.') {
-
-            // Get last character. There is always at least one character
-            // because the << operator requires 0-9 or -
-            ch = buffer.back();
-            decimal = true;
-
-            if (ch >= '0' && ch <= '9') {
-
-                // Add to buffer
-                buffer.push_back('.');
-            } else {
-
-                // Not a valid number
-                // @TODO: raise an error
-                return nullptr;
-            }
-        } else if (ch >= '0' && ch <= '9') {
-
-            // Add to buffer
-            buffer.push_back(ch);
-        } else {
-
-            // End of the number
-            // Rewind 1 byte
-            seekp(-1, std::ios_base::cur);
-
-            char lch = tolower(ch);
-            if (lch == 'n' || lch == 't' || lch == 'f') {
-
-                // Number is immediately followed by an n, t, or f. This will
-                // not be caught by the main stream reader, so we need to report
-                // it as an error here
-                // @TODO: raise an error
-                return nullptr;
-            }
-
-            // Valid number and all done processing!
-            if (decimal) {
-
-                // Convert to double
-                return std::stod(buffer);
-            } else {
-
-                // Convert to long
-                return std::stol(buffer);
-            }
-        }
-    }
-
-    return nullptr;
+    return current;
 }
 
-Variant JsonStream::readString()
+JsonStream::Ch JsonStream::Take()
 {
-    char ch;
-    std::string buffer;
-
-    while (!eof()) {
-
-        // Read character
-        ch = 0;
-        read(&ch, 1);
-
-        switch (ch) {
-            case '\\':
-
-                // Read next character
-                ch = 0;
-                read(&ch, 1);
-
-                // Un-escape certain special characters
-                switch (ch) {
-                    case 'b':
-                        buffer.push_back('\b');
-                        break;
-                    case 'f':
-                        buffer.push_back('\f');
-                        break;
-                    case 'n':
-                        buffer.push_back('\n');
-                        break;
-                    case 'r':
-                        buffer.push_back('\r');
-                        break;
-                    case 't':
-                        buffer.push_back('\t');
-                        break;
-                    case '"':
-                        buffer.push_back('"');
-                        break;
-                    case '\\':
-                        buffer.push_back('\\');
-                        break;
-                    case 'u':
-                    {
-                        char ch[5] = { 0 };
-                        read(ch, 4);
-
-                        // Ensure null termination
-                        ch[4] = 0;
-                        // decode this!
-                    }
-                    default:
-                        buffer.push_back('\\');
-                        buffer.push_back(ch);
-                        break;
-                }
-                break;
-            case '"':
-
-                // All done!
-                return buffer;
-            default:
-
-                // Add to buffer;
-                buffer.push_back(ch);
-        }
-    }
-
-    return nullptr;
+    Ch c = current;
+    current = 0;
+    read(reinterpret_cast<char *>(&current), sizeof(current));
+    count++;
+    return c;
 }
 
-Variant JsonStream::readObject()
+size_t JsonStream::Tell() const
 {
-    VariantMap map;
-    char ch;
-
-    while (!eof()) {
-
-        ch = ignoreWhitespace();
-
-        switch (ch) {
-            case '}':
-
-                // end of object
-                return map;
-            case ',':
-
-                // keep processing
-                break;
-            case '"':
-            {
-
-                // Start of a key
-                auto key = readString();
-
-                // Get next character
-                ch = ignoreWhitespace();
-
-                if (ch != ':') {
-
-                    // Must be a colon (separator), or this is invalid
-                    return nullptr;
-                }
-
-                // Get next character
-                ch = ignoreWhitespace();
-
-                // Read the value and add to our map
-                map[key.toString()] = readVariant(ch);
-                break;
-            }
-            default:
-
-                // This is an invalid object
-                return nullptr;
-        }
+    if (current != 0) {
+        return count + 1;
     }
-
-    return nullptr;
+    return count;
+    //return count_ + static_cast<size_t>(current_ - buffer_);
 }
 
-Variant JsonStream::readList()
+void JsonStream::Put(JsonStream::Ch ch)
 {
-    VariantVector list;
-    char ch;
-
-    while (!eof()) {
-
-        ch = ignoreWhitespace();
-
-        switch (ch) {
-            case ']':
-
-                // end of list
-                return list;
-            case ',':
-
-                // keep processing
-                continue;
-            default:
-                list.push_back(readVariant(ch));
-        }
-    }
-
-    return nullptr;
+    write(&ch, 1);
 }
 
-Variant JsonStream::readVariant(char ch)
+void JsonStream::Flush()
 {
-    if (ch >= '0' && ch <= '9') {
-
-        // Set to 0 for easier access in the switch. We'll re-read this byte.
-        ch = '0';
-    }
-
-    switch (ch) {
-        case '"':
-
-            // string
-            return readString();
-        case '{':
-
-            // object
-            return readObject();
-        case '[':
-
-            // list
-            return readList();
-        case 'n':
-        case 'N':
-        {
-
-            // NULL value
-            char buffer[4] = { 0 };
-            read(buffer, 3);
-
-            // Ensure null termination
-            buffer[3] = 0;
-
-            if (strcasecmp(buffer, "ull") == 0) {
-
-                // Found null!
-                return Variant(nullptr);
-            }
-
-            // Invalid data
-            return nullptr;
-        }
-        case 't':
-        case 'T':
-        {
-
-            // TRUE value
-            char buffer[4] = { 0 };
-            read(buffer, 3);
-
-            // Ensure null termination
-            buffer[3] = 0;
-
-            if (strcasecmp(buffer, "rue") == 0) {
-
-                // Found true!
-                return Variant(true);
-            }
-
-            // Invalid data
-            return nullptr;
-        }
-        case 'f':
-        case 'F':
-        {
-
-            // FALSE value
-            char buffer[5] = { 0 };
-            read(buffer, 4);
-
-            // Ensure null termination
-            buffer[4] = 0;
-
-            if (strcasecmp(buffer, "alse") == 0) {
-
-                // Found false!
-                return Variant(false);
-            }
-
-            // Invalid data
-            return nullptr;
-        }
-        case '0':
-        case '-':
-
-            // Rewind 1 byte
-            seekp(-1, std::ios_base::cur);
-
-            // number
-            return readNumber();
-        default:
-
-            return nullptr;
-    }
+    flush();
 }
 
-char JsonStream::ignoreWhitespace()
+JsonStream::Ch* JsonStream::PutBegin()
 {
-    char ch;
+    RAPIDJSON_ASSERT(false);
+    return 0;
+}
 
-    while (!eof()) {
-
-        // Read byte
-        ch = 0;
-        read(&ch, 1);
-
-        if (strchr(ws, ch) != nullptr || ch == 0) {
-
-            // Found a whitespace character
-            continue;
-        }
-
-        return ch;
-    }
-
-    // Nothing found
+size_t JsonStream::PutEnd(JsonStream::Ch*)
+{
+    RAPIDJSON_ASSERT(false);
     return 0;
 }
 
@@ -1035,5 +1225,12 @@ std::string JsonStream::prepare(std::string string)
     return buffer;
 }
 
-char JsonStream::ws[] = { 0x20, 0x09, 0x0a, 0x0d };
+JsonStream::~JsonStream()
+{
+    if (writer != nullptr) {
+
+        delete reinterpret_cast<rapidjson::Writer<JsonStream> *>(this->writer);
+    }
+}
+
 } // namespace RabidSQL

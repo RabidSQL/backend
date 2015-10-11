@@ -4,6 +4,12 @@
 #include "structs.h"
 
 #include <fstream>
+#include <stack>
+
+namespace rapidjson
+{
+    typedef unsigned SizeType;
+} // rapidjson
 
 namespace RabidSQL
 {
@@ -16,22 +22,76 @@ public:
     virtual FileStream &operator>>(Variant &value) = 0;
 };
 
+struct JsonHandler {
+public:
+    enum Type {
+        PRIMITIVE, ARRAY, OBJECT
+    };
+    class Data {
+    public:
+        Data();
+        Data(const Variant &primitive);
+        Data(const VariantVector &list);
+        Data(const VariantMap &object);
+        Type type();
+        Variant *primitive();
+        VariantVector *array();
+        VariantMap *object();
+        ~Data();
+
+    private:
+        void switchType(Type type);
+
+        Type _type;
+        void *_data;
+    };
+
+    std::stack<Data *> stack;
+    std::stack<std::string> keys;
+
+    bool set(Variant data);
+    Variant get();
+    bool Null();
+    bool Bool(bool b);
+    bool Int(int i);
+    bool Uint(unsigned u);
+    bool Int64(int64_t i);
+    bool Uint64(uint64_t u);
+    bool Double(double d);
+    bool String(const char* str, rapidjson::SizeType length, bool copy);
+    bool StartObject();
+    bool Key(const char* str, rapidjson::SizeType length, bool copy);
+    bool EndObject(rapidjson::SizeType memberCount);
+    bool StartArray();
+    bool EndArray(rapidjson::SizeType elementCount);
+};
+
 class JsonStream : virtual public FileStream {
 public:
-    static char ws[5];
+    typedef char Ch;
+    void *writer;
 
     FileFormat getFormat();
     std::string prepare(std::string string);
-    virtual ~JsonStream() {}
+    JsonStream();
+    virtual ~JsonStream();
     FileStream &operator<<(const Variant &value);
     FileStream &operator>>(Variant &value);
+
+    // Writer methods
+    void Put(Ch);
+    void Flush();
+    Ch* PutBegin();
+    size_t PutEnd(Ch*);
+
+    // Reader methods
+    Ch Peek() const;
+    Ch Take();
+    size_t Tell() const;
+
 private:
-    Variant readNumber();
-    Variant readString();
-    Variant readObject();
-    Variant readList();
-    char ignoreWhitespace();
-    Variant readVariant(char ch);
+    char current;
+    unsigned int count;
 };
 
 class BinaryStream : virtual public FileStream {

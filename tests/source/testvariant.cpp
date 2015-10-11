@@ -550,5 +550,22 @@ TEST_F(TestVariant, FileIOJsonIOULong) {
     TEST_JSON_SINGLE(unsigned long, 1);
 }
 
+// Tests reading a unicode literal
+TEST_F(TestVariant, FileIOUnicodeTranslation) {
+    JsonStream stream;
+    Variant variant;
+    char value[] = "\"\\u263a\"";
+    stream.open(filename, std::ios::out);
+    stream.write(value, strlen(value));
+    stream.close();
+    stream.open(filename, std::ios::in);
+    stream >> variant;
+    stream.close();
+    EXPECT_EQ(variant.toString(), "\u263A");
+    char tc;
+    EXPECT_FALSE(stream.get(tc));
+    EXPECT_TRUE(stream.eof());
+}
+
 } // namespace RabidSQL
 
