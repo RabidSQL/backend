@@ -1,8 +1,8 @@
 #ifndef RABIDSQL_MYSQLDRIVER_MYSQLDATABASECONNECTION_H
 #define RABIDSQL_MYSQLDRIVER_MYSQLDATABASECONNECTION_H
 
-#include "logic/include/databaseconnection.h"
-#include "logic/include/connectionsettings.h"
+#include "../../databaseconnection.h"
+#include "connectionsettings.h"
 
 namespace sql {
 class Connection;

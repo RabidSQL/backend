@@ -1,5 +1,5 @@
 #include "app.h"
-#include "logic/include/structs.h"
+#include "include/structs.h"
 #include "../include/databaseconnection.h"
 
 #include <driver.h>

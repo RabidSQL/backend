@@ -4,7 +4,8 @@ project(Test)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -std=c++0x")
 include_directories(${PROJECT_NAME} PUBLIC
     include
-    ../logic/include
+    ../include
+    ../drivers
     ../
     ../libs/googletest/googletest/include/
 )
@@ -28,8 +29,8 @@ LINK_DIRECTORIES(
 )
 
 add_subdirectory(../libs/googletest/googletest googletest)
-add_subdirectory(../logic/ logic)
-add_subdirectory(../libs/drivers/mysql mysql)
+add_subdirectory(../ logic)
+add_subdirectory(../drivers/mysql mysql)
 
 add_executable(${PROJECT_NAME} ${TEST_SOURCE_FILES})
 
