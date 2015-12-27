@@ -7,7 +7,7 @@
 
 #ifdef DEBUG
 
-#include "logic/include/console.h"
+#include "console.h"
 
 #define rDebug Console::debug()
 
