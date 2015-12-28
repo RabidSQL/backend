@@ -49,4 +49,9 @@ set(LOGIC_SOURCE_FILES
     source/Variant.cpp
 )
 
+OPTION(BUILD_TESTS "Build unit tests" ON)
+IF(BUILD_TESTS)
+    add_subdirectory(tests)
+ENDIF()
+
 add_library(${PROJECT_NAME} STATIC ${LOGIC_SOURCE_FILES})

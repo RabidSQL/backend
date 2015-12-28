@@ -34,7 +34,6 @@ LINK_DIRECTORIES(
 )
 
 add_subdirectory(../libs/googletest/googlemock googlemock)
-add_subdirectory(../ backend)
 add_subdirectory(../drivers/mysql mysql)
 
 add_executable(${PROJECT_NAME} ${TEST_SOURCE_FILES})
