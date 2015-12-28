@@ -16,21 +16,19 @@ class Application
 public:
     static Application *getInstance();
 
-    void postMessage(MessageType type, std::string label, Variant data);
-    void processEvents();
-    bool hasMessage();
-    Message getNextMessage();
+    virtual void postMessage(MessageType type, std::string label, Variant data);
+    virtual void processEvents();
+    virtual bool hasMessage();
+    virtual Message getNextMessage();
     ~Application();
 
 protected:
-    void registerObject(SmartObject *object);
-    void unregisterObject(SmartObject *object);
+    Application();
+    virtual void registerObject(SmartObject *object);
+    virtual void unregisterObject(SmartObject *object);
 
 private:
-    Application();
-
     static Application *instance;
-
     ThreadLocal<std::vector<SmartObject *> > objects;
     std::queue<Message> messages;
     std::mutex mutex;
