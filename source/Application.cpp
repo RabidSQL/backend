@@ -17,7 +17,7 @@ Application *Application::getInstance()
     if (Application::instance == nullptr) {
 
         // Initialize application
-        Application::instance = new Application();
+        new Application();
     }
 
     return Application::instance;
@@ -27,6 +27,11 @@ Application *Application::getInstance()
  * Application constructor
  */
 Application::Application() {
+    if (instance != nullptr) {
+        delete instance;
+    }
+
+    instance = this;
 }
 
 /**
