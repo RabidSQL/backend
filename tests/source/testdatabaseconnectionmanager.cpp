@@ -5,7 +5,15 @@
 #include "DatabaseConnectionManager.h"
 #include "NSEnums.h"
 #include "smartobjecttester.h"
+#include "mockapplication.h"
+#include "mockconnectionsettings.h"
+#include "mockdatabaseconnection.h"
+#include "mocksmartobject.h"
 #include "gtest/gtest.h"
+
+using ::testing::Exactly;
+using ::testing::_;
+using ::testing::Return;
 
 namespace RabidSQL {
 
@@ -15,134 +23,100 @@ protected:
     {
         // Reset statically stored data
         SmartObjectTester::reset();
-
-        delete Application::getInstance();
     }
 };
 
 // Tests shutting down database connections via manager
 TEST(TestDatabaseConnectionManager, reserveReleaseShutdown) {
-    ConnectionSettings settings;
-    DatabaseConnectionManager *manager;
+    MockApplication app;
+    EXPECT_CALL(app, registerObject(_)).Times(Exactly(4));
 
-    // Configure connection settings
-    settings.set("type", MYSQL);
-    settings.set("hostname", "localhost");
-    settings.set("username", "test");
-    settings.set("max_connections", 5);
+    MockConnectionSettings settings;
+    EXPECT_CALL(settings, get("type", true)).Times(Exactly(1)).WillOnce(Return(INHERIT));
+    EXPECT_CALL(settings, get("max_connections", true)).Times(Exactly(1)).WillOnce(Return(5));
+    EXPECT_CALL(app, unregisterObject(&settings)).Times(Exactly(1));
+    // Connection MUST be a pointer because the manager is going to delete it
+    // when it is finished.
 
-    // Make manager
-    manager = DatabaseConnectionFactory::makeManager(&settings);
+    MockDatabaseConnection *parentConnection = new MockDatabaseConnection();
+    MockDatabaseConnection *connection = new MockDatabaseConnection();
+    EXPECT_CALL(app, unregisterObject(parentConnection)).Times(Exactly(1));
+    EXPECT_CALL(app, unregisterObject(connection)).Times(Exactly(1));
+    EXPECT_CALL(*connection, start()).Times(Exactly(1));
 
-    // Reserve connection
-    std::string uuid = manager->reserveDatabaseConnection(0);
+    DatabaseConnectionManager manager(parentConnection, &settings);
+    EXPECT_CALL(*parentConnection, clone(&manager)).Times(Exactly(1)).WillOnce(Return(connection));
+    EXPECT_CALL(*connection, join()).Times(Exactly(1));
+    EXPECT_CALL(app, unregisterObject(&manager)).Times(Exactly(1));
 
-    // Give the thread enough time to startup before we check for it
-    std::this_thread::sleep_for(std::chrono::milliseconds(30));
-
-    ASSERT_EQ(1, Thread::numberOfActiveThreads());
+    // Reserve connection.
+    std::string uuid = manager.reserveDatabaseConnection(0);
 
     // Release connection
-    manager->releaseDatabaseConnection(uuid);
-
-    // Cleanup manager / free memory
-    delete manager;
-
-    ASSERT_EQ(0, Thread::numberOfActiveThreads());
+    manager.releaseDatabaseConnection(uuid);
 }
 
 // Tests implicitly shutting down database connections via manager
 TEST(TestDatabaseConnectionManager, implicitShutdown) {
-    ConnectionSettings settings;
-    DatabaseConnectionManager *manager;
+    MockApplication app;
+    EXPECT_CALL(app, registerObject(_)).Times(Exactly(4));
 
-    // Configure connection settings
-    settings.set("type", MYSQL);
-    settings.set("hostname", "localhost");
-    settings.set("username", "test");
-    settings.set("max_connections", 5);
+    MockConnectionSettings settings;
+    EXPECT_CALL(settings, get("type", true)).Times(Exactly(1)).WillOnce(Return(INHERIT));
+    EXPECT_CALL(settings, get("max_connections", true)).Times(Exactly(1)).WillOnce(Return(5));
+    EXPECT_CALL(app, unregisterObject(&settings)).Times(Exactly(1));
+    // Connection MUST be a pointer because the manager is going to delete it
+    // when it is finished.
 
-    // Make manager
-    manager = DatabaseConnectionFactory::makeManager(&settings);
+    MockDatabaseConnection *parentConnection = new MockDatabaseConnection();
+    MockDatabaseConnection *connection = new MockDatabaseConnection();
+    EXPECT_CALL(app, unregisterObject(parentConnection)).Times(Exactly(1));
+    EXPECT_CALL(app, unregisterObject(connection)).Times(Exactly(1));
+    EXPECT_CALL(*connection, start()).Times(Exactly(1));
 
-    // Reserve connection
-    std::string uuid = manager->reserveDatabaseConnection(0);
+    DatabaseConnectionManager manager(parentConnection, &settings);
+    EXPECT_CALL(*parentConnection, clone(&manager)).Times(Exactly(1)).WillOnce(Return(connection));
+    EXPECT_CALL(*connection, join()).Times(Exactly(1));
+    EXPECT_CALL(app, unregisterObject(&manager)).Times(Exactly(1));
 
-    // Give the thread enough time to startup before we check for it
-    std::this_thread::sleep_for(std::chrono::milliseconds(30));
-
-    ASSERT_EQ(1, Thread::numberOfActiveThreads());
-
-    // Cleanup manager / free memory
-    delete manager;
-
-    ASSERT_EQ(0, Thread::numberOfActiveThreads());
+    // Reserve connection.
+    std::string uuid = manager.reserveDatabaseConnection(0);
 }
 
 // Tests retrieving database through the connection manager
 TEST(TestDatabaseConnectionManager, getDatabase) {
-    ConnectionSettings settings;
-    DatabaseConnectionManager *manager;
+    MockApplication app;
+    EXPECT_CALL(app, registerObject(_)).Times(Exactly(5));
 
-    // Configure connection settings
-    settings.set("type", MYSQL);
-    settings.set("hostname", "localhost");
-    settings.set("username", "test");
-    settings.set("max_connections", 5);
+    MockConnectionSettings settings;
+    EXPECT_CALL(settings, get("type", true)).Times(Exactly(1)).WillOnce(Return(INHERIT));
+    EXPECT_CALL(settings, get("max_connections", true)).Times(Exactly(1)).WillOnce(Return(5));
+    EXPECT_CALL(app, unregisterObject(&settings)).Times(Exactly(1));
 
-    // Make manager
-    manager = DatabaseConnectionFactory::makeManager(&settings);
+    MockDatabaseConnection *parentConnection = new MockDatabaseConnection();
+    MockDatabaseConnection *connection = new MockDatabaseConnection();
+    EXPECT_CALL(app, unregisterObject(parentConnection)).Times(Exactly(1));
+    EXPECT_CALL(app, unregisterObject(connection)).Times(Exactly(1));
+    EXPECT_CALL(*connection, start()).Times(Exactly(1));
+
+    DatabaseConnectionManager manager(parentConnection, &settings);
+    EXPECT_CALL(*parentConnection, clone(&manager)).Times(Exactly(1)).WillOnce(Return(connection));
+    EXPECT_CALL(*connection, join()).Times(Exactly(1));
+    EXPECT_CALL(app, unregisterObject(&manager)).Times(Exactly(1));
 
     // Initialize receiver
-    auto receiver = new SmartObjectTester();
+    MockSmartObject receiver;
+    EXPECT_CALL(app, unregisterObject(&receiver)).Times(Exactly(1));
 
     // Reserve connection
-    std::string uuid = manager->reserveDatabaseConnection(0, receiver);
+    std::string uuid = manager.reserveDatabaseConnection(0, &receiver);
 
-    manager->call(uuid, Variant("uid"), LIST_DATABASES,
+    EXPECT_CALL(*connection, call(Variant("uid"), LIST_DATABASES, VariantVector() << "test")).Times(Exactly(1));
+    manager.call(uuid, Variant("uid"), LIST_DATABASES,
         VariantVector() << "test");
 
-    // Give the thread enough time to startup before we check for it
-    std::this_thread::sleep_for(std::chrono::milliseconds(30));
-
-    EXPECT_EQ(1, Thread::numberOfActiveThreads());
-
-    for (int i = 0; i < 10 && receiver->data.empty(); i++) {
-
-        // Process events
-        Application::getInstance()->processEvents();
-
-        // Still waiting for data. We'll wait for up to 1 second
-        std::this_thread::sleep_for(std::chrono::milliseconds(100));
-    }
-
     // Release database connection
-    manager->releaseDatabaseConnection(uuid);
-
-    // Cleanup manager / free memory
-    delete manager;
-
-    ASSERT_EQ(receiver->data.size(), 1);
-    ASSERT_NE(receiver->data.find(DatabaseConnection::EXECUTED),
-        receiver->data.end());
-
-    // Get first result
-    auto meta = receiver->data[DatabaseConnection::EXECUTED];
-
-    // Free memory
-    delete receiver;
-
-    ASSERT_EQ(meta.size(), 3);
-    ASSERT_EQ(meta[0], "uid");
-    ASSERT_EQ(meta[1], LIST_DATABASES);
-
-    auto result = meta[2].toQueryResult();
-
-    ASSERT_FALSE(result.error.isError);
-    ASSERT_EQ(result.rows.size(), 1);
-    ASSERT_EQ(result.rows.front().front(), "test");
-
-    EXPECT_EQ(0, Thread::numberOfActiveThreads());
+    manager.releaseDatabaseConnection(uuid);
 }
 
 // Tests retrieving all databases through the connection manager. This is really
@@ -151,66 +125,37 @@ TEST(TestDatabaseConnectionManager, getDatabase) {
 // will actually happen until the thread picks it up, which will be never if
 // there is no manager.
 TEST(TestDatabaseConnectionManager, getAllDatabases) {
-    ConnectionSettings settings;
-    DatabaseConnectionManager *manager;
+    MockApplication app;
+    EXPECT_CALL(app, registerObject(_)).Times(Exactly(5));
 
-    // Configure connection settings
-    settings.set("type", MYSQL);
-    settings.set("hostname", "localhost");
-    settings.set("username", "test");
-    settings.set("max_connections", 5);
+    MockConnectionSettings settings;
+    EXPECT_CALL(settings, get("type", true)).Times(Exactly(1)).WillOnce(Return(INHERIT));
+    EXPECT_CALL(settings, get("max_connections", true)).Times(Exactly(1)).WillOnce(Return(5));
+    EXPECT_CALL(app, unregisterObject(&settings)).Times(Exactly(1));
 
-    // Make manager
-    manager = DatabaseConnectionFactory::makeManager(&settings);
+    MockDatabaseConnection *parentConnection = new MockDatabaseConnection();
+    MockDatabaseConnection *connection = new MockDatabaseConnection();
+    EXPECT_CALL(app, unregisterObject(parentConnection)).Times(Exactly(1));
+    EXPECT_CALL(app, unregisterObject(connection)).Times(Exactly(1));
+    EXPECT_CALL(*connection, start()).Times(Exactly(1));
+
+    DatabaseConnectionManager manager(parentConnection, &settings);
+    EXPECT_CALL(*parentConnection, clone(&manager)).Times(Exactly(1)).WillOnce(Return(connection));
+    EXPECT_CALL(*connection, join()).Times(Exactly(1));
+    EXPECT_CALL(app, unregisterObject(&manager)).Times(Exactly(1));
 
     // Initialize receiver
-    auto receiver = new SmartObjectTester();
+    MockSmartObject receiver;
+    EXPECT_CALL(app, unregisterObject(&receiver)).Times(Exactly(1));
 
     // Reserve connection
-    std::string uuid = manager->reserveDatabaseConnection(0, receiver);
+    std::string uuid = manager.reserveDatabaseConnection(0, &receiver);
 
-    manager->call(uuid, Variant("uid"), LIST_DATABASES);
-
-    // Give the thread enough time to startup before we check for it
-    std::this_thread::sleep_for(std::chrono::milliseconds(30));
-
-    EXPECT_EQ(1, Thread::numberOfActiveThreads());
-
-    for (int i = 0; i < 10 && receiver->data.empty(); i++) {
-
-        // Process events
-        Application::getInstance()->processEvents();
-
-        // Still waiting for data. We'll wait for up to 1 second
-        std::this_thread::sleep_for(std::chrono::milliseconds(100));
-    }
+    EXPECT_CALL(*connection, call(Variant("uid"), LIST_DATABASES, VariantVector())).Times(Exactly(1));
+    manager.call(uuid, Variant("uid"), LIST_DATABASES, VariantVector());
 
     // Release database connection
-    manager->releaseDatabaseConnection(uuid);
-
-    // Cleanup manager / free memory
-    delete manager;
-
-    ASSERT_EQ(receiver->data.size(), 1);
-    ASSERT_NE(receiver->data.find(DatabaseConnection::EXECUTED),
-              receiver->data.end());
-
-    // Get first result
-    auto meta = receiver->data[DatabaseConnection::EXECUTED];
-
-    // Free memory
-    delete receiver;
-
-    ASSERT_EQ(meta.size(), 3);
-    ASSERT_EQ(meta[0], "uid");
-    ASSERT_EQ(meta[1], LIST_DATABASES);
-
-    auto result = meta[2].toQueryResult();
-
-    ASSERT_FALSE(result.error.isError);
-    ASSERT_GT(result.rows.size(), 0);
-
-    EXPECT_EQ(0, Thread::numberOfActiveThreads());
+    manager.releaseDatabaseConnection(uuid);
 }
 
 } // namespace RabidSQL
