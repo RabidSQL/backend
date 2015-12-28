@@ -4,7 +4,6 @@
 #include "DatabaseConnectionFactory.h"
 #include "DatabaseConnectionManager.h"
 #include "NSEnums.h"
-#include "smartobjecttester.h"
 #include "mockapplication.h"
 #include "mockconnectionsettings.h"
 #include "mockdatabaseconnection.h"
@@ -18,12 +17,6 @@ using ::testing::Return;
 namespace RabidSQL {
 
 class TestDatabaseConnectionManager : public ::testing::Test {
-protected:
-    void TearDown()
-    {
-        // Reset statically stored data
-        SmartObjectTester::reset();
-    }
 };
 
 // Tests shutting down database connections via manager
