@@ -26,13 +26,13 @@ public:
     void connectQueue(int id, SmartObject *receiver);
     void disconnectQueue(int id = 0);
     void disconnectQueue(const SmartObject *receiver = nullptr, int id = 0);
+    void processQueue();
 
 protected:
     void queueData(int id, const VariantVector &arguments);
     virtual void processQueueItem(int id, VariantVector arguments);
 
 private:
-    void processQueue();
     void addChild(SmartObject *child);
     void removeChild(SmartObject *child, bool deallocate = true);
 

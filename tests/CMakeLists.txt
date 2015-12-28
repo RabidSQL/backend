@@ -22,6 +22,7 @@ set(TEST_SOURCE_FILES
     source/smartobjecttester.cpp
     source/testuuid.cpp
     source/testdatabaseconnectionmanager.cpp
+    include/mockapplication.h
     include/smartobjecttester.h
 )
 

@@ -251,7 +251,11 @@ void SmartObject::queueData(int id, const VariantVector &arguments)
 
 /**
  *
- * Process any data in the queue, clearing it in our wake
+ * Process any data in the queue, clearing it in our wake. Note that while
+ * this is publicly exposed and calling it won't actually hurt anything
+ * (unless you run it on the wrong thread, then it potentially could),
+ * Application::processQueue should be used in place. It is public only for
+ * testing.
  *
  * @return void
  */

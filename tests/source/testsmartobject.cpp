@@ -1,7 +1,11 @@
 #include "Application.h"
 #include "SmartObject.h"
 #include "smartobjecttester.h"
+#include "mockapplication.h"
 #include "gtest/gtest.h"
+
+using ::testing::Exactly;
+using ::testing::_;
 
 namespace RabidSQL {
 
@@ -11,8 +15,6 @@ protected:
     {
         // Reset statically stored data
         SmartObjectTester::reset();
-
-        delete Application::getInstance();
     }
 };
 
@@ -55,22 +57,27 @@ TEST_F(TestSmartObject, ChildrenManualCleanup) {
     delete parent;
 }
 
-// Tests that the emitter sends data to the receiever
+// Tests that the emitter sends data to the receiver
 TEST_F(TestSmartObject, SingleThreadCommunication) {
+    MockApplication app;
+
+    EXPECT_CALL(app, registerObject(_)).Times(Exactly(2));
     SmartObjectTester emitter;
     SmartObjectTester receiver;
+    EXPECT_CALL(app, unregisterObject(&emitter)).Times(Exactly(1));
+    EXPECT_CALL(app, unregisterObject(&receiver)).Times(Exactly(1));
 
-    // Connect the emitter and receiever
+    // Connect the emitter and receiver
     emitter.connectQueue(1, &receiver);
 
     // Send data
     emitter.queueData(1, VariantVector() << "test");
 
     // Process queue
-    Application::getInstance()->processEvents();
+    receiver.processQueue();
 
-    EXPECT_EQ(receiver.data.size(), 1);
-    EXPECT_EQ(receiver.data[1].front(), "test");
+    EXPECT_EQ(1, receiver.data.size());
+    EXPECT_EQ("test", receiver.data[1].front().toString());
 }
 
 } // namespace RabidSQL
