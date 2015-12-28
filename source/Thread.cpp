@@ -18,11 +18,12 @@ Thread::Thread()
     // Initialize thread
     thread = nullptr;
 
-    // Mark stopping as false
-    stopping = false;
+    // Mark stopping as true
+    stopping = true;
 
-    // Mark as unfinished
-    finished = false;
+    // Mark as finished. This is so that if the thread never starts, it counts
+    // as done.
+    finished = true;
 }
 
 /**
@@ -33,6 +34,10 @@ Thread::Thread()
  */
 void Thread::start()
 {
+    // Mark as unfinished and not stopping.
+    finished = false;
+    stopping = false;
+
     if (thread != nullptr) {
 
         #ifdef DEBUG
