@@ -1,7 +1,7 @@
 #include "Application.h"
 #include "SmartObject.h"
-#include "smartobjecttester.h"
-#include "mockapplication.h"
+#include "SmartObjectTester.h"
+#include "MockApplication.h"
 #include "gtest/gtest.h"
 
 using ::testing::Exactly;
@@ -81,5 +81,3 @@ TEST_F(TestSmartObject, SingleThreadCommunication) {
 }
 
 } // namespace RabidSQL
-
-

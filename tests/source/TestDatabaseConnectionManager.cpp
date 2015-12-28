@@ -4,10 +4,10 @@
 #include "DatabaseConnectionFactory.h"
 #include "DatabaseConnectionManager.h"
 #include "NSEnums.h"
-#include "mockapplication.h"
-#include "mockconnectionsettings.h"
-#include "mockdatabaseconnection.h"
-#include "mocksmartobject.h"
+#include "MockApplication.h"
+#include "MockConnectionSettings.h"
+#include "MockDatabaseConnection.h"
+#include "MockSmartObject.h"
 #include "gtest/gtest.h"
 
 using ::testing::Exactly;

@@ -1,4 +1,4 @@
-#include "smartobjecttester.h"
+#include "SmartObjectTester.h"
 
 #include <algorithm>
 

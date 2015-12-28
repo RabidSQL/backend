@@ -1,6 +1,6 @@
 #include "Application.h"
 #include "SmartObject.h"
-#include "smartobjecttester.h"
+#include "SmartObjectTester.h"
 #include "gtest/gtest.h"
 
 namespace RabidSQL {

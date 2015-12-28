@@ -12,21 +12,21 @@ include_directories(${PROJECT_NAME} PUBLIC
 )
 
 set(TEST_SOURCE_FILES
-    source/testapplication.cpp
-    source/testconnectionsettings.cpp
-    source/testdatabaseconnection.cpp
-    source/testvariant.cpp
-    source/testsmartobject.cpp
-    source/testthread.cpp
-    source/testthreadlocal.cpp
-    source/smartobjecttester.cpp
-    source/testuuid.cpp
-    source/testdatabaseconnectionmanager.cpp
-    include/mockapplication.h
-    include/mockconnectionsettings.h
-    include/mockdatabaseconnection.h
-    include/mocksmartobject.h
-    include/smartobjecttester.h
+    source/TestApplication.cpp
+    source/TestConnectionSettings.cpp
+    source/TestDatabaseConnection.cpp
+    source/TestVariant.cpp
+    source/TestSmartObject.cpp
+    source/TestThread.cpp
+    source/TestThreadLocal.cpp
+    source/SmartObjectTester.cpp
+    source/TestUUID.cpp
+    source/TestDatabaseConnectionManager.cpp
+    include/MockApplication.h
+    include/MockConnectionSettings.h
+    include/MockDatabaseConnection.h
+    include/MockSmartObject.h
+    include/SmartObjectTester.h
 )
 
 LINK_DIRECTORIES(
