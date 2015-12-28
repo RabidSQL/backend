@@ -22,13 +22,14 @@ public:
     Message getNextMessage();
     ~Application();
 
+protected:
+    void registerObject(SmartObject *object);
+    void unregisterObject(SmartObject *object);
+
 private:
     Application();
 
     static Application *instance;
-
-    void registerObject(SmartObject *object);
-    void unregisterObject(SmartObject *object);
 
     ThreadLocal<std::vector<SmartObject *> > objects;
     std::queue<Message> messages;
