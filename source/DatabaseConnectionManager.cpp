@@ -243,7 +243,9 @@ void DatabaseConnectionManager::disconnected(const VariantVector &args)
     disconnectingConnections.erase(uuid);
 
     // Free memory
-    delete connection;
+    if (connection != mainConnection) {
+        delete connection;
+    }
 }
 
 /**
@@ -441,7 +443,9 @@ DatabaseConnectionManager::~DatabaseConnectionManager()
                 this->connections.erase(connection);
 
                 // Free memory
-                delete connection;
+                if (connection != mainConnection) {
+                    delete connection;
+                }
             } else {
 
                 // Ask the connection to stop running
