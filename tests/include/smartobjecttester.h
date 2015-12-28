@@ -1,7 +1,7 @@
 #ifndef RABIDSQL_SMARTOBJECTTESTER_H
 #define RABIDSQL_SMARTOBJECTTESTER_H
 
-#include "smartobject.h"
+#include "SmartObject.h"
 #include <vector>
 
 namespace RabidSQL {

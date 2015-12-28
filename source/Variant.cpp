@@ -1,10 +1,10 @@
-#include "app.h"
-#include "filestream.h"
-#include "variant.h"
-#include "structs.h"
+#include "App.h"
+#include "FileStream.h"
+#include "Variant.h"
+#include "QueryResult.h"
 
-#include <algorithm>
 #include <cmath>
+#include <sstream>
 
 namespace RabidSQL {
 

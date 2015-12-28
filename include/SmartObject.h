@@ -8,8 +8,7 @@
 #include <string>
 #include <typeinfo>
 
-#include "variant.h"
-#include "structs.h"
+#include "Variant.h"
 
 namespace RabidSQL {
 

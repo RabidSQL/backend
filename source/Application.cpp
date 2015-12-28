@@ -1,7 +1,6 @@
-#include "application.h"
-#include "smartobject.h"
-
-#include <algorithm>
+#include "Application.h"
+#include "SmartObject.h"
+#include "Message.h"
 
 namespace RabidSQL {
 

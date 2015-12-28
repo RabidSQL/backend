@@ -1,7 +1,5 @@
-#include "app.h"
-#include "thread.h"
-
-#include <future>
+#include "App.h"
+#include "Thread.h"
 
 namespace RabidSQL {
 

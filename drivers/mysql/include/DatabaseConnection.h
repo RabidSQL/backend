@@ -1,8 +1,7 @@
 #ifndef RABIDSQL_MYSQLDRIVER_MYSQLDATABASECONNECTION_H
 #define RABIDSQL_MYSQLDRIVER_MYSQLDATABASECONNECTION_H
 
-#include "../../databaseconnection.h"
-#include "connectionsettings.h"
+#include "../../DatabaseConnection.h"
 
 namespace sql {
 class Connection;
@@ -10,6 +9,8 @@ class Driver;
 }
 
 namespace RabidSQL {
+
+class ConnectionSettings;
 namespace MySQLDriver {
 
 class DatabaseConnection : virtual public RabidSQL::DatabaseConnection

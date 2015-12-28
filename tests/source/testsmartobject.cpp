@@ -1,5 +1,5 @@
-#include "application.h"
-#include "smartobject.h"
+#include "Application.h"
+#include "SmartObject.h"
 #include "smartobjecttester.h"
 #include "gtest/gtest.h"
 

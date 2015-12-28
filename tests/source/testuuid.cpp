@@ -1,5 +1,5 @@
-#include "thread.h"
-#include "uuid.h"
+#include "Thread.h"
+#include "UUID.h"
 #include "gtest/gtest.h"
 
 #include <algorithm>

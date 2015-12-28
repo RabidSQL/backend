@@ -1,7 +1,7 @@
 #ifndef RABIDSQL_THREADLOCAL_H
 #define RABIDSQL_THREADLOCAL_H
 
-#include "app.h"
+#include "App.h"
 #include <map>
 #include <mutex>
 #include <thread>

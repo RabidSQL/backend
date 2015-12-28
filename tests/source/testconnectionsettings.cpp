@@ -1,4 +1,4 @@
-#include "connectionsettings.h"
+#include "ConnectionSettings.h"
 #include "gtest/gtest.h"
 
 namespace RabidSQL {

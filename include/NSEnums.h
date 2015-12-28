@@ -9,7 +9,7 @@
 
 namespace RabidSQL {
 
-#include "enums.h"
+#include "Enums.h"
 
 } // RabidSQL
 

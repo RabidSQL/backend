@@ -1,12 +1,13 @@
 #ifndef RABIDSQL_DATABASECONNECTIONFACTORY_H
 #define RABIDSQL_DATABASECONNECTIONFACTORY_H
 
-#include "connectionsettings.h"
-#include "databaseconnectionmanager.h"
+#include "SettingsField.h"
 
 namespace RabidSQL {
 
-class QueryWidget;
+class ConnectionSettings;
+class DatabaseConnection;
+class DatabaseConnectionManager;
 class DatabaseConnectionFactory
 {
 public:

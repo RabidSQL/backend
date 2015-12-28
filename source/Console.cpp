@@ -1,7 +1,8 @@
-#include "console.h"
-#include "variant.h"
+#include "Console.h"
+#include "Variant.h"
 
 #include <iostream>
+#include <sstream>
 
 namespace RabidSQL {
 

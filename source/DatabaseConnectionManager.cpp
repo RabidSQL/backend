@@ -1,9 +1,9 @@
-#include "app.h"
-#include "application.h"
-#include "connectionsettings.h"
-#include "databaseconnection.h"
-#include "databaseconnectionmanager.h"
-#include "uuid.h"
+#include "App.h"
+#include "Application.h"
+#include "ConnectionSettings.h"
+#include "DatabaseConnection.h"
+#include "DatabaseConnectionManager.h"
+#include "UUID.h"
 
 #include <ctime>
 #include <unistd.h>

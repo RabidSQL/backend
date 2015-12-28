@@ -9,32 +9,44 @@ include_directories(${PROJECT_NAME} PUBLIC
 )
 
 set(LOGIC_SOURCE_FILES
-    source/application.cpp
-    source/connectionsettings.cpp
-    source/console.cpp
-    source/databaseconnection.cpp
-    source/databaseconnectionfactory.cpp
-    source/databaseconnectionmanager.cpp
-    source/smartobject.cpp
-    source/thread.cpp
-    source/variant.cpp
-    source/uuid.cpp
-    drivers/databaseconnection.h
-    include/application.h
-    include/connectionsettings.h
-    include/console.h
-    include/databaseconnectionfactory.h
-    include/databaseconnectionmanager.h
-    include/smartobject.h
-    include/structs.h
-    include/thread.h
-    include/threadlocal.h
-    include/variant.h
-    include/uuid.h
-    source/filestream.cpp
-    include/filestream.h
-    include/enums.h
-    include/nsenums.h
+    drivers/DatabaseConnection.h
+    include/App.h
+    include/Application.h
+    include/BinaryFileStream.h
+    include/ConnectionSettings.h
+    include/Console.h
+    include/DatabaseConnectionFactory.h
+    include/DatabaseConnectionManager.h
+    include/Enums.h
+    include/FileStream.h
+    include/JsonFileStream.h
+    include/JsonHandler.h
+    include/Message.h
+    include/NSEnums.h
+    include/QueryCommand.h
+    include/QueryError.h
+    include/QueryResult.h
+    include/SettingsField.h
+    include/SmartObject.h
+    include/Thread.h
+    include/ThreadLocal.h
+    include/UUID.h
+    include/Variant.h
+    source/Application.cpp
+    source/ConnectionSettings.cpp
+    source/Console.cpp
+    source/DatabaseConnection.cpp
+    source/DatabaseConnectionFactory.cpp
+    source/DatabaseConnectionManager.cpp
+    source/BinaryFileStream.cpp
+    source/FileStream.cpp
+    source/JsonFileStream.cpp
+    source/JsonHandler.cpp
+    source/Message.cpp
+    source/SmartObject.cpp
+    source/Thread.cpp
+    source/UUID.cpp
+    source/Variant.cpp
 )
 
 add_library(${PROJECT_NAME} STATIC ${LOGIC_SOURCE_FILES})

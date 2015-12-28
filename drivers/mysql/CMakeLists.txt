@@ -10,8 +10,8 @@ include_directories(${PROJECT_NAME} PUBLIC
 )
 
 set(MYSQL_SOURCE_FILES
-    source/databaseconnection.cpp
-    include/databaseconnection.h
+    include/DatabaseConnection.h
+    source/DatabaseConnection.cpp
 )
 
 LINK_DIRECTORIES(

@@ -1,6 +1,8 @@
-#include "app.h"
-#include "include/structs.h"
-#include "../include/databaseconnection.h"
+#include "App.h"
+#include "ConnectionSettings.h"
+#include "QueryResult.h"
+#include "SettingsField.h"
+#include "../include/DatabaseConnection.h"
 
 #include <driver.h>
 #include <resultset.h>

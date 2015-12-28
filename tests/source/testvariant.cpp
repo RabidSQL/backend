@@ -1,5 +1,7 @@
-#include "filestream.h"
-#include "variant.h"
+#include "BinaryFileStream.h"
+#include "JsonFileStream.h"
+#include "QueryResult.h"
+#include "Variant.h"
 #include "gtest/gtest.h"
 
 namespace RabidSQL {
@@ -327,7 +329,7 @@ TEST_F(TestVariant, OperatorLTFloatString) {
 // for functionality comments.
 
 #define TEST_BINARY_SINGLE(T, V) \
-    BinaryStream stream; \
+    BinaryFileStream stream; \
     T value = V; \
     Variant variant(value); \
     stream.open(filename, std::ios::out); \
@@ -436,7 +438,7 @@ TEST_F(TestVariant, FileIOBinaryIOQueryResult) {
 
 // Tests reading and writing of a single long variant from and to binary files
 TEST_F(TestVariant, FileIOBinaryIOMultipleTypes) {
-    BinaryStream stream;
+    BinaryFileStream stream;
 
     // Values we'll be testing for
     long value1 = 123;
@@ -487,7 +489,7 @@ TEST_F(TestVariant, FileIOBinaryIOMultipleTypes) {
 }
 
 #define TEST_JSON_SINGLE(T, V) \
-    JsonStream stream; \
+    JsonFileStream stream; \
     T value = V; \
     Variant variant(value); \
     stream.open(filename, std::ios::out); \
@@ -552,7 +554,7 @@ TEST_F(TestVariant, FileIOJsonIOULong) {
 
 // Tests reading a unicode literal
 TEST_F(TestVariant, FileIOUnicodeTranslation) {
-    JsonStream stream;
+    JsonFileStream stream;
     Variant variant;
     char value[] = "\"\\u263a\"";
     stream.open(filename, std::ios::out);

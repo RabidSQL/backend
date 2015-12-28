@@ -4,8 +4,8 @@
 #include <queue>
 #include <vector>
 
-#include "structs.h"
-#include "threadlocal.h"
+#include "ThreadLocal.h"
+#include "Message.h"
 
 namespace RabidSQL {
 

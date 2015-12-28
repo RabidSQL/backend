@@ -1,12 +1,14 @@
 #ifndef RABIDSQL_DATABASECONNECTIONMANAGER_H
 #define RABIDSQL_DATABASECONNECTIONMANAGER_H
 
-#include "connectionsettings.h"
-#include "databaseconnection.h"
+#include "Variant.h"
+
 #include <map>
 
 namespace RabidSQL {
 
+class ConnectionSettings;
+class DatabaseConnection;
 class DatabaseConnectionManager: virtual public SmartObject
 {
     friend class DatabaseConnection;

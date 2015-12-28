@@ -1,9 +1,10 @@
-#include "app.h"
-#include "application.h"
-#include "connectionsettings.h"
-#include "filestream.h"
-#include "structs.h"
-#include "uuid.h"
+#include "App.h"
+#include "Application.h"
+#include "ConnectionSettings.h"
+#include "FileStream.h"
+#include "UUID.h"
+#include "BinaryFileStream.h"
+#include "JsonFileStream.h"
 
 #include <fstream>
 
@@ -159,11 +160,11 @@ std::vector<ConnectionSettings *> ConnectionSettings::load(
     switch (format) {
     case BINARY:
 
-        stream = new BinaryStream();
+        stream = new BinaryFileStream();
         break;
     case JSON:
 
-        stream = new JsonStream();
+        stream = new JsonFileStream();
         break;
     }
 
@@ -291,11 +292,11 @@ void ConnectionSettings::save(
     switch (format) {
         case FileFormat::BINARY:
 
-            stream = new BinaryStream();
+            stream = new BinaryFileStream();
             break;
         case FileFormat::JSON:
 
-            stream = new JsonStream();
+            stream = new JsonFileStream();
     }
 
     // Open stream

@@ -1,7 +1,7 @@
 #ifndef RABIDSQL_THREAD_H
 #define RABIDSQL_THREAD_H
 
-#include "smartobject.h"
+#include "SmartObject.h"
 
 #include <future>
 

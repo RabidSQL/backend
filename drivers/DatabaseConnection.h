@@ -1,12 +1,10 @@
 #ifndef RABIDSQL_DATABASECONNECTION_H
 #define RABIDSQL_DATABASECONNECTION_H
 
-#include "smartobject.h"
-#include "structs.h"
-#include "thread.h"
-
-#include <queue>
-#include <thread>
+#include "SmartObject.h"
+#include "Thread.h"
+#include "QueryResult.h"
+#include "QueryCommand.h"
 
 namespace RabidSQL {
 

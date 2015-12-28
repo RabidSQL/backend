@@ -1,7 +1,9 @@
-#include "app.h"
-#include "databaseconnectionfactory.h"
-#include "databaseconnectionmanager.h"
-#include "mysql/include/databaseconnection.h"
+#include "App.h"
+#include "ConnectionSettings.h"
+#include "DatabaseConnectionFactory.h"
+#include "DatabaseConnectionManager.h"
+#include "DatabaseConnection.h"
+#include "drivers/mysql/include/DatabaseConnection.h"
 
 namespace RabidSQL {
 

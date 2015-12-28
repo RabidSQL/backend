@@ -1,25 +1,24 @@
 #ifndef RABIDSQL_VARIANT_H
 #define RABIDSQL_VARIANT_H
 
-#include "nsenums.h"
+#include "NSEnums.h"
 
 #include <map>
 #include <string>
-#include <sstream>
 #include <vector>
 
 namespace RabidSQL {
 
 struct QueryResult;
-class BinaryStream;
-class JsonStream;
+class BinaryFileStream;
+class JsonFileStream;
 class VariantVector;
 class VariantMap;
 class Variant
 {
     friend class FileStream;
-    friend class BinaryStream;
-    friend class JsonStream;
+    friend class BinaryFileStream;
+    friend class JsonFileStream;
 public:
     Variant();
     Variant(const std::nullptr_t &value);

@@ -1,6 +1,6 @@
-#include "connectionsettings.h"
-#include "databaseconnection.h"
-#include "databaseconnectionfactory.h"
+#include "ConnectionSettings.h"
+#include "DatabaseConnection.h"
+#include "DatabaseConnectionFactory.h"
 #include "gtest/gtest.h"
 
 namespace RabidSQL {

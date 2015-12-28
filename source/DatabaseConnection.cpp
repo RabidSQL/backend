@@ -1,8 +1,7 @@
-#include "app.h"
-#include "databaseconnection.h"
-#include "databaseconnectionmanager.h"
-
-#include <chrono>
+#include "App.h"
+#include "DatabaseConnection.h"
+#include "DatabaseConnectionManager.h"
+#include "QueryResult.h"
 
 namespace RabidSQL {
 

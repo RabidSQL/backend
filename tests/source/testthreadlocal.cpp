@@ -1,5 +1,5 @@
-#include "thread.h"
-#include "threadlocal.h"
+#include "Thread.h"
+#include "ThreadLocal.h"
 #include "gtest/gtest.h"
 
 namespace RabidSQL {

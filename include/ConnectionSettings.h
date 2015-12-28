@@ -4,14 +4,13 @@
 #include <string>
 #include <map>
 
-#include "nsenums.h"
-#include "structs.h"
-#include "smartobject.h"
-#include "variant.h"
+#include "NSEnums.h"
+#include "SmartObject.h"
+#include "Variant.h"
 
 namespace RabidSQL {
 
-class JsonStream;
+class JsonFileStream;
 class ConnectionSettings : public SmartObject
 {
 public:
