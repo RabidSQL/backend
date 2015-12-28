@@ -9,9 +9,10 @@ class TestSmartObject : public ::testing::Test {
 protected:
     void TearDown()
     {
-
         // Reset statically stored data
         SmartObjectTester::reset();
+
+        delete Application::getInstance();
     }
 };
 
