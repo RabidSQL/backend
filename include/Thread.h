@@ -11,18 +11,19 @@ class Thread : public SmartObject
 {
 public:
     Thread();
-    virtual void run() = 0;
-    void start();
-    void stop(bool block = true);
-    void join();
+    virtual void start();
+    virtual void stop(bool block = true);
+    virtual void join();
 
     bool isFinished();
     bool isStopping();
 
     ~Thread();
 
-    static void processQueue();
     static int numberOfActiveThreads();
+
+protected:
+    virtual void run() = 0;
 
 private:
     void _run();
