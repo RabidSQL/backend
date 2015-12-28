@@ -13,7 +13,7 @@ TEST(TestApplication, Cleanup) {
 
     SmartObjectTester *object = new SmartObjectTester();
 
-    Application::shutdown();
+    delete Application::getInstance();
 
     // Expect that the application has freed the object and thus accessing it
     // crashes.
@@ -25,23 +25,23 @@ TEST(TestApplication, MessageQueues) {
     Message message;
 
     // Post 2 messages
-    Application::postMessage(MessageType::ERROR, "err label", "err message");
-    Application::postMessage(MessageType::CRITICAL, "cri label", "cri message");
+    Application::getInstance()->postMessage(MessageType::ERROR, "err label", "err message");
+    Application::getInstance()->postMessage(MessageType::CRITICAL, "cri label", "cri message");
 
     // Process first message
-    message = Application::getNextMessage();
+    message = Application::getInstance()->getNextMessage();
     EXPECT_EQ(MessageType::ERROR, message.type);
     EXPECT_EQ("err label", message.label);
     EXPECT_EQ(Variant("err message"), message.data);
 
     // Process second message
-    message = Application::getNextMessage();
+    message = Application::getInstance()->getNextMessage();
     EXPECT_EQ(MessageType::CRITICAL, message.type);
     EXPECT_EQ("cri label", message.label);
     EXPECT_EQ(Variant("cri message"), message.data);
 
     // Expect that there are 0 more messages
-    EXPECT_FALSE(Application::getNextMessage());
+    EXPECT_FALSE(Application::getInstance()->getNextMessage());
 
 }
 

@@ -109,7 +109,7 @@ TEST(TestDatabaseConnectionManager, getDatabase) {
     for (int i = 0; i < 10 && receiver->data.empty(); i++) {
 
         // Process events
-        Application::processEvents();
+        Application::getInstance()->processEvents();
 
         // Still waiting for data. We'll wait for up to 1 second
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
@@ -178,7 +178,7 @@ TEST(TestDatabaseConnectionManager, getAllDatabases) {
     for (int i = 0; i < 10 && receiver->data.empty(); i++) {
 
         // Process events
-        Application::processEvents();
+        Application::getInstance()->processEvents();
 
         // Still waiting for data. We'll wait for up to 1 second
         std::this_thread::sleep_for(std::chrono::milliseconds(100));

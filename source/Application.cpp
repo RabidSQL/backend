@@ -24,6 +24,12 @@ Application *Application::getInstance()
 }
 
 /**
+ * Application constructor
+ */
+Application::Application() {
+}
+
+/**
  *
  * Processes any queued events
  *
@@ -175,10 +181,9 @@ void Application::unregisterObject(SmartObject *object)
  *
  * @return void
  */
-void Application::shutdown()
+Application::~Application()
 {
-    auto app = Application::getInstance();
-    auto objects = app->objects.get();
+    auto objects = this->objects.get();
 
     for (auto it = objects->begin(); it != objects->end(); ++it) {
 
@@ -189,10 +194,6 @@ void Application::shutdown()
         // Free memory
         delete *it;
     }
-
-    // Free memory
-    delete Application::instance;
-
     Application::instance = nullptr;
 }
 

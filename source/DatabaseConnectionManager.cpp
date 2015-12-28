@@ -185,7 +185,7 @@ DatabaseConnection *DatabaseConnectionManager::reserveDatabaseConnectionObj(
 
         if (connection == nullptr) {
             // Process any pending events
-            Application::processEvents();
+            Application::getInstance()->processEvents();
 
             // Also sleep for 30ms. There may not be events to process above
             // and we don't want to pin the cpu
@@ -233,7 +233,7 @@ void DatabaseConnectionManager::disconnected(const VariantVector &args)
     while (!connection->isFinished()) {
 
         // Process any pending events
-        Application::processEvents();
+        Application::getInstance()->processEvents();
 
         // Sleep for 30ms.
         usleep(30 * 1000);

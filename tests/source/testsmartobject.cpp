@@ -66,7 +66,7 @@ TEST_F(TestSmartObject, SingleThreadCommunication) {
     emitter.queueData(1, VariantVector() << "test");
 
     // Process queue
-    Application::processEvents();
+    Application::getInstance()->processEvents();
 
     EXPECT_EQ(receiver.data.size(), 1);
     EXPECT_EQ(receiver.data[1].front(), "test");

@@ -22,7 +22,7 @@ SmartObject::SmartObject(SmartObject *parent)
     this->setParent(parent);
     disconnectFromParent = true;
     disconnectFromApplication = true;
-    Application::registerObject(this);
+    Application::getInstance()->registerObject(this);
 }
 
 /**
@@ -313,7 +313,7 @@ SmartObject::~SmartObject()
     if (disconnectFromApplication) {
 
         // Unregister with our application if applicable
-        Application::unregisterObject(this);
+        Application::getInstance()->unregisterObject(this);
     }
 
     if (parent != nullptr && disconnectFromParent) {
