@@ -24,6 +24,8 @@ set(TEST_SOURCE_FILES
     source/testdatabaseconnectionmanager.cpp
     include/mockapplication.h
     include/mockconnectionsettings.h
+    include/mockdatabaseconnection.h
+    include/mocksmartobject.h
     include/smartobjecttester.h
 )
 
