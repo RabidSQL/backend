@@ -8,6 +8,7 @@ include_directories(${PROJECT_NAME} PUBLIC
     ../drivers
     ../
     ../libs/googletest/googletest/include/
+    ../libs/googletest/googlemock/include/
 )
 
 set(TEST_SOURCE_FILES
@@ -28,15 +29,16 @@ LINK_DIRECTORIES(
     /usr/local/mysql/lib
 )
 
-add_subdirectory(../libs/googletest/googletest googletest)
-add_subdirectory(../ logic)
+add_subdirectory(../libs/googletest/googlemock googlemock)
+add_subdirectory(../ backend)
 add_subdirectory(../drivers/mysql mysql)
 
 add_executable(${PROJECT_NAME} ${TEST_SOURCE_FILES})
 
 TARGET_LINK_LIBRARIES(${PROJECT_NAME}
-    Logic
+    Backend
     MySQL
+    gmock
     gtest
     gtest_main
     pthread
