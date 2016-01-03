@@ -112,6 +112,7 @@ FileStream &JsonFileStream::operator<<(const Variant &value)
         case D_BOOLEAN:
             writer->Bool(value.toBool());
             break;
+        case D_POINTER:
         case D_NULL:
         case D_QUERYRESULT:
             writer->Null();

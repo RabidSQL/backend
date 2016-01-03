@@ -25,6 +25,7 @@ public:
     Variant(const Variant &value);
     Variant(const std::string &value);
     Variant(const char *value);
+    Variant(void *value, bool manage);
     Variant(const std::vector<std::string> &value);
     Variant(const VariantVector &value);
     Variant(const VariantMap &value);
@@ -41,6 +42,7 @@ public:
     Variant(const float &value);
     Variant(const QueryResult &value);
     ~Variant();
+    void *toPointer() const;
     const std::string toString() const;
     const std::vector<std::string> toStringVector() const;
     const VariantVector toVariantVector() const;
@@ -70,8 +72,10 @@ public:
 private:
     template<typename T>
     T numericCast() const;
+    void init(DataType type);
 
     void *data;
+    bool deleteData;
     DataType type;
 };
 

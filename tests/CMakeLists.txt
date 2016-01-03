@@ -27,7 +27,8 @@ set(TEST_SOURCE_FILES
     include/MockDatabaseConnection.h
     include/MockSmartObject.h
     include/SmartObjectTester.h
-)
+    include/TrackedPointer.h
+    source/TrackedPointer.cpp)
 
 LINK_DIRECTORIES(
     /usr/local/mysql/lib

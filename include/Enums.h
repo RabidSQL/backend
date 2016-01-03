@@ -43,6 +43,7 @@ typedef enum {
     D_FLOAT = 140,
     D_DOUBLE = 150,
     D_BOOLEAN = 160,
+    D_POINTER = 170,
     _FIRST = D_NULL,
     _LAST = D_BOOLEAN,
 } DataType;

@@ -217,6 +217,8 @@ FileStream &BinaryFileStream::operator>>(Variant &value)
     }
 
     switch (type) {
+        case D_POINTER:
+            // We can't store a memory pointer in a file. Set to null.
         case D_NULL:
             // Variant is nullptr by default. We need not do any more work
             value = nullptr;

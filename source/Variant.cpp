@@ -9,14 +9,49 @@
 namespace RabidSQL {
 
 /**
+ * Basic initialization (sets defaults)
+ *
+ * @param DataType type The type of Variant we're initializing
+ * @return void
+ */
+void Variant::init(DataType type)
+{
+    this->type = type;
+    this->data = nullptr;
+    switch (type) {
+        case D_NULL:
+        case D_POINTER:
+            deleteData = false;
+            break;
+        case D_STRING:
+        case D_STRINGVECTOR:
+        case D_VARIANTVECTOR:
+        case D_VARIANTMAP:
+        case D_LONG:
+        case D_LONGLONG:
+        case D_ULONG:
+        case D_ULONGLONG:
+        case D_INT:
+        case D_UINT:
+        case D_SHORT:
+        case D_USHORT:
+        case D_BOOLEAN:
+        case D_DOUBLE:
+        case D_FLOAT:
+        case D_QUERYRESULT:
+            deleteData = true;
+            break;
+    }
+}
+
+/**
  * Initializes a null variant.
  *
  * @return void
  */
 Variant::Variant()
 {
-    type = D_NULL;
-    data = nullptr;
+    init(D_NULL);
 }
 
 /**
@@ -26,8 +61,12 @@ Variant::Variant()
  */
 Variant::Variant(const std::nullptr_t &value)
 {
-    type = D_NULL;
-    data = nullptr;
+    init(D_NULL);
+    // We can technically recover from this being called with a regular pointer,
+    // but it is unknown whether we should be managing memory or not. If we do
+    // it could lead to crashes and if we do not it could lead to memory leaks...
+    // Pointers (except null) should go through Variant(void *...)
+    assert(value == nullptr);
 }
 
 /**
@@ -39,7 +78,7 @@ Variant::Variant(const std::nullptr_t &value)
  */
 Variant::Variant(const Variant &value)
 {
-    type = D_NULL;
+    init(D_NULL);
     *this = value;
 }
 
@@ -51,7 +90,7 @@ Variant::Variant(const Variant &value)
  */
 Variant::Variant(const std::string &value)
 {
-    type = D_STRING;
+    init(D_STRING);
     data = new std::string(value);
 }
 
@@ -63,8 +102,22 @@ Variant::Variant(const std::string &value)
  */
 Variant::Variant(const char *value)
 {
-    type = D_STRING;
+    init(D_STRING);
     data = new std::string(value);
+}
+
+/**
+ * Initializes a variant based on a pointer
+ *
+ * @param value The value to use
+ * @param manage True to manage the pointer memory (i.e. delete it when we
+ * replace it with something else or we destruct)
+ */
+Variant::Variant(void *value, bool manage)
+{
+    init(D_POINTER);
+    data = value;
+    deleteData = manage;
 }
 
 /**
@@ -75,7 +128,7 @@ Variant::Variant(const char *value)
  */
 Variant::Variant(const std::vector<std::string> &value)
 {
-    type = D_STRINGVECTOR;
+    init(D_STRINGVECTOR);
     data = new std::vector<std::string>(value);
 }
 
@@ -87,7 +140,7 @@ Variant::Variant(const std::vector<std::string> &value)
  */
 Variant::Variant(const VariantVector &value)
 {
-    type = D_VARIANTVECTOR;
+    init(D_VARIANTVECTOR);
     data = new VariantVector(value);
 }
 
@@ -99,7 +152,7 @@ Variant::Variant(const VariantVector &value)
  */
 Variant::Variant(const VariantMap &value)
 {
-    type = D_VARIANTMAP;
+    init(D_VARIANTMAP);
     data = new VariantMap(value);
 }
 
@@ -111,7 +164,7 @@ Variant::Variant(const VariantMap &value)
  */
 Variant::Variant(const long &value)
 {
-    type = D_LONG;
+    init(D_LONG);
     data = new long(value);
 }
 
@@ -123,7 +176,7 @@ Variant::Variant(const long &value)
  */
 Variant::Variant(const long long &value)
 {
-    type = D_LONGLONG;
+    init(D_LONGLONG);
     data = new long long(value);
 }
 
@@ -135,7 +188,7 @@ Variant::Variant(const long long &value)
  */
 Variant::Variant(const unsigned long &value)
 {
-    type = D_ULONG;
+    init(D_LONG);
     data = new unsigned long(value);
 }
 
@@ -147,7 +200,7 @@ Variant::Variant(const unsigned long &value)
  */
 Variant::Variant(const unsigned long long &value)
 {
-    type = D_ULONGLONG;
+    init(D_ULONGLONG);
     data = new unsigned long long(value);
 }
 
@@ -159,7 +212,7 @@ Variant::Variant(const unsigned long long &value)
  */
 Variant::Variant(const int &value)
 {
-    type = D_INT;
+    init(D_INT);
     data = new int(value);
 }
 
@@ -171,7 +224,7 @@ Variant::Variant(const int &value)
  */
 Variant::Variant(const unsigned int &value)
 {
-    type = D_UINT;
+    init(D_UINT);
     data = new unsigned int(value);
 }
 
@@ -183,7 +236,7 @@ Variant::Variant(const unsigned int &value)
  */
 Variant::Variant(const short &value)
 {
-    type = D_SHORT;
+    init(D_SHORT);
     data = new short(value);
 }
 
@@ -195,7 +248,7 @@ Variant::Variant(const short &value)
  */
 Variant::Variant(const unsigned short &value)
 {
-    type = D_USHORT;
+    init(D_USHORT);
     data = new unsigned short(value);
 }
 
@@ -207,7 +260,7 @@ Variant::Variant(const unsigned short &value)
  */
 Variant::Variant(const bool &value)
 {
-    type = D_BOOLEAN;
+    init(D_BOOLEAN);
     data = new bool(value);
 }
 
@@ -219,7 +272,7 @@ Variant::Variant(const bool &value)
  */
 Variant::Variant(const double &value)
 {
-    type = D_DOUBLE;
+    init(D_DOUBLE);
     data = new double(value);
 }
 
@@ -231,7 +284,7 @@ Variant::Variant(const double &value)
  */
 Variant::Variant(const float &value)
 {
-    type = D_FLOAT;
+    init(D_FLOAT);
     data = new float(value);
 }
 
@@ -243,7 +296,7 @@ Variant::Variant(const float &value)
  */
 Variant::Variant(const QueryResult &value)
 {
-    type = D_QUERYRESULT;
+    init(D_QUERYRESULT);
     data = new QueryResult(value);
 }
 
@@ -257,16 +310,20 @@ Variant::Variant(const QueryResult &value)
  */
 void Variant::operator=(const Variant &value)
 {
-    if (type != D_NULL) {
+    if (deleteData && data != value.data) {
 
         // Free memory. Convert to char * to clean up compiler warnings
         delete reinterpret_cast<char *>(data);
     }
 
-    type = value.type;
+    init(value.type);
     switch (type) {
     case D_NULL:
         data = nullptr;
+        break;
+    case D_POINTER:
+        data = value.data;
+        deleteData = value.deleteData;
         break;
     case D_STRING:
         data = new std::string(value.toString());
@@ -358,6 +415,8 @@ bool Variant::operator==(const Variant &value) const
     }
 
     switch (type) {
+    case D_POINTER:
+        return data == value.data;
     case D_STRING:
         return toString() == value.toString();
     case D_STRINGVECTOR:
@@ -418,6 +477,8 @@ bool Variant::operator>(const Variant &value) const
     }
 
     switch (type) {
+    case D_POINTER:
+        return data > value.data;
     case D_STRING:
         return toString() > value.toString();
     case D_STRINGVECTOR:
@@ -477,6 +538,8 @@ bool Variant::operator<(const Variant &value) const
     }
 
     switch (type) {
+    case D_POINTER:
+        return data < value.data;
     case D_STRING:
         return toString() < value.toString();
     case D_STRINGVECTOR:
@@ -555,13 +618,13 @@ bool Variant::operator<=(const Variant &value) const
 
 /**
  *
- * Checks if this variant represents nullptr. Returns true if so else false
+ * Checks if this variant represents nullptr. Returns true if so else false.
  *
  * @return bool
  */
 const bool Variant::isNull() const
 {
-    return type == D_NULL;
+    return type == D_NULL || data == nullptr;
 }
 
 /**
@@ -576,6 +639,8 @@ const std::string Variant::toString() const
     std::stringstream stream;
 
     switch (type) {
+    case D_POINTER:
+        return "";
     case D_STRING:
         return *static_cast<std::string *>(data);
     case D_VARIANTVECTOR:
@@ -656,6 +721,7 @@ const std::vector<std::string> Variant::toStringVector() const
         }
         break;
     }
+    case D_POINTER:
     case D_NULL:
     case D_VARIANTMAP:
         break;
@@ -692,6 +758,7 @@ const VariantVector Variant::toVariantVector() const
         }
         break;
     }
+    case D_POINTER:
     case D_NULL:
     case D_VARIANTMAP:
         break;
@@ -922,6 +989,7 @@ T Variant::numericCast() const
     case D_ULONG:
         return *static_cast<unsigned long *>(data);
     case D_NULL:
+    case D_POINTER:
     default:
         return 0;
     }
@@ -973,7 +1041,7 @@ const Variant VariantVector::toVariant()
  */
 Variant::~Variant()
 {
-    if (!isNull()) {
+    if (deleteData) {
 
         // Free memory. Convert to char * to clean up compiler warnings
         delete reinterpret_cast<char *>(data);

@@ -1,6 +1,7 @@
 #include "BinaryFileStream.h"
 #include "JsonFileStream.h"
 #include "QueryResult.h"
+#include "TrackedPointer.h"
 #include "Variant.h"
 #include "gtest/gtest.h"
 
@@ -11,6 +12,7 @@ protected:
     void SetUp()
     {
         filename = "/tmp/rabidsql-test-variant";
+        TrackedPointer::count = 0;
     }
 
     void TearDown()
@@ -322,6 +324,44 @@ TEST_F(TestVariant, OperatorLTFloatString) {
     Variant v1((float) 124.08);
     Variant v2("124.09");
     EXPECT_LT(v1, v2);
+}
+
+// Tests pointers using string pointers (to make sure they stay as pointers)
+TEST_F(TestVariant, StringPointers) {
+    std::string *str1 = new std::string("Test");
+    std::string *str2 = new std::string("Test");
+
+    {
+        Variant v1(str1, false);
+        Variant v2(str1, false);
+        EXPECT_EQ(DataType::D_POINTER, v1.getType());
+        EXPECT_EQ(DataType::D_POINTER, v2.getType());
+        EXPECT_EQ(v1, v2);
+    }
+    {
+        Variant v1(str1, false);
+        Variant v2(str2, false);
+        EXPECT_EQ(DataType::D_POINTER, v1.getType());
+        EXPECT_EQ(DataType::D_POINTER, v2.getType());
+        EXPECT_NE(v1, v2);
+    }
+
+    // Free memory
+    delete str1;
+    delete str2;
+}
+
+// Tests pointer memory management
+TEST_F(TestVariant, PointerCleanup) {
+    TrackedPointer *p1 = new TrackedPointer();
+    TrackedPointer *p2 = new TrackedPointer();
+
+    EXPECT_EQ(2, TrackedPointer::count);
+    {
+        Variant v1(p1, true);
+        Variant v2(p2, true);
+    }
+    EXPECT_EQ(0, TrackedPointer::count);
 }
 
 // This test macro is the same for all single type tests. It is very similar to
