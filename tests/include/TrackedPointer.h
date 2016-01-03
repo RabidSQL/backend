@@ -1,9 +1,11 @@
 #ifndef RABIDSQL_TRACKEDPOINTER_H
 #define RABIDSQL_TRACKEDPOINTER_H
 
+#include "ArbitraryPointer.h"
+
 namespace RabidSQL {
 
-class TrackedPointer
+class TrackedPointer : public ArbitraryPointer
 {
 public:
     static int count;
@@ -13,7 +15,7 @@ public:
         TrackedPointer::count++;
     }
 
-    ~TrackedPointer()
+    virtual ~TrackedPointer()
     {
         TrackedPointer::count--;
     }

@@ -1,4 +1,5 @@
 #include "App.h"
+#include "ArbitraryPointer.h"
 #include "FileStream.h"
 #include "Variant.h"
 #include "QueryResult.h"
@@ -65,7 +66,7 @@ Variant::Variant(const std::nullptr_t &value)
     // We can technically recover from this being called with a regular pointer,
     // but it is unknown whether we should be managing memory or not. If we do
     // it could lead to crashes and if we do not it could lead to memory leaks...
-    // Pointers (except null) should go through Variant(void *...)
+    // Pointers (except null) should go through Variant(ArbitraryPointer *, ...)
     assert(value == nullptr);
 }
 
@@ -113,7 +114,7 @@ Variant::Variant(const char *value)
  * @param manage True to manage the pointer memory (i.e. delete it when we
  * replace it with something else or we destruct)
  */
-Variant::Variant(void *value, bool manage)
+Variant::Variant(ArbitraryPointer *value, bool manage)
 {
     init(D_POINTER);
     data = value;
@@ -312,8 +313,7 @@ void Variant::operator=(const Variant &value)
 {
     if (deleteData && data != value.data) {
 
-        // Free memory. Convert to char * to clean up compiler warnings
-        delete reinterpret_cast<char *>(data);
+        deinit();
     }
 
     init(value.type);
@@ -1034,6 +1034,68 @@ const Variant VariantVector::toVariant()
 }
 
 /**
+ * De-initializes the data. This frees any allocated memory.
+ */
+void Variant::deinit()
+{
+    switch (type) {
+        case D_NULL:
+            break;
+        case D_POINTER:
+            delete reinterpret_cast<ArbitraryPointer *>(data);
+            break;
+        case D_STRING:
+            delete reinterpret_cast<std::string *>(data);
+            break;
+        case D_STRINGVECTOR:
+            delete reinterpret_cast<std::vector<std::string> *>(data);
+            break;
+        case D_VARIANTVECTOR:
+            delete reinterpret_cast<VariantVector *>(data);
+            break;
+        case D_VARIANTMAP:
+            delete reinterpret_cast<VariantMap *>(data);
+            break;
+        case D_QUERYRESULT:
+            delete reinterpret_cast<QueryResult *>(data);
+            break;
+        case D_LONG:
+            delete reinterpret_cast<long *>(data);
+            break;
+        case D_LONGLONG:
+            delete reinterpret_cast<long long *>(data);
+            break;
+        case D_ULONG:
+            delete reinterpret_cast<unsigned long *>(data);
+            break;
+        case D_ULONGLONG:
+            delete reinterpret_cast<unsigned long long *>(data);
+            break;
+        case D_INT:
+            delete reinterpret_cast<int *>(data);
+            break;
+        case D_UINT:
+            delete reinterpret_cast<unsigned int *>(data);
+            break;
+        case D_SHORT:
+            delete reinterpret_cast<short *>(data);
+            break;
+        case D_USHORT:
+            delete reinterpret_cast<unsigned short *>(data);
+            break;
+        case D_BOOLEAN:
+            delete reinterpret_cast<bool *>(data);
+            break;
+        case D_DOUBLE:
+            delete reinterpret_cast<double *>(data);
+            break;
+        case D_FLOAT:
+            delete reinterpret_cast<float *>(data);
+            break;
+    }
+}
+
+/**
  * This object is being destroyed. Lets free up the memory used by our internal
  * data
  *
@@ -1042,9 +1104,7 @@ const Variant VariantVector::toVariant()
 Variant::~Variant()
 {
     if (deleteData) {
-
-        // Free memory. Convert to char * to clean up compiler warnings
-        delete reinterpret_cast<char *>(data);
+        deinit();
     }
 }
 

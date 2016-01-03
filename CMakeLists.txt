@@ -12,6 +12,7 @@ set(LOGIC_SOURCE_FILES
     drivers/DatabaseConnection.h
     include/App.h
     include/Application.h
+    include/ArbitraryPointer.h
     include/BinaryFileStream.h
     include/ConnectionSettings.h
     include/Console.h

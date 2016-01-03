@@ -326,31 +326,6 @@ TEST_F(TestVariant, OperatorLTFloatString) {
     EXPECT_LT(v1, v2);
 }
 
-// Tests pointers using string pointers (to make sure they stay as pointers)
-TEST_F(TestVariant, StringPointers) {
-    std::string *str1 = new std::string("Test");
-    std::string *str2 = new std::string("Test");
-
-    {
-        Variant v1(str1, false);
-        Variant v2(str1, false);
-        EXPECT_EQ(DataType::D_POINTER, v1.getType());
-        EXPECT_EQ(DataType::D_POINTER, v2.getType());
-        EXPECT_EQ(v1, v2);
-    }
-    {
-        Variant v1(str1, false);
-        Variant v2(str2, false);
-        EXPECT_EQ(DataType::D_POINTER, v1.getType());
-        EXPECT_EQ(DataType::D_POINTER, v2.getType());
-        EXPECT_NE(v1, v2);
-    }
-
-    // Free memory
-    delete str1;
-    delete str2;
-}
-
 // Tests pointer memory management
 TEST_F(TestVariant, PointerCleanup) {
     TrackedPointer *p1 = new TrackedPointer();

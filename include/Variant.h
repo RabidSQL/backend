@@ -9,6 +9,7 @@
 
 namespace RabidSQL {
 
+class ArbitraryPointer;
 struct QueryResult;
 class BinaryFileStream;
 class JsonFileStream;
@@ -25,7 +26,7 @@ public:
     Variant(const Variant &value);
     Variant(const std::string &value);
     Variant(const char *value);
-    Variant(void *value, bool manage);
+    Variant(ArbitraryPointer *value, bool manage);
     Variant(const std::vector<std::string> &value);
     Variant(const VariantVector &value);
     Variant(const VariantMap &value);
@@ -42,7 +43,7 @@ public:
     Variant(const float &value);
     Variant(const QueryResult &value);
     ~Variant();
-    void *toPointer() const;
+    ArbitraryPointer *toPointer() const;
     const std::string toString() const;
     const std::vector<std::string> toStringVector() const;
     const VariantVector toVariantVector() const;
@@ -73,6 +74,7 @@ private:
     template<typename T>
     T numericCast() const;
     void init(DataType type);
+    void deinit();
 
     void *data;
     bool deleteData;
