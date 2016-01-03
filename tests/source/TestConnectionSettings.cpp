@@ -33,6 +33,24 @@ TEST_F(TestConnectionSettings, SetterGetter) {
     ASSERT_EQ(1234, settings.get("port").toUInt());
 }
 
+TEST_F(TestConnectionSettings, Clone) {
+    ConnectionSettings *settings = new ConnectionSettings();
+
+    // Configure connection settings
+    settings->set("type", MYSQL);
+    settings->set("hostname", "test");
+    settings->set("port", 1234);
+
+    ConnectionSettings *clone = settings->clone();
+    delete settings;
+
+    ASSERT_EQ(MYSQL, clone->get("type").toUInt());
+    ASSERT_EQ("test", clone->get("hostname").toString());
+    ASSERT_EQ(1234, clone->get("port").toUInt());
+
+    delete clone;
+}
+
 // Tests reading and writing binary files (single connection)
 TEST_F(TestConnectionSettings, BinaryIOSingleConnection) {
     std::vector<ConnectionSettings *> connections;

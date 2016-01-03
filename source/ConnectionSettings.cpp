@@ -385,6 +385,22 @@ ConnectionType ConnectionSettings::getType()
 }
 
 /**
+ * Clone these ConnectionSettings
+ *
+ * @return ConnectionSettings *
+ */
+ConnectionSettings *ConnectionSettings::clone()
+{
+    auto *settings = new ConnectionSettings();
+
+    for (auto it = this->settings.cbegin(); it != this->settings.cend(); ++it) {
+        settings->set(it->first, it->second);
+    }
+
+    return settings;
+}
+
+/**
  *
  * Destructor for the class
  */

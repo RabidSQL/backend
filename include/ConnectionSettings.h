@@ -4,6 +4,7 @@
 #include <string>
 #include <map>
 
+#include "ArbitraryPointer.h"
 #include "NSEnums.h"
 #include "SmartObject.h"
 #include "Variant.h"
@@ -11,7 +12,7 @@
 namespace RabidSQL {
 
 class JsonFileStream;
-class ConnectionSettings : public SmartObject
+class ConnectionSettings : public SmartObject, public ArbitraryPointer
 {
 public:
     explicit ConnectionSettings(ConnectionSettings *parent = 0);
@@ -22,6 +23,7 @@ public:
     virtual Variant get(std::string key, bool bubble = true);
     virtual void set(std::string key, const Variant value);
     virtual ConnectionType getType();
+    virtual ConnectionSettings *clone();
 
     static std::vector<ConnectionSettings *> load(FileFormat format,
         std::string filename);
