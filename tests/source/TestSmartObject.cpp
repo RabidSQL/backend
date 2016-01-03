@@ -80,4 +80,15 @@ TEST_F(TestSmartObject, SingleThreadCommunication) {
     EXPECT_EQ("test", receiver.data[1].front().toString());
 }
 
+// Tests handing arbitrary data to SmartObject
+TEST_F(TestSmartObject, ArbitraryData) {
+    MockApplication app;
+
+    EXPECT_CALL(app, registerObject(_)).Times(Exactly(1));
+    SmartObjectTester object;
+    object.setArbitraryData("test", 123);
+    EXPECT_EQ(123, object.getArbitraryData("test").toInt());
+    EXPECT_TRUE(object.getArbitraryData("missing").isNull());
+}
+
 } // namespace RabidSQL

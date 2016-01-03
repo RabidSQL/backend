@@ -289,6 +289,34 @@ void SmartObject::processQueue()
 }
 
 /**
+ * Stores some arbitrary data locally, identified by key
+ *
+ * @param std::string key The identifier for the data
+ * @param Variant value The data itself
+ * @return void
+ */
+void SmartObject::setArbitraryData(std::string key, const Variant &value)
+{
+    arbitraryData[key] = value;
+}
+
+/**
+ * Retreieves some arbitrary data locally, identified by key
+ *
+ * @param std::string key The identifier for the data
+ * @return Variant
+ */
+Variant SmartObject::getArbitraryData(std::string key)
+{
+    if (arbitraryData.find(key) == arbitraryData.end()) {
+        // This key doesn't exist
+        return Variant(nullptr);
+    }
+
+    return arbitraryData[key];
+}
+
+/**
  *
  * Process a record from the queue. This should be implemented in any subclasses
  * which use the queue

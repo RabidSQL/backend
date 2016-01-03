@@ -27,6 +27,8 @@ public:
     void disconnectQueue(int id = 0);
     void disconnectQueue(const SmartObject *receiver = nullptr, int id = 0);
     void processQueue();
+    void setArbitraryData(std::string key, const Variant &value);
+    Variant getArbitraryData(std::string key);
 
 protected:
     void queueData(int id, const VariantVector &arguments);
@@ -46,6 +48,7 @@ private:
     SmartObject *parent;
     std::vector<SmartObject *> children;
     std::multimap<int, SmartObject *> connectedObjects;
+    std::map<std::string, Variant> arbitraryData;
     std::queue<Data> dataQueue;
     std::mutex mutex;
 
