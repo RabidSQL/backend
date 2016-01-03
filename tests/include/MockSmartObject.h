@@ -13,7 +13,7 @@ public:
     MockSmartObject(SmartObject *parent = nullptr) {}
     MOCK_METHOD1(contains, bool(SmartObject *));
     MOCK_METHOD2(queueData, void(int, const VariantVector &));
-    MOCK_METHOD2(processQueueItem, void(int, VariantVector));
+    MOCK_METHOD2(processQueueItem, void(int, const VariantVector &));
 };
 
 } // namespace RabidSQL

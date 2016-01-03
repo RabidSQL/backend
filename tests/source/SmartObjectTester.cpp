@@ -74,7 +74,7 @@ void SmartObjectTester::reset()
  * @param arguments The actual data
  * @return void
  */
-void SmartObjectTester::processQueueItem(int id, VariantVector arguments)
+void SmartObjectTester::processQueueItem(int id, const VariantVector &arguments)
 {
 
     // Set data
