@@ -116,9 +116,13 @@ Variant::Variant(const char *value)
  */
 Variant::Variant(ArbitraryPointer *value, bool manage)
 {
-    init(D_POINTER);
-    data = value;
-    deleteData = manage;
+    if (value == nullptr) {
+        init(D_NULL);
+    } else {
+        init(D_POINTER);
+        data = value;
+        deleteData = manage;
+    }
 }
 
 /**
@@ -322,8 +326,12 @@ void Variant::operator=(const Variant &value)
         data = nullptr;
         break;
     case D_POINTER:
-        data = value.data;
-        deleteData = value.deleteData;
+        if (value.data == nullptr) {
+            init(D_NULL);
+        } else {
+            data = value.toPointer()->clone();
+            deleteData = value.deleteData;
+        }
         break;
     case D_STRING:
         data = new std::string(value.toString());
@@ -951,6 +959,17 @@ const VariantMap Variant::toVariantMap() const
     }
 
     return VariantMap();
+}
+
+/**
+ * Returns this variant as a pointer, but only if that is already what it was.
+ * If not, returns nullptr.
+ *
+ * @return ArbitraryPointer *
+ */
+ArbitraryPointer *Variant::toPointer() const
+{
+    return static_cast<ArbitraryPointer *>(data);
 }
 
 /**

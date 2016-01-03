@@ -330,8 +330,28 @@ TEST_F(TestVariant, OperatorLTFloatString) {
 TEST_F(TestVariant, PointerCleanup) {
     TrackedPointer *p1 = new TrackedPointer();
     TrackedPointer *p2 = new TrackedPointer();
+    ArbitraryPointer *p3;
 
     EXPECT_EQ(2, TrackedPointer::count);
+    {
+        Variant v1(p1, false);
+        Variant v2(p1, false);
+    }
+    EXPECT_EQ(2, TrackedPointer::count);
+    {
+        Variant v1(p1, false);
+        Variant v2(v1);
+        p3 = v2.toPointer();
+    }
+    EXPECT_EQ(3, TrackedPointer::count);
+    delete p3;
+    EXPECT_EQ(2, TrackedPointer::count);
+    {
+        Variant v1(p1, true);
+        Variant v2(v1);
+    }
+    EXPECT_EQ(1, TrackedPointer::count);
+    p1 = new TrackedPointer();
     {
         Variant v1(p1, true);
         Variant v2(p2, true);

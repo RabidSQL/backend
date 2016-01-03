@@ -15,6 +15,11 @@ public:
         TrackedPointer::count++;
     }
 
+    virtual ArbitraryPointer *clone()
+    {
+        return new TrackedPointer();
+    }
+
     virtual ~TrackedPointer()
     {
         TrackedPointer::count--;
