@@ -12,7 +12,7 @@ public:
     static bool contains(SmartObjectTester *value);
     static void reset();
     void queueData(int id, const VariantVector &arguments);
-    void processQueueItem(int id, const VariantVector &arguments);
+    void processQueueItem(const int id, const VariantVector &arguments);
     ~SmartObjectTester();
 
     std::map<int, VariantVector> data;

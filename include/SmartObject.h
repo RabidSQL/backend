@@ -32,7 +32,7 @@ public:
 
 protected:
     void queueData(int id, const VariantVector &arguments);
-    virtual void processQueueItem(int id, const VariantVector &arguments);
+    virtual void processQueueItem(const int id, const VariantVector &arguments);
 
 private:
     void addChild(SmartObject *child);

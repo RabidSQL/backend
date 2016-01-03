@@ -325,7 +325,7 @@ Variant SmartObject::getArbitraryData(std::string key)
  * @param args Any applicable arguments
  * @return void
  */
-void SmartObject::processQueueItem(int, const VariantVector &)
+void SmartObject::processQueueItem(const int, const VariantVector &)
 {
     #ifdef DEBUG
     rDebug << "Unimplemented SmartObject::processData is receieving data! T_T";
