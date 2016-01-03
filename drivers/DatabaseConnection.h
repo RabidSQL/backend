@@ -14,7 +14,10 @@ class DatabaseConnection: virtual public Thread
 {
     friend class DatabaseConnectionManager;
 public:
-    static const int EXECUTED;
+    enum Constants
+    {
+        EXECUTED = 10
+    };
 
     DatabaseConnection(ConnectionSettings *settings);
     DatabaseConnection(DatabaseConnection *mainConnection,

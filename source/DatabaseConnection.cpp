@@ -254,6 +254,4 @@ DatabaseConnection::~DatabaseConnection()
     #endif
 }
 
-const int DatabaseConnection::EXECUTED = 0x1;
-
 } // namespace RabidSQL
