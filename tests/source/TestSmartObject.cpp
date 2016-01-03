@@ -86,6 +86,7 @@ TEST_F(TestSmartObject, ArbitraryData) {
 
     EXPECT_CALL(app, registerObject(_)).Times(Exactly(1));
     SmartObjectTester object;
+    EXPECT_CALL(app, unregisterObject(&object)).Times(Exactly(1));
     object.setArbitraryData("test", 123);
     EXPECT_EQ(123, object.getArbitraryData("test").toInt());
     EXPECT_TRUE(object.getArbitraryData("missing").isNull());
