@@ -41,14 +41,13 @@ DatabaseConnectionManager *DatabaseConnectionFactory::makeManager(
  *
  * Returns a vector of Settings Fields for the given connection type
  *
- * @param type The type of database connection to get settings for
  * @param settings The settings for the connection, if applicable
  * @return A QWidget to be injected into the settings form
  */
 std::vector<SettingsField> DatabaseConnectionFactory::getSettingsFields(
-        ConnectionType type)
+        ConnectionSettings *settings)
 {
-    switch (type) {
+    switch (settings->get("type").toUInt()) {
     case MYSQL:
     default:
         return MySQLDriver::DatabaseConnection::getSettingsFields();

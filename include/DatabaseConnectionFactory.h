@@ -13,7 +13,7 @@ class DatabaseConnectionFactory
 public:
     static DatabaseConnection *makeConnection(ConnectionSettings *settings);
     static DatabaseConnectionManager *makeManager(ConnectionSettings *settings);
-    static std::vector<SettingsField> getSettingsFields(ConnectionType type);
+    static std::vector<SettingsField> getSettingsFields(ConnectionSettings *settings);
     static std::map<ConnectionType, std::string> getTypeMap();
 };
 

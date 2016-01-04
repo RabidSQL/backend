@@ -10,6 +10,7 @@ struct SettingsField {
     std::string label;
     std::string tooltip;
     int width = 100;
+    void *pointer = nullptr;
 };
 
 } // namespace RabidSQL

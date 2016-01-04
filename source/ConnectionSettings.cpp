@@ -393,7 +393,7 @@ ConnectionSettings *ConnectionSettings::clone()
 {
     auto *settings = new ConnectionSettings();
 
-    for (auto it = this->settings.cbegin(); it != this->settings.cend(); ++it) {
+    for (auto it = this->settings.cbegin(); it != this->settings.end(); ++it) {
         settings->set(it->first, it->second);
     }
 
