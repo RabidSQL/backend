@@ -7,7 +7,7 @@
 
 #ifdef DEBUG
 
-#include "console.h"
+#include "Console.h"
 
 #define rDebug Console::debug()
 
