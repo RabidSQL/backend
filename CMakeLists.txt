@@ -44,6 +44,7 @@ set(LOGIC_SOURCE_FILES
     source/JsonFileStream.cpp
     source/JsonHandler.cpp
     source/Message.cpp
+    source/SettingsField.cpp
     source/SmartObject.cpp
     source/Thread.cpp
     source/UUID.cpp

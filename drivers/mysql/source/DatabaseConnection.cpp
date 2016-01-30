@@ -386,7 +386,17 @@ void DatabaseConnection::disconnect()
  */
 std::vector<SettingsField> DatabaseConnection::getSettingsFields()
 {
-    return std::vector<SettingsField>();
+    std::vector<SettingsField> fields;
+
+    fields.push_back(SettingsField("hostname", "Hostname", "Hostname", 0));
+    fields.push_back(SettingsField("port", "Port", "Port", 0, D_UINT,
+        VariantVector() << 3306 << 1 << 65536));
+    fields.push_back(SettingsField("username", "Username", "Username", 1));
+    fields.push_back(SettingsField("password", "Password", "Password", 2));
+    fields.push_back(SettingsField("save_password", "Save Password", "Save Password", 2, D_BOOLEAN));
+    fields.push_back(SettingsField("database", "Database(s)", "Database(s)", 4));
+
+    return fields;
 }
 
 DatabaseConnection::~DatabaseConnection()
