@@ -18,7 +18,7 @@ namespace RabidSQL {
  * @return void
  */
 ConnectionSettings::ConnectionSettings(ConnectionSettings *parent) :
-    SmartObject(parent)
+    ArbitraryPointer(parent)
 {
     if (parent != nullptr) {
         set("parent", parent->get("uuid"));
@@ -141,6 +141,16 @@ void ConnectionSettings::remove(std::string key)
     }
 }
 
+ConnectionSettings *ConnectionSettings::createDefaultSettings()
+{
+    // Add default group
+    auto connectionSettings = new ConnectionSettings();
+    connectionSettings->set("name", "Default");
+    connectionSettings->set("type", MYSQL);
+
+    return connectionSettings;
+}
+
 /**
  *
  * Loads all connection settings from a configuration file formatted as format
@@ -170,6 +180,8 @@ std::vector<ConnectionSettings *> ConnectionSettings::load(
 
     // Open the file
     if (!stream->open(filename, std::ios::in)) {
+        connectionSettings = createDefaultSettings();
+        connectionList.push_back(connectionSettings);
 
         // Failed to open file
         return connectionList;
@@ -209,10 +221,7 @@ std::vector<ConnectionSettings *> ConnectionSettings::load(
 
     if (connectionList.size() == 0) {
 
-        // Add default group
-        connectionSettings = new ConnectionSettings();
-        connectionSettings->set("name", "Default");
-        connectionSettings->set("type", MYSQL);
+        connectionSettings = createDefaultSettings();
         connectionList.push_back(connectionSettings);
     }
 

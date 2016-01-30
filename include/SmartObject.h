@@ -15,6 +15,9 @@ namespace RabidSQL {
 class Application;
 class SmartObject
 {
+    enum Constants {
+        DELETE_LATER = 9999
+    };
     friend class Application;
 public:
     SmartObject(SmartObject *parent = nullptr);
@@ -26,8 +29,9 @@ public:
     void connectQueue(int id, SmartObject *receiver);
     void disconnectQueue(int id = 0);
     void disconnectQueue(const SmartObject *receiver = nullptr, int id = 0);
-    void processQueue();
+    virtual int processQueue() final;
     void setArbitraryData(std::string key, const Variant &value);
+    void deleteLater();
     Variant getArbitraryData(std::string key);
 
 protected:

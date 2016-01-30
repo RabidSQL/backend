@@ -12,7 +12,7 @@
 namespace RabidSQL {
 
 class JsonFileStream;
-class ConnectionSettings : public SmartObject, public ArbitraryPointer
+class ConnectionSettings : public ArbitraryPointer
 {
 public:
     explicit ConnectionSettings(ConnectionSettings *parent = 0);
@@ -35,6 +35,7 @@ public:
     ~ConnectionSettings();
 
 private:
+    static ConnectionSettings *createDefaultSettings();
     VariantMap toVariantMap();
     VariantVector getChildren(ConnectionSettings *parent);
     static void reparentChildren(

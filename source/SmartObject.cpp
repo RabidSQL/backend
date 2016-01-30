@@ -257,11 +257,12 @@ void SmartObject::queueData(int id, const VariantVector &arguments)
  * Application::processQueue should be used in place. It is public only for
  * testing.
  *
- * @return void
+ * @return int Returns the id of the last processed event
  */
-void SmartObject::processQueue()
+int SmartObject::processQueue()
 {
-    bool finished = false;
+    bool finished;
+    int id = -1;
 
     do {
 
@@ -277,8 +278,12 @@ void SmartObject::processQueue()
             // Unlock mutex
             mutex.unlock();
 
-            processQueueItem(data.id, data.arguments);
-
+            id = data.id;
+            if (id == DELETE_LATER) {
+                finished = true;
+            } else {
+                processQueueItem(id, data.arguments);
+            }
         } else {
 
             // Unlock mutex
@@ -286,6 +291,8 @@ void SmartObject::processQueue()
         }
 
     } while (!finished);
+
+    return id;
 }
 
 /**
@@ -362,6 +369,20 @@ SmartObject::~SmartObject()
         // Free memory
         delete *it;
     }
+}
+
+/**
+ * Schedule this object for deletion later on
+ */
+void SmartObject::deleteLater()
+{
+    // Lock mutex
+    this->mutex.lock();
+
+    this->dataQueue.push(Data(DELETE_LATER, VariantVector()));
+
+    // Unlock mutex
+    this->mutex.unlock();
 }
 
 /**

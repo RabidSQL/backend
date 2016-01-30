@@ -55,7 +55,12 @@ void Application::processEvents()
         auto object = *it;
 
         // Tell this object to check its queue
-        object->processQueue();
+        if (object->processQueue() == SmartObject::DELETE_LATER) {
+            delete object;
+
+            // Restart iterator
+            it = objects->begin();
+        }
     }
 }
 

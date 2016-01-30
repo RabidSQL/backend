@@ -1,11 +1,15 @@
 #ifndef RABIDSQL_ARBITRARYPOINTER_H
 #define RABIDSQL_ARBITRARYPOINTER_H
 
+#include "SmartObject.h"
+
 namespace RabidSQL {
 
-class ArbitraryPointer {
+class SmartObject;
+class ArbitraryPointer : public SmartObject {
 public:
-    virtual ~ArbitraryPointer() {};
+    ArbitraryPointer(SmartObject *parent = 0) : SmartObject(parent) {}
+    virtual ~ArbitraryPointer() {}
     virtual ArbitraryPointer *clone() = 0;
 };
 

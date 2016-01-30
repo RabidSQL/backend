@@ -9,7 +9,7 @@ namespace RabidSQL {
 
 class ConnectionSettings;
 class DatabaseConnection;
-class DatabaseConnectionManager: virtual public SmartObject
+class DatabaseConnectionManager: public SmartObject
 {
     friend class DatabaseConnection;
     static const unsigned int DEFAULT_EXPIRY = 10;
@@ -25,7 +25,7 @@ public:
         VariantVector arguments = VariantVector(), bool blocking = false);
     void killQuery(std::string uuid);
     ConnectionType getType();
-    ~DatabaseConnectionManager();
+    virtual ~DatabaseConnectionManager();
 
     void disconnected(const VariantVector &args);
 

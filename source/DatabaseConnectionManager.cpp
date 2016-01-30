@@ -253,7 +253,7 @@ void DatabaseConnectionManager::disconnected(const VariantVector &args)
  * Reserves a database connection. Until this is freed, it will not be re-used.
  *
  * @param expiry The length of time in seconds before this connection expires
- * @param receiver The object that will receieve signals emitted by this db
+ * @param receiver The object that will receive signals emitted by this db
  *
  * @return A UUID for this connection
  */
@@ -465,4 +465,3 @@ DatabaseConnectionManager::~DatabaseConnectionManager()
 }
 
 } // namespace RabidSQL
-
