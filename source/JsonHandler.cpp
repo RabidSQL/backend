@@ -151,6 +151,19 @@ bool JsonHandler::Double(double d)
 }
 
 /**
+ * Set the current value to a string-representation of a number.
+ * @param str
+ * @param length
+ * @param copy
+ * @return bool
+ */
+bool JsonHandler::RawNumber(const char* str, unsigned int length, bool copy)
+{
+    // Note that Variant automatically converts internally as needed so lets not bother converting ourselves.
+    return set(str);
+}
+
+/**
  * Sets the current value to the provided string value. This must be UTF8.
  *
  * @param str

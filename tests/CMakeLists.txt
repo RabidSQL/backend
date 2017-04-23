@@ -7,8 +7,7 @@ include_directories(${PROJECT_NAME} PUBLIC
     ../include
     ../drivers
     ../
-    ../libs/googletest/googletest/include/
-    ../libs/googletest/googlemock/include/
+    /usr/local/include/
 )
 
 set(TEST_SOURCE_FILES
@@ -31,10 +30,10 @@ set(TEST_SOURCE_FILES
     source/TrackedPointer.cpp)
 
 LINK_DIRECTORIES(
-    /usr/local/mysql/lib
+    /usr/local/lib
+    ${CMAKE_CURRENT_SOURCE_DIR}/../
 )
 
-add_subdirectory(../libs/googletest/googlemock googlemock)
 add_subdirectory(../drivers/mysql mysql)
 
 add_executable(${PROJECT_NAME} ${TEST_SOURCE_FILES})

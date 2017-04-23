@@ -43,6 +43,7 @@ public:
     bool Int64(long long int i);
     bool Uint64(unsigned long long int u);
     bool Double(double d);
+    bool RawNumber(const char* str, unsigned int length, bool copy);
     bool String(const char* str, unsigned int length, bool copy);
     bool StartObject();
     bool Key(const char* str, unsigned int length, bool copy);

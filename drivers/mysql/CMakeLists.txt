@@ -14,13 +14,13 @@ set(MYSQL_SOURCE_FILES
     source/DatabaseConnection.cpp
 )
 
-LINK_DIRECTORIES(
-    /usr/local/mysql/lib
+link_directories(
+    /usr/local/lib,
 )
 
 add_library(${PROJECT_NAME} STATIC ${MYSQL_SOURCE_FILES})
 
 TARGET_LINK_LIBRARIES(${PROJECT_NAME}
     mysqlcppconn-static
-    mysqlclient_r
+    mysqlclient
 )

@@ -1,8 +1,8 @@
 #include "JsonFileStream.h"
 #include "JsonHandler.h"
-#include "libs/rapidjson/include/rapidjson/reader.h"
-#include "libs/rapidjson/include/rapidjson/error/en.h"
-#include "libs/rapidjson/include/rapidjson/writer.h"
+#include "rapidjson/reader.h"
+#include "rapidjson/error/en.h"
+#include "rapidjson/writer.h"
 
 namespace RabidSQL {
 
